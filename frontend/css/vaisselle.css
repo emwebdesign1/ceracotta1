@@ -1,0 +1,373 @@
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #fcf8f1;
+  height: 80px;
+  padding: 0 20px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.07);
+  z-index: 1101;
+}
+.header-left, .header-center, .header-right {
+  display: flex;
+  align-items: center;
+}
+.header-center {
+  flex: 1;
+  justify-content: center;
+}
+.logo-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-image {
+  height: 120px;
+  object-fit: contain;
+  user-select: none;
+}
+.hamburger {
+  width: 32px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.hamburger span {
+  height: 3.5px;
+  background: #7f0000;
+  border-radius: 3px;
+  transition: all 0.4s ease;
+}
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+.header-right {
+  gap: 14px;
+}
+.header-right .icon-link img {
+  width: 26px;
+  height: 26px;
+}
+.icon {
+  width: 26px;
+  height: 26px;
+  fill: #7f0000;
+}
+
+
+/* NAVIGATION */
+
+nav {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(to bottom, #d7bc8a, #c8a96a);
+  padding-top: 80px; 
+  transition: left 0.35s ease;
+  z-index: 1100;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+  overflow-y: auto;
+}
+
+nav.active {
+  left: 0;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+nav ul li a {
+  display: block;
+  padding: 18px 28px;
+  font-weight: 600;
+  color: #fffaf2;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  font-family: 'Montserrat', sans-serif;
+}
+
+nav ul li a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  padding-left: 36px;
+}
+
+nav ul li.dropdown > a::after {
+  content: " ▸";
+  float: right;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+nav ul li.dropdown.open > a::after {
+  transform: rotate(90deg);
+}
+
+nav ul li.dropdown ul {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: rgba(0,0,0,0.05);
+}
+
+nav ul li.dropdown.open ul {
+  max-height: 400px;
+}
+
+nav ul li.dropdown ul li a {
+  padding-left: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff3e6;
+}
+
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.35);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease;
+  z-index: 1090;
+}
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+body {
+  margin: 0;
+  font-family: 'Urbanist', sans-serif;
+  background-color: #fdf9f6;
+  color: #2e2e2e;
+}
+
+
+
+.page-title {
+  text-align: center;
+  font-size: 42px;
+  margin: 100px 0 30px;
+  font-weight: 700;
+  color: #7f0000;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 48px;
+  padding: 0 5vw; /* plus fluide selon la largeur d'écran */
+  justify-items: stretch; /* pour que les cards prennent toute la largeur dispo */
+  margin-top: 20px;
+  max-width: 1600px; /* limite pour très grands écrans */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+.product-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #7f0000;
+  margin-bottom: 10px;
+}
+
+.color-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+.more-dot {
+  font-size: 12px;
+  color: #555;
+  border: none;
+  background: none;
+  padding-left: 2px;
+  font-weight: bold;
+}
+
+.sort-filter-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 40px 20px;
+  font-size: 16px;
+  gap: 12px;
+}
+
+.sort-filter-container select {
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 2px solid #7f0000;
+  background-color: #fff;
+  color: #7f0000;
+  font-family: 'Urbanist', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sort-filter-container select:focus {
+  border-color: #7f0000;
+  outline: none;
+}
+
+.sort-filter-container option {
+  color: #7f0000;
+}
+
+
+.load-more-container {
+  text-align: center;
+  margin: 40px 0 60px;
+}
+
+.load-more {
+  padding: 12px 28px;
+  background-color: #7f0000;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.load-more:hover {
+  background-color: #5a0000;
+}
+
+
+.conditions-container {
+  max-width: 1200px;
+  margin: 100px auto 60px;
+  padding: 0 40px;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+
+
+/* ========== RESPONSIVE POUR TÉLÉPHONES ========== */
+@media screen and (max-width: 768px) {
+  .page-title {
+    font-size: 28px;
+    margin: 80px 0 20px;
+  }
+
+  .products-grid {
+    padding: 0 20px;
+    gap: 32px;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sort-filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 20px 20px;
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .sort-filter-container label {
+    font-weight: 500;
+  }
+
+  .load-more {
+    width: 90%;
+    font-size: 15px;
+  }
+
+  footer {
+    font-size: 13px;
+    padding: 24px 10px;
+    text-align: center;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .conditions-container {
+    max-width: 1400px;
+    font-size: 1.05rem;
+  }
+}
+
+
+

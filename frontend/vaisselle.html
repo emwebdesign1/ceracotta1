@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collection Vaisselle – Céracotta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/vaisselle.css" />
+  <link rel="icon" href="images/logo.png" type="image/x-icon" />
+</head>
+
+<body>
+  <header>
+    <div class="header-left">
+      <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div class="header-center">
+      <a href="index.html" class="logo-link">
+        <img src="images/logo.png" alt="Logo Céracotta" class="logo-image" />
+      </a>
+    </div>
+    <div class="header-right">
+      <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
+        </svg>
+      </a>
+      <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 
+          7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
+          14.76 3 16.5 3 19.58 3 22 5.42 22 
+          8.5c0 3.78-3.4 6.86-8.55 
+          11.54L12 21.35z"/>
+        </svg>
+      </a>
+      <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
+        </svg>
+      </a>
+    </div>
+    <nav id="side-menu" aria-label="Navigation principale">
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li class="dropdown">
+          <a href="#" id="collections-link">Collections</a>
+          <ul class="dropdown-list">
+            <li><a href="vaisselle.html">Vaisselle</a></li>
+            <li><a href="vases.html">Vases</a></li>
+          </ul>
+        </li>
+        <li><a href="apropos.html">À propos</a></li>
+      </ul>
+    </nav>
+    <div class="overlay" id="overlay"></div>
+  </header>
+
+
+  <main>
+    <h1 class="page-title">Collection Vaisselle</h1>
+
+    <div class="sort-filter-container">
+      <label for="category-filter">Trier par :</label>
+      <select id="category-filter">
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+      </select>
+    </div>
+
+    <section id="product-list" class="products-grid"></section>
+
+    <div class="load-more-container">
+      <button id="load-more" class="load-more">Charger plus</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions légales</a>
+      <a href="conditions.html">Conditions générales</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+       <a href="retours.html">Retours & remboursement</a>
+    </div>
+  </footer>
+
+
+  <!-- SIDE PANELS -->
+  <div id="panel-compte" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Mon compte</h2>
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Votre email">
+      <label>Mot de passe</label>
+      <input type="password" placeholder="Votre mot de passe">
+      <button type="submit">Connexion</button>
+      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
+    </form>
+  </div>
+  <div id="panel-favoris" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Vos favoris</h2>
+    <p>Aucun favori pour le moment.</p>
+  </div>
+  <div id="panel-panier" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Votre panier</h2>
+    <p>Votre panier est vide.</p>
+  </div>
+
+  
+<script type="module" src="/js/boot.js"></script>
+<script type="module" src="/js/pages/vaisselle.page.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,600 @@
+.checkout-shell {
+  display: grid; grid-template-columns: 1fr min(380px, 40%); gap: 24px;
+  padding: 24px; align-items: start;
+}
+.checkout-left h1 { margin-top: 0; }
+.checkout-right .card {
+  border: 1px solid #eee; border-radius: 14px; padding: 16px; background: #fff;
+}
+.sum-list { list-style: none; padding: 0; margin: 0 0 12px 0; display: grid; gap: 10px; }
+.sum-item { display: grid; grid-template-columns: 56px 1fr; gap: 10px; align-items: center; }
+.sum-thumb { width: 56px; height: 56px; border-radius: 8px; overflow: hidden; background: #f6f6f6; }
+.sum-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.sum-title { font-weight: 600; margin-bottom: 2px; }
+.sum-line { display: flex; justify-content: space-between; color: #444; }
+.sum-row { display: flex; justify-content: space-between; padding: 6px 0; }
+.sum-row.total { border-top: 1px solid #eee; margin-top: 6px; padding-top: 10px; font-size: 18px; }
+.pay-methods { display: grid; gap: 8px; margin: 8px 0 16px; }
+.pay-option { border: 1px solid #eee; border-radius: 10px; padding: 10px; display: flex; align-items: center; gap: 8px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* ===== Cart Panel ===== */
+#panel-panier {
+  display: flex;
+  flex-direction: column;
+  width: min(420px, 100vw);
+  height: 100vh;
+  background: #fff;
+  box-shadow: -8px 0 24px rgba(0,0,0,.12);
+  padding: 16px;
+  gap: 12px;
+}
+#panel-panier .close-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  border: none; background: transparent; font-size: 20px; cursor: pointer;
+}
+#panel-panier .cart-header {
+  padding: 8px 24px 0 8px;
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+#panel-panier .cart-header h2 { margin: 0; font-size: 20px; }
+#panel-panier .cart-count { color: #666; font-size: 14px; }
+
+#panel-panier .cart-body {
+  overflow-y: auto;
+  padding: 4px 4px 120px; /* espace pour le summary collé en bas */
+  flex: 1;
+}
+
+#panel-panier .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+#panel-panier .cart-item {
+  display: grid; grid-template-columns: 72px 1fr 28px; gap: 12px;
+  align-items: center; border: 1px solid #eee; border-radius: 12px; padding: 8px;
+}
+#panel-panier .thumb { width: 72px; height: 72px; overflow: hidden; border-radius: 8px; background: #f7f7f7; display: grid; place-items: center; }
+#panel-panier .thumb img { width: 100%; height: 100%; object-fit: cover; }
+#panel-panier .thumb .ph { width: 48px; height: 48px; background:#eaeaea; border-radius: 8px; }
+
+#panel-panier .meta .title { font-weight: 600; margin-bottom: 4px; }
+#panel-panier .meta .price { color: #333; margin-bottom: 8px; }
+
+#panel-panier .qty-controls {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid #e6e6e6; border-radius: 999px; padding: 4px 8px;
+}
+#panel-panier .qty-controls .qty {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: none; background: #f1f1f1; cursor: pointer; font-size: 18px; line-height: 28px;
+}
+#panel-panier .qty-controls .qty:hover { background: #e6e6e6; }
+#panel-panier .qty-controls .qty-val { min-width: 20px; text-align: center; font-weight: 600; }
+
+#panel-panier .rm {
+  border: none; background: transparent; cursor: pointer; font-size: 20px; color: #999;
+}
+#panel-panier .rm:hover { color: #d32f2f; }
+
+#panel-panier .cart-summary {
+  position: sticky; bottom: 0; left: 0; right: 0;
+  padding: 12px 8px 8px;
+  background: linear-gradient(to top, #fff 80%, rgba(255,255,255,0));
+  border-top: 1px solid #eee;
+}
+#panel-panier .cart-summary .row {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
+}
+#panel-panier .cart-summary .hint { color: #666; font-size: 13px; margin: 6px 0 12px; }
+
+#panel-panier .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btn { appearance: none; border: 1px solid #ddd; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+.btn.primary { background: #1f2937; color: #fff; border-color: #1f2937; }
+.btn.primary:hover { filter: brightness(1.05); }
+.btn.ghost { background: #fff; }
+.btn.ghost:hover { background: #f7f7f7; }
+
+/* === Thème Céracotta pour la page Checkout === */
+.checkout-page body, .checkout-page {
+  background: #fcf8f1;
+  color: #5a4a3b;
+}
+.checkout-shell {
+  padding-top: 110px; /* pour compenser le header fixe d'index.css */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.checkout-left h1, .checkout-left h2, .checkout-right h2 {
+  font-family: 'Playfair Display', serif;
+  color: #7f0000;
+}
+
+/* Carte résumé à droite */
+.checkout-right .card {
+  background: #fff;
+  border: 1px solid rgba(127,0,0,.08);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.06);
+}
+
+/* Formulaire */
+#checkoutForm label { display:flex; flex-direction:column; gap:6px; color:#7b6c60; font-weight:600; }
+#checkoutForm input {
+  background:#fcf8f1;
+  border:1px solid #e7e0d7;
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:1rem;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+#checkoutForm input:focus{
+  border-color:#caa18b;
+  box-shadow:0 0 0 3px rgba(202,161,139,.22);
+}
+
+/* Radios paiement + état actif */
+.pay-methods { display:grid; gap:10px; margin:12px 0 8px; }
+.pay-option {
+  border:1px solid rgba(127,0,0,.18);
+  background:#fff;
+  border-radius:14px;
+  padding:12px 14px;
+  display:flex; align-items:center; gap:10px;
+  cursor:pointer;
+  transition: border-color .2s, box-shadow .2s, transform .05s;
+}
+.pay-option:has(input:checked){
+  border-color:#7f0000;
+  box-shadow:0 6px 18px rgba(127,0,0,.08);
+}
+.pay-option:active { transform: scale(.997); }
+
+/* Panneaux de paiement */
+#pay-details {
+  border:1px solid rgba(127,0,0,.08);
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  margin:6px 0 18px;
+  box-shadow:0 10px 24px rgba(0,0,0,.05);
+}
+.pay-card-logos { display:flex; gap:10px; margin-bottom:12px; }
+.pay-card-logos img { height:22px; filter: saturate(.85); }
+
+.pay-hint { color:#7b6c60; font-size:.92rem; margin-top:8px; }
+
+.twint-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.twint-logo { height:26px; }
+.twint-qr { display:grid; place-items:center; margin-top:8px; }
+.twint-qr img { width:180px; height:auto; border-radius:8px; background:#f4f1ec; }
+
+.btn.primary {
+  background:#7f0000; color:#fff; border:0; border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer;
+}
+.btn.primary:hover { background:#5e0000; }
+.form-msg { color:#a45b3f; min-height:20px; margin-top:6px; }
+
+
+/* Accordéon paiement (smooth) */
+.pay-option { position: relative; user-select: none; }
+.pay-option .chev { margin-left:auto; transition: transform .25s ease; }
+.pay-option.active .chev { transform: rotate(180deg); }
+
+.pay-panel[data-accordion] {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform-origin: top;
+  transition: max-height .35s ease, opacity .2s ease;
+  will-change: max-height, opacity;
+  border: 1px solid rgba(127,0,0,.08);
+  background:#fff; border-radius:16px; padding:0 16px; margin:0 0 12px;
+}
+.pay-panel[data-accordion].open {
+  opacity: 1;
+  padding:16px;
+  margin:6px 0 18px;
+  /* max-height est mis en JS pour s’adapter au contenu */
+}
+
+/* Récap total plus “e-shop” */
+.checkout-right .card h2 { margin-top:0; }
+.sum-title{ color:#2f2a26; }
+.sum-qty{ color:#7b6c60; }
+.sum-price{ color:#7f0000; font-weight:700; }
+.sum-row.total strong{ color:#7f0000; font-size:1.1rem; }
+
+/* Bouton pay pro */
+.btn.primary { display:inline-flex; align-items:center; gap:10px; }
+.btn.primary::after{ content:'→'; font-weight:900; }
+
+/* Petites améliorations accessibilité */
+.pay-option input{ accent-color:#7f0000; }
+
+.pay-panel[data-accordion] {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height .4s ease, opacity .3s ease;
+}
+
+.pay-panel[data-accordion].open {
+  opacity: 1;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  max-height: 600px; /* valeur grande pour laisser dérouler */
+}
+
+.sum-list { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.sum-item { display:flex; gap:12px; align-items:center; }
+.sum-thumb img { width:60px; height:60px; object-fit:cover; border-radius:8px; }
+.sum-title { font-weight:600; }
+.sum-line { display:flex; justify-content:space-between; gap:10px; }
+.sum-row { display:flex; justify-content:space-between; padding:6px 0; }
+.sum-row.total strong { color:#7f0000; font-size:1.1rem; }
+
+/* L’overlay ne doit rien bloquer quand il est inactif */
+.overlay { pointer-events: none; }
+.overlay.active { pointer-events: auto; }
+
+/* Les panneaux de paiement doivent laisser passer les interactions */
+.pay-panel[data-accordion] { overflow: visible; }
+
+/* S’assure que le conteneur Stripe reste “cliquable” */
+#card-number, #card-exp, #card-cvc, .stripe-input { pointer-events: auto; position: relative; z-index: 1; }
+
+/* === Stripe fix: pas d'overflow hidden quand le panneau est ouvert === */
+.pay-panel[data-accordion] { /* état fermé, ok pour l'animation */
+  overflow: hidden;
+}
+
+.pay-panel[data-accordion].open {
+  overflow: visible;           /* <-- clé pour que l’iframe Stripe capte les clics/focus */
+  max-height: 600px;           /* tu peux garder ton animation */
+}
+
+/* L’overlay ne doit jamais bloquer la page checkout si inactif */
+#overlay { pointer-events: none !important; }
+
+/* S’assure que les éléments Stripe sont au-dessus de tout décor */
+#card-number, #card-exp, #card-cvc, .stripe-input { 
+  position: relative; 
+  z-index: 10; 
+}
+
+
+/* === Stripe clickability – PATCH FINAL (placer en BAS du fichier) === */
+
+/* 1) Le panneau ouvert ne doit PAS masquer l’iframe  */
+.pay-panel[data-accordion] { overflow: hidden; }          /* fermé = OK */
+.pay-panel[data-accordion].open {
+  overflow: visible !important;                            /* clé pour capter le focus */
+  position: relative !important;
+  z-index: 10 !important;
+  isolation: isolate;                                      /* nouveau contexte, au-dessus des labels */
+}
+
+/* 2) L’overlay du header ne doit rien bloquer quand il n’est pas actif */
+.checkout-page #overlay:not(.active) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* 3) S’assure que la zone paiement est au-dessus du label onglet/carte */
+.checkout-page .pay-methods { position: relative; z-index: 5; }
+.checkout-page .pay-option { position: relative; z-index: 1; } /* l’onglet */
+.checkout-page .pay-panel { position: relative; z-index: 5; }  /* le contenu */
+.checkout-page .pay-panel.open { z-index: 20 !important; }     /* > onglet */
+
+/* 4) L’iframe Stripe doit toujours recevoir les clics */
+#card-number, #card-exp, #card-cvc, .stripe-input {
+  position: relative !important;
+  z-index: 30 !important;
+  pointer-events: auto !important;
+}
+#card-number iframe,
+#card-exp iframe,
+#card-cvc iframe {
+  pointer-events: auto !important;
+}
+
+
+/* === Stripe clickability – PATCH FINAL === */
+
+/* Panneau fermé vs ouvert */
+.pay-panel[data-accordion] { overflow: hidden; }
+.pay-panel[data-accordion].open {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 20 !important;
+  isolation: isolate; /* nouveau contexte de stacking */
+}
+
+/* L’overlay global ne doit JAMAIS bloquer la page checkout quand inactif */
+.checkout-page #overlay:not(.active) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Onglet vs contenu : le contenu doit passer au-dessus */
+.checkout-page .pay-methods { position: relative; z-index: 5; }
+.checkout-page .pay-option  { position: relative; z-index: 1; }  /* l’onglet */
+.checkout-page .pay-panel   { position: relative; z-index: 5; }
+.checkout-page .pay-panel.open { z-index: 30 !important; }
+
+/* Les iframes Stripe doivent recevoir les clics */
+#card-number, #card-exp, #card-cvc, .stripe-input {
+  position: relative !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+  transform: translateZ(0); /* force un nouveau contexte de rendu */
+}
+#card-number iframe, #card-exp iframe, #card-cvc iframe {
+  pointer-events: auto !important;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+/* === Stripe clickability – patch final === */
+
+/* Panneau fermé vs ouvert */
+.pay-panel[data-accordion] { overflow: hidden; }
+.pay-panel[data-accordion].open {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 30 !important;
+  isolation: isolate;
+}
+
+/* L’overlay global ne doit pas bloquer la page checkout quand inactif */
+.checkout-page #overlay:not(.active) { display: none !important; pointer-events: none !important; }
+
+/* Onglet vs contenu : le contenu passe au-dessus */
+.checkout-page .pay-methods { position: relative; z-index: 5; }
+.checkout-page .pay-option  { position: relative; z-index: 1; }   /* l’onglet/label */
+.checkout-page .pay-panel   { position: relative; z-index: 10; }  /* le contenu */
+.checkout-page .pay-panel.open { z-index: 40 !important; }
+
+/* L’iframe Stripe reçoit les clics quoiqu’il arrive */
+#card-number, #card-exp, #card-cvc, .stripe-input {
+  position: relative !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+  transform: translateZ(0);
+}
+#card-number iframe, #card-exp iframe, #card-cvc iframe {
+  pointer-events: auto !important;
+  display: block; width: 100% !important; height: 100% !important;
+}
+
+
+/* Désactive tout overlay résiduel */
+.checkout-page #overlay { display: none !important; pointer-events: none !important; }
+
+/* Le contenu (panneaux) passe DEVANT l’onglet */
+.pay-option  { position: relative; z-index: 1 !important; }
+.pay-panel   { position: relative !important; z-index: 10 !important; }
+.pay-panel.open { overflow: visible !important; z-index: 30 !important; }
+
+/* Les zones Stripe (si présentes) restent cliquables */
+#card-number, #card-exp, #card-cvc, .stripe-input {
+  position: relative !important; z-index: 50 !important; pointer-events: auto !important;
+}
+
+/* Stripe – l’iframe doit couvrir 100% de la zone cliquable */
+.stripe-input { padding: 0 !important; height: 46px !important; display: block !important; }
+.stripe-input > iframe { display: block !important; width: 100% !important; height: 100% !important; pointer-events: auto !important; }
+
+/* Panneau ouvert au-dessus des onglets et sans masque */
+.pay-panel[data-accordion].open { overflow: visible !important; position: relative !important; z-index: 20 !important; }
+
+/* Overlay global inactif = inoffensif */
+.checkout-page #overlay:not(.active) { display: none !important; pointer-events: none !important; }
+/* ========= Thème & reset léger ========= */
+:root{
+  --brand:#7f0000;            /* bordeaux Céracotta */
+  --brand-2:#5f0000;
+  --bg:#faf6ef;
+  --card:#ffffff;
+  --text:#3b3a39;
+  --muted:#7b756f;
+  --line:#e5e2db;
+  --radius:14px;
+  --shadow:0 6px 18px rgba(0,0,0,.06);
+  --shadow-sm:0 3px 10px rgba(0,0,0,.05);
+}
+
+.checkout-page{
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* ========= Titres / labels ========= */
+.checkout-left h1{ margin:0 0 10px; }
+.checkout-left h2{
+  margin:28px 0 12px;
+  font-size:1.15rem;
+  color:var(--brand);
+}
+
+label{ color:#5a554f; font-weight:600; }
+.form-msg, .form-msg.small{ color:var(--muted); }
+#cardErrors{ color:#b00020; margin-top:6px; }
+
+/* ========= Inputs natifs ========= */
+.checkout-left input{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:#fff;
+  height:46px;
+  padding:10px 12px;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.checkout-left input:focus{
+  outline:none;
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(127,0,0,.12);
+}
+
+/* ========= Accordéon Paiement ========= */
+.pay-methods{ display:block; gap:10px; }
+.pay-option{
+  display:flex; align-items:center; justify-content:space-between;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  background:linear-gradient(#fff,#fcfbf9);
+  box-shadow:var(--shadow-sm);
+  user-select:none; cursor:pointer;
+  transition:border-color .15s ease, box-shadow .15s ease, background .2s;
+  margin-bottom:8px;
+}
+.pay-option input{ margin-right:8px; }
+.pay-option.active{
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(127,0,0,.10), var(--shadow-sm);
+  background:#fff;
+}
+.pay-option .chev{ opacity:.7; }
+
+/* Panneau */
+.pay-panel[data-accordion]{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--card);
+  padding:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  max-height:0;
+}
+.pay-panel[data-accordion].open{
+  overflow:visible !important;
+  max-height:800px;       /* animation simple */
+}
+
+/* Logos cartes */
+.pay-card-logos img{
+  height:18px; margin-right:8px; filter:grayscale(.15);
+}
+
+/* ========= Stripe Elements containers ========= */
+.stripe-input{
+  height:48px !important;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:#fff;
+  display:block !important;
+  padding:0 !important;                 /* important pour cliquer partout */
+  transition:border-color .15s ease, box-shadow .15s ease, background .2s;
+}
+.stripe-input:focus-within{
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(127,0,0,.12);
+}
+.stripe-input > iframe{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  pointer-events:auto !important;
+  border:0;
+}
+
+/* petites cartes Exp / CVC côté à côté (si grid-3) */
+.grid-3 .stripe-input{ height:44px !important; }
+
+/* ========= Résumé de commande ========= */
+#orderSummary .card{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:#fff;
+  box-shadow:var(--shadow);
+  padding:18px;
+}
+#orderSummary .sum-item{ padding:10px 0; border-bottom:1px dashed #ece8e2; }
+#orderSummary .sum-item:last-child{ border-bottom:0; }
+#orderSummary .sum-title{ font-weight:600; }
+#orderSummary .sum-row{ display:flex; justify-content:space-between; padding:8px 0; }
+#orderSummary .sum-row.total strong{ color:var(--brand); }
+
+/* ========= Bouton principal ========= */
+.btn.primary{
+  background:var(--brand);
+  color:#fff;
+  border-radius:999px;
+  padding:12px 18px;
+  border:0;
+  box-shadow:0 10px 20px rgba(127,0,0,.18);
+  transition:transform .06s ease, box-shadow .2s ease, background .2s ease;
+}
+.btn.primary:hover{ background:var(--brand-2); box-shadow:0 12px 24px rgba(127,0,0,.22); }
+.btn.primary:active{ transform:translateY(1px); }
+
+/* ========= Sécurité overlays ========= */
+.checkout-page #overlay:not(.active){ display:none !important; pointer-events:none !important; }
+
+/* ——— Thème doux Céracotta ——— */
+:root{
+  --brand:#7f0000; --brand-2:#5f0000;
+  --text:#3b3a39; --muted:#7b756f;
+  --line:#e5e2db; --card:#fff;
+  --radius:12px; --shadow:0 10px 24px rgba(0,0,0,.06);
+}
+
+/* Cartes / panneaux */
+.pay-panel[data-accordion]{
+  border:1px solid var(--line);
+  border-radius: calc(var(--radius) + 2px);
+  background:var(--card);
+  box-shadow: var(--shadow);
+  padding:18px;
+}
+
+/* Labels et inputs */
+label{ color:#5a554f; font-weight:600; }
+.checkout-left input{
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  height:46px; padding:10px 12px;
+  background:#fff;
+  transition:border-color .15s, box-shadow .15s;
+}
+.checkout-left input:focus{
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(127,0,0,.12);
+}
+
+/* Stripe containers (extérieur de l’iframe) */
+.stripe-input{
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  background:#fff;
+  height:48px !important;
+  padding:0 !important;              /* pour que l’iframe couvre 100% */
+  transition:border-color .15s, box-shadow .15s;
+}
+.stripe-input:focus-within{
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(127,0,0,.12);
+}
+.stripe-input > iframe{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+}
+
+/* Bouton payer */
+.btn.primary{
+  background:var(--brand); color:#fff; border:0;
+  border-radius:999px; padding:12px 20px;
+  box-shadow:0 12px 24px rgba(127,0,0,.18);
+  transition:transform .06s, box-shadow .2s, background .2s;
+}
+.btn.primary:hover{ background:var(--brand-2); box-shadow:0 14px 28px rgba(127,0,0,.22); }
+.btn.primary:active{ transform:translateY(1px); }
+
+/* Overlay sécurité (ne bloque pas) */
+.checkout-page #overlay:not(.active){ display:none !important; pointer-events:none !important; }

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Politique de confidentialité – Céracotta</title>
+  <link rel="stylesheet" href="css/index.css" />
+  <!-- On réutilise la même feuille pour garder exactement le même rendu que les CGV -->
+  <link rel="stylesheet" href="css/cvg.css" />
+  <link rel="icon" href="images/logo.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER (identique au site) -->
+  <header>
+    <div class="header-left">
+      <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="header-center">
+      <a href="index.html" class="logo-link">
+        <img src="images/logo.png" alt="Logo Céracotta" class="logo-image" />
+      </a>
+    </div>
+    <div class="header-right">
+      <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
+        </svg>
+      </a>
+      <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 
+          7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
+          14.76 3 16.5 3 19.58 3 22 5.42 22 
+          8.5c0 3.78-3.4 6.86-8.55 
+          11.54L12 21.35z"/>
+        </svg>
+      </a>
+      <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
+        </svg>
+      </a>
+    </div>
+    <nav id="side-menu" aria-label="Navigation principale">
+      <ul>
+        <li><a href="index.html#top">Accueil</a></li>
+        <li class="dropdown">
+          <a href="#" id="collections-link">Collections</a>
+          <ul class="dropdown-list">
+            <li><a href="vaisselle.html">Vaisselle</a></li>
+            <li><a href="vases.html">Vases</a></li>
+          </ul>
+        </li>
+        <li><a href="apropos.html">À propos</a></li>
+      </ul>
+    </nav>
+    <div class="overlay" id="overlay"></div>
+  </header>
+
+  <!-- CONTENU -->
+  <main class="page-legale">
+    <!-- espace sous header fixe -->
+    <div class="header-spacer" aria-hidden="true"></div>
+
+    <!-- HERO -->
+    <section class="legal-hero section-appear">
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="index.html">Accueil</a><span class="sep">/</span><span>Politique de confidentialité</span>
+      </nav>
+      <h1>Politique de confidentialité</h1>
+      <p class="subtitle">Comment nous collectons, utilisons et protégeons vos données personnelles.</p>
+      <div style="margin-top:12px;">
+        <span class="legal-badge">Mise à jour&nbsp;: 19 septembre 2025</span>
+      </div>
+    </section>
+
+    <div class="legal-shell">
+      <!-- Sommaire sticky (desktop) -->
+      <aside class="legal-toc" aria-label="Sommaire">
+        <h3>Sommaire</h3>
+        <ul>
+          <li><a href="#intro">1. Introduction</a></li>
+          <li><a href="#responsable">2. Responsable du traitement</a></li>
+          <li><a href="#donnees-finalites">3. Données collectées & finalités</a></li>
+          <li><a href="#base-legale">4. Base légale</a></li>
+          <li><a href="#conservation">5. Conservation</a></li>
+          <li><a href="#destinataires">6. Destinataires</a></li>
+          <li><a href="#securite">7. Sécurité</a></li>
+          <li><a href="#droits">8. Vos droits (RGPD)</a></li>
+          <li><a href="#reclamations">9. Réclamations</a></li>
+          <li><a href="#cookies">10. Cookies</a></li>
+          <li><a href="#contact">11. Contact</a></li>
+        </ul>
+      </aside>
+
+      <!-- Corps -->
+      <div class="legal-container">
+
+        <article class="legal-section section-appear" id="intro">
+          <div class="section-head">
+            <h2><span class="article-number">1</span>Introduction</h2><span class="rule"></span>
+          </div>
+          <p>
+            <strong>[Nom de votre entreprise]</strong> (ci-après « nous », « notre », « l’entreprise »), société spécialisée dans la vente
+            de céramiques en ligne, s’engage à protéger la confidentialité et la sécurité des données personnelles de ses clients
+            conformément au <strong>RGPD</strong> et à la loi Informatique et Libertés.
+          </p>
+        </article>
+
+        <article class="legal-section section-appear" id="responsable">
+          <div class="section-head">
+            <h2><span class="article-number">2</span>Responsable du traitement</h2><span class="rule"></span>
+          </div>
+          <p><strong>Responsable :</strong> [Nom de l’entreprise]</p>
+          <p><strong>Adresse :</strong> [Votre adresse]</p>
+          <p><strong>Email :</strong> [Votre email de contact]</p>
+          <p><strong>Téléphone :</strong> [Votre téléphone]</p>
+          <p><strong>Délégué à la protection des données (DPO) :</strong> [Email DPO si applicable]</p>
+        </article>
+
+        <article class="legal-section section-appear" id="donnees-finalites">
+          <div class="section-head">
+            <h2><span class="article-number">3</span>Données collectées & finalités</h2><span class="rule"></span>
+          </div>
+
+          <h3 class="small">3.1 Données collectées lors de la commande</h3>
+          <ul class="legal-list">
+            <li><strong>Données d’identité</strong> : nom, prénom, âge (si nécessaire)</li>
+            <li><strong>Données de contact</strong> : email, téléphone, adresse postale</li>
+            <li><strong>Données de paiement</strong> : informations bancaires (via prestataires sécurisés)</li>
+            <li><strong>Données de livraison</strong> : adresse de livraison, instructions spécifiques</li>
+          </ul>
+          <p class="notice notice--soft">
+            <strong>Finalités :</strong> traitement des commandes, facturation, livraison, service client, gestion des garanties.
+          </p>
+
+          <h3 class="small">3.2 Données de navigation</h3>
+          <ul class="legal-list">
+            <li><strong>Cookies techniques</strong> : fonctionnement du site, panier d’achat</li>
+            <li><strong>Cookies de performance</strong> : analyse de trafic (ex. Google Analytics)</li>
+            <li><strong>Données de connexion</strong> : IP, type de navigateur, pages visitées</li>
+          </ul>
+          <p class="notice notice--beige">
+            <strong>Finalités :</strong> amélioration de l’expérience, statistiques de fréquentation, sécurité.
+          </p>
+        </article>
+
+        <article class="legal-section section-appear" id="base-legale">
+          <div class="section-head">
+            <h2><span class="article-number">4</span>Base légale des traitements</h2><span class="rule"></span>
+          </div>
+          <ul class="legal-list">
+            <li><strong>Exécution du contrat</strong> : traitement des commandes, livraison</li>
+            <li><strong>Intérêt légitime</strong> : amélioration des services, sécurité, lutte contre la fraude</li>
+            <li><strong>Consentement</strong> : cookies non essentiels, newsletter marketing</li>
+            <li><strong>Obligation légale</strong> : conservation des factures, obligations fiscales</li>
+          </ul>
+        </article>
+
+        <article class="legal-section section-appear" id="conservation">
+          <div class="section-head">
+            <h2><span class="article-number">5</span>Durées de conservation</h2><span class="rule"></span>
+          </div>
+          <table class="legal-table" aria-label="Durées de conservation">
+            <thead><tr><th>Catégorie</th><th>Durée</th></tr></thead>
+            <tbody>
+              <tr><td>Données clients actifs</td><td>Durée de la relation commerciale + 3 ans</td></tr>
+              <tr><td>Données de facturation</td><td>10 ans (obligations comptables & fiscales)</td></tr>
+              <tr><td>Données de navigation</td><td>13 mois maximum</td></tr>
+              <tr><td>Données de prospection</td><td>3 ans à compter du dernier contact</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="legal-section section-appear" id="destinataires">
+          <div class="section-head">
+            <h2><span class="article-number">6</span>Destinataires des données</h2><span class="rule"></span>
+          </div>
+          <ul class="legal-list">
+            <li><strong>Prestataires de paiement</strong> : traitement sécurisé des transactions</li>
+            <li><strong>Transporteurs</strong> : livraison des commandes</li>
+            <li><strong>Prestataires techniques</strong> : hébergement, maintenance</li>
+            <li><strong>Autorités compétentes</strong> : en cas d’obligation légale</li>
+          </ul>
+        </article>
+
+        <article class="legal-section section-appear" id="securite">
+          <div class="section-head">
+            <h2><span class="article-number">7</span>Sécurité des données</h2><span class="rule"></span>
+          </div>
+          <ul class="legal-list">
+            <li>Chiffrement <strong>SSL</strong> pour les transactions</li>
+            <li>Accès <strong>restreint</strong> aux données personnelles</li>
+            <li>Sauvegardes <strong>régulières et sécurisées</strong></li>
+            <li>Formation du personnel à la protection des données</li>
+          </ul>
+        </article>
+
+        <article class="legal-section section-appear" id="droits">
+          <div class="section-head">
+            <h2><span class="article-number">8</span>Vos droits (RGPD)</h2><span class="rule"></span>
+          </div>
+          <div class="legal-accordion">
+            <details>
+              <summary>Droits disponibles</summary>
+              <div class="accordion-body">
+                <ul class="legal-list">
+                  <li><strong>Accès</strong> : obtenir une copie de vos données</li>
+                  <li><strong>Rectification</strong> : corriger des données inexactes</li>
+                  <li><strong>Effacement</strong> : supprimer vos données (sous conditions)</li>
+                  <li><strong>Portabilité</strong> : recevoir vos données dans un format lisible</li>
+                  <li><strong>Opposition</strong> : vous opposer à certains traitements</li>
+                  <li><strong>Limitation</strong> : restreindre temporairement un traitement</li>
+                </ul>
+              </div>
+            </details>
+            <details>
+              <summary>Exercer vos droits</summary>
+              <div class="accordion-body">
+                <p>
+                  Contactez-nous à <a href="mailto:[email]">[email]</a> avec une pièce d’identité.
+                  Délai de réponse&nbsp;: <strong>1 mois</strong> maximum.
+                </p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="legal-section section-appear" id="reclamations">
+          <div class="section-head">
+            <h2><span class="article-number">9</span>Réclamations</h2><span class="rule"></span>
+          </div>
+          <p>
+            En cas de litige, vous pouvez saisir la <strong>CNIL</strong> : <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>
+            ou par courrier (3 Place de Fontenoy - TSA 80715 - 75334 PARIS CEDEX 07).
+          </p>
+        </article>
+
+        <article class="legal-section section-appear" id="cookies">
+          <div class="section-head">
+            <h2><span class="article-number">10</span>Cookies</h2><span class="rule"></span>
+          </div>
+          <p>
+            Nous utilisons des cookies pour le fonctionnement et l’amélioration du site. Vous pouvez les paramétrer via notre
+            bandeau cookies ou les réglages de votre navigateur.
+          </p>
+          <table class="legal-table" aria-label="Types de cookies">
+            <thead><tr><th>Type</th><th>Exemples</th><th>Finalité</th><th>Durée</th></tr></thead>
+            <tbody>
+              <tr><td>Essentiels</td><td>Panier, session</td><td>Fonctionnement du site</td><td>Session</td></tr>
+              <tr><td>Performance</td><td>Analytics</td><td>Mesure d’audience</td><td>13 mois max</td></tr>
+              <tr><td>Marketing</td><td>UTM, ads</td><td>Personnalisation / campagnes</td><td>Selon partenaire</td></tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="legal-section section-appear" id="contact">
+          <div class="section-head">
+            <h2><span class="article-number">11</span>Contact</h2><span class="rule"></span>
+          </div>
+          <p>
+            Service données personnelles : <a href="mailto:[email]">[email]</a> — Lun-Ven, 9h-17h.
+          </p>
+        </article>
+
+        <div class="legal-divider"></div>
+        <p class="small" style="opacity:.8">© 2025 Céracotta – Tous droits réservés.</p>
+      </div>
+    </div>
+
+    <!-- Bouton retour haut -->
+    <button class="legal-back-to-top" id="backToTop" aria-label="Retour en haut" title="Retour en haut">↑</button>
+  </main>
+
+  <!-- FOOTER global -->
+  <footer>
+    <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions légales</a>
+      <a href="cvg.html">Conditions générales</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+       <a href="retours.html">Retours & remboursement</a>
+    </div>
+  </footer>
+
+  <!-- JS minimal pour le bouton top -->
+  <script type="module">
+    const topBtn = document.getElementById('backToTop');
+    const onScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      topBtn.classList.toggle('show', y > 400);
+    };
+    window.addEventListener('scroll', onScroll, { passive:true });
+    topBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+  </script>
+  <script type="module" src="/js/boot.js"></script>
+
+
+    <!-- SIDE PANELS -->
+  <div id="panel-compte" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Mon compte</h2>
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Votre email">
+      <label>Mot de passe</label>
+      <input type="password" placeholder="Votre mot de passe">
+      <button type="submit">Connexion</button>
+      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
+    </form>
+  </div>
+  <div id="panel-favoris" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Vos favoris</h2>
+    <p>Aucun favori pour le moment.</p>
+  </div>
+  <div id="panel-panier" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Votre panier</h2>
+    <p>Votre panier est vide.</p>
+  </div>
+</body>
+</html>
