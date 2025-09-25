@@ -35,6 +35,8 @@ const titleEl   = $('.product-details h1');
 const priceEl   = $('.product-details .price');
 const descEl    = $('.product-details .description');
 const colorWrap = $('.product-details .color-options');
+const sizeWrap  = $('.product-details .sizes');
+const sizeOpts  = $('.product-details .size-options');
 const addBtn    = $('.product-details .add-to-cart');
 const favBtn    = $('.product-details .fav-toggle');
 const favHeart  = $('.product-details .fav-toggle .heart');
@@ -43,49 +45,61 @@ const detailsP  = document.querySelector('.accordion-section details:nth-of-type
 const careP     = document.querySelector('.accordion-section details:nth-of-type(2) > p');
 const shippingP = document.querySelector('.accordion-section details:nth-of-type(3) > p');
 
+let currentVariant = null;
+
 async function init(){
   try{
-    // 1) produit
-    const p = await getProductBySlug(slug); // grâce à l’API corrigée, p est l’objet produit direct
+    const p = await getProductBySlug(slug);
     if (!p) throw new Error('Produit introuvable');
 
-    // 2) texte
     titleEl.textContent = p.title || '';
     priceEl.textContent = CHF(p.price);
     descEl.textContent  = p.description || '';
-
-    // 3) couleurs
     colorWrap.innerHTML = renderColorDots(p.colors || []);
 
-    // 4) images
-    const imgs = Array.isArray(p.images) ? p.images.slice().sort((a,b)=>{
-      const pa = typeof a==='string'?0:(a.position??0);
-      const pb = typeof b==='string'?0:(b.position??0);
-      return pa-pb;
-    }) : [];
-    const getUrl = (item) => typeof item==='string' ? item : item.url;
-
+    const imgs = (p.images || []);
     if (imgs.length){
-      mainImg.src = getUrl(imgs[0]);
+      mainImg.src = imgs[0];
       mainImg.alt = p.title || '';
-      thumbsWrap.innerHTML = imgs.map(it=>`<img class="thumbnail" src="${getUrl(it)}" alt="${p.title||''}">`).join('');
+      thumbsWrap.innerHTML = imgs.map(it=>`<img class="thumbnail" src="${it}" alt="${p.title||''}">`).join('');
       thumbsWrap.addEventListener('click', e=>{
         const t = e.target;
-        if (t && t.classList.contains('thumbnail')) mainImg.src = t.getAttribute('src');
+        if (t && t.classList.contains('thumbnail')) {
+          mainImg.src = t.getAttribute('src');
+        }
       });
     } else {
-      // ⚠️ pas de placeholder inexistant -> on met une image présente
       mainImg.src = '/images/bols.png';
       mainImg.alt = p.title || '';
-      thumbsWrap.innerHTML = '';
     }
 
-    // 5) accordéons
     if (detailsP)  detailsP.innerHTML  = renderMultilineToHTML(p.pieceDetail);
     if (careP)     careP.innerHTML     = renderMultilineToHTML(p.careAdvice);
     if (shippingP) shippingP.innerHTML = renderMultilineToHTML(p.shippingReturn);
 
-    // 6) favoris (ton state attend un slug, pas un objet)
+    // --- variantes / tailles ---
+    if (p.variants && p.variants.length) {
+      sizeWrap.style.display = 'block';
+      sizeOpts.innerHTML = '';
+      p.variants.forEach((v,i)=>{
+        const btn = document.createElement('button');
+        btn.className = 'size-option';
+        btn.textContent = v.size || `Taille ${i+1}`;
+        btn.addEventListener('click', ()=>{
+          sizeOpts.querySelectorAll('.size-option').forEach(b=>b.classList.remove('selected'));
+          btn.classList.add('selected');
+          currentVariant = v;
+          priceEl.textContent = CHF(v.price ?? p.price);
+          if (imgs[i]) mainImg.src = imgs[i];
+        });
+        sizeOpts.appendChild(btn);
+      });
+      sizeOpts.querySelector('.size-option')?.click();
+    } else {
+      sizeWrap.style.display = 'none';
+    }
+
+    // favoris
     try{
       if (isFavorite && isFavorite(p.slug)) { favHeart.textContent = '❤'; favBtn?.classList.add('active'); }
     }catch{}
@@ -98,37 +112,28 @@ async function init(){
       }catch{}
     });
 
-    // 7) panier
-// ...
-addBtn?.addEventListener('click', async () => {
-  try {
-    // n'essaie plus de caster en Number
-    const productId = p?.id ?? p?._id ?? p?.productId;
-    if (!productId) {
-      console.error('Produit reçu:', p);
-      throw new Error('ID produit introuvable dans la réponse du serveur.');
-    }
+    // panier
+    addBtn?.addEventListener('click', async () => {
+      try {
+        const productId = p?.id;
+        if (!productId) throw new Error('ID produit introuvable.');
 
-    await addToCart({
-      productId: p.id,          // <-- string OU number, on l’envoie tel quel
-      quantity: 1,
-      // facultatif pour l’UI :
-      title: p.title,
-      unitPrice: p.price,
-      id: p.id ?? p._id,
-      slug: p.slug,
-      image: (Array.isArray(p.images) && p.images[0]) 
-               ? (typeof p.images[0] === 'string' ? p.images[0] : p.images[0].url)
-               : null
+        await addToCart({
+          productId,
+          quantity: 1,
+          variantId: currentVariant?.id || null,
+          title: p.title,
+          unitPrice: currentVariant?.price ?? p.price,
+          slug: p.slug,
+          image: imgs[0] || null
+        });
+
+        showToast && showToast('Ajouté au panier');
+      } catch (e) {
+        console.error(e);
+        alert(e?.message || 'Impossible d’ajouter au panier.');
+      }
     });
-
-    showToast && showToast('Ajouté au panier');
-  } catch (e) {
-    console.error(e);
-    alert(e?.message || 'Impossible d’ajouter au panier.');
-  }
-});
-
 
   }catch(err){
     console.error(err);

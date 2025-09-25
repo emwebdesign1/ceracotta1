@@ -15,6 +15,12 @@ form?.addEventListener('submit', async (e) => {
   const password  = (fd.get('password')  || '').trim();
   const confirm   = (fd.get('passwordConfirm') || '').trim();
 
+  const addressLine1 = (fd.get('addressLine1') || '').trim();
+  const addressLine2 = (fd.get('addressLine2') || '').trim();
+  const postalCode   = (fd.get('postalCode')   || '').trim();
+  const city         = (fd.get('city')         || '').trim();
+  const country      = (fd.get('country')      || '').trim();
+
   // Validations front
   if (!firstName || !lastName) return msg('Prénom et nom requis.');
   if (!username || username.length < 3) return msg('Nom d’utilisateur ≥ 3 caractères.');
@@ -23,13 +29,20 @@ form?.addEventListener('submit', async (e) => {
   if (password.length < 8) return msg('Mot de passe trop court (≥ 8).');
   if (password !== confirm) return msg('Les mots de passe ne correspondent pas.');
 
-  const payload = { firstName, lastName, username, phone, email, password };
+  if (!addressLine1) return msg('Adresse (ligne 1) requise.');
+  if (!postalCode)   return msg('Code postal requis.');
+  if (!city)         return msg('Ville requise.');
+  if (!country)      return msg('Pays requis.');
+
+  const payload = {
+    firstName, lastName, username, phone, email, password,
+    addressLine1, addressLine2, postalCode, city, country
+  };
 
   try {
     msg('Création du compte…');
     const res = await register(payload); // { user, token }
     if (res?.user && res?.token) {
-      // setAuth est déjà appelé dans api.register ; ici on redirige juste
       msg('Compte créé ✓');
       location.href = '/account.html';
     } else {

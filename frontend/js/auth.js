@@ -6,11 +6,9 @@ export function mountAuthPanel() {
   const root = document.getElementById('panel-compte');
   if (!root) return;
 
-  // On cible le <form> déjà présent dans index.html
   const form = root.querySelector('form');
   if (!form) return;
 
-  // On ajoute une zone de message si elle n'existe pas
   let msgEl = form.querySelector('.msg');
   if (!msgEl) {
     msgEl = document.createElement('div');
@@ -18,7 +16,6 @@ export function mountAuthPanel() {
     form.appendChild(msgEl);
   }
 
-  // Récupère les inputs
   const emailEl = form.querySelector('input[type="email"], input[name="email"]');
   const passEl  = form.querySelector('input[type="password"], input[name="password"]');
   const submit  = form.querySelector('button[type="submit"], button');
@@ -34,45 +31,41 @@ export function mountAuthPanel() {
     }
   };
 
-  // Handler login
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = (emailEl?.value || '').trim();
     const password = (passEl?.value || '').trim();
-
-    if (!email || !password) {
-      setMsg('Email et mot de passe requis.');
-      return;
-    }
+    if (!email || !password) return setMsg('Email et mot de passe requis.');
 
     disable(true);
     setMsg('Connexion…', true);
 
     try {
-      const res = await login({ email, password }); // passe par api.js → setAuth(token.v1)
-      if (res?.user && res?.token) {
+      const res = await login({ email, password }); // { user, token }
+      const user = res?.user;
+      if (user && res?.token) {
+        // Enregistre un displayName pour le header
+        const displayName = user.username || user.firstName || user.email || 'Mon compte';
+        localStorage.setItem('user.displayName', displayName);
+        localStorage.setItem('user.role', user.role || 'user');
+
         setMsg('Connecté ✔', true);
-        // ferme le panel et rafraîchit l’UI
-        const overlay = document.getElementById('overlay');
-        root.classList.remove('active');
-        overlay?.classList.remove('active');
-        location.reload();
-      } else {
-        // Message backend si fourni, sinon fallback
-        const m = res?.message || 'Identifiants incorrects';
-        if (/incorrect/i.test(m) || /invalid/i.test(m) || /mot de passe/i.test(m)) {
-          setMsg('Mot de passe incorrect.');
+
+        // Redirection selon le rôle
+        if ((user.role || '').toLowerCase() === 'admin') {
+          location.href = '/admin.html';
         } else {
-          setMsg(m);
+          location.href = '/account.html';
         }
+      } else {
+        const m = res?.message || 'Identifiants incorrects';
+        if (/incorrect|invalid|mot de passe/i.test(m)) setMsg('Mot de passe incorrect.');
+        else setMsg(m);
       }
     } catch (err) {
       const m = err?.message || 'Erreur de connexion.';
-      if (/incorrect/i.test(m) || /invalid/i.test(m) || /mot de passe/i.test(m)) {
-        setMsg('Mot de passe incorrect.');
-      } else {
-        setMsg(m);
-      }
+      if (/incorrect|invalid|mot de passe/i.test(m)) setMsg('Mot de passe incorrect.');
+      else setMsg(m);
     } finally {
       disable(false);
     }

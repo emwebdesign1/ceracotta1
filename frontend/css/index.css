@@ -916,3 +916,15 @@ footer {
 #panel-favoris .btn.danger{ background:#b00020; color:#fff; border:1px solid transparent; }
 #panel-favoris .fav-empty{ text-align:center; color:#6a6157; padding:16px 0; }
 
+/* Style du nom utilisateur (admin, prénom, etc.) */
+.user-link {
+  color: #7f0000;        /* ton bordeaux */
+  font-weight: 700;      /* un peu marqué */
+  margin-left: 10px;     /* espace après l’icône compte */
+  text-decoration: none; /* pas de soulignement */
+  display: inline-flex;  /* aligné avec les icônes */
+  align-items: center;
+}
+.user-link:hover {
+  color: #5a0000;        /* légèrement plus foncé au hover */
+}

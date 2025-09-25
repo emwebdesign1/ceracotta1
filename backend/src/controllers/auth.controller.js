@@ -6,15 +6,22 @@ import { z } from 'zod';
 
 const registerSchema = z.object({
   firstName: z.string().min(1, 'Prénom requis'),
-  lastName:  z.string().min(1, 'Nom requis'),
-  username:  z.string().min(3, 'Nom d’utilisateur trop court').max(32),
-  phone:     z.string().min(6, 'Téléphone invalide').max(32),
-  email:     z.string().email('Email invalide'),
-  password:  z.string().min(8, 'Mot de passe trop court (≥ 8)'),
+  lastName: z.string().min(1, 'Nom requis'),
+  username: z.string().min(3, 'Nom d’utilisateur trop court').max(32),
+  phone: z.string().min(6, 'Téléphone invalide').max(32),
+  email: z.string().email('Email invalide'),
+  password: z.string().min(8, 'Mot de passe trop court (≥ 8)'),
+
+  // ✅ nouveaux champs adresse
+  addressLine1: z.string().min(1, 'Adresse requise'),
+  addressLine2: z.string().optional(),
+  postalCode: z.string().min(1, 'Code postal requis'),
+  city: z.string().min(1, 'Ville requise'),
+  country: z.string().min(1, 'Pays requis'),
 });
 
 const loginSchema = z.object({
-  email:    z.string().email('Email invalide'),
+  email: z.string().email('Email invalide'),
   password: z.string().min(1, 'Mot de passe requis'),
 });
 
@@ -33,20 +40,27 @@ export async function register(req, res) {
       prisma.user.findUnique({ where: { email: data.email } }),
       prisma.user.findUnique({ where: { username: data.username } }),
     ]);
-    if (byEmail)    return res.status(400).json({ message: 'Email déjà utilisé' });
+    if (byEmail) return res.status(400).json({ message: 'Email déjà utilisé' });
     if (byUsername) return res.status(400).json({ message: 'Nom d’utilisateur déjà pris' });
 
     const hash = await bcrypt.hash(data.password, 10);
 
     const user = await prisma.user.create({
       data: {
-        email:       data.email,
-        passwordHash: hash,                  // ← stocke dans passwordHash
-        firstName:   data.firstName,
-        lastName:    data.lastName,
-        username:    data.username,
-        phone:       data.phone,
-        role:        'CUSTOMER',
+        email: data.email,
+        passwordHash: hash,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.username,
+        phone: data.phone,
+        role: 'CUSTOMER',
+
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2 || null,
+        zip: data.postalCode,   // ✅ mappe postalCode → zip
+        city: data.city,
+        country: data.country,
+
       },
     });
 
@@ -64,7 +78,6 @@ export async function login(req, res) {
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(400).json({ message: 'Identifiants incorrects' });
 
-    // ⚠️ corrige: compare avec user.passwordHash
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return res.status(400).json({ message: 'Identifiants incorrects' });
 
@@ -76,7 +89,6 @@ export async function login(req, res) {
 }
 
 export async function me(req, res) {
-  // recharge l’utilisateur depuis l’ID contenu dans le JWT (mis par le middleware)
   const userId = req.user?.id || req.userId;
   if (!userId) return res.status(401).json({ message: 'Non authentifié' });
 

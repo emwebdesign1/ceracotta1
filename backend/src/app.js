@@ -2,13 +2,15 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+
 import routes from './routes/index.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,9 +65,14 @@ app.get('/', (_req, res) => res.sendFile(path.join(FRONT_DIR, 'index.html')));
 
 /* ---------------- API ---------------- */
 app.use('/api', routes);
+app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
+
+// 👉 Alias: tout ce qui est sous /uploads sera aussi visible sous /images
+app.use('/images',  express.static(path.join(process.cwd(), 'public', 'uploads')));
 
 /* ---------------- 404 JSON ---------------- */
 app.use((req, res, next) => next({ status: 404, message: 'Not Found' }));
+
 
 /* ---------------- Gestion d'erreurs ---------------- */
 app.use(errorHandler);

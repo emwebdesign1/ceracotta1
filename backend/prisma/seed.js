@@ -9,6 +9,14 @@ async function main() {
     create: { name: 'Vases', slug: 'vases' }
   });
 
+  // prisma/seed.js
+const vaisselleCat = await prisma.category.upsert({
+  where: { slug: 'vaisselle' },
+  update: {},
+  create: { name: 'Vaisselle', slug: 'vaisselle' }
+});
+
+
   const products = [
     {
       slug: "vase-cosmo",
@@ -84,7 +92,7 @@ async function main() {
       colors: ["#ffffff"],
       images: [
         "/images/vase-terralumiere1.jpg",
-        "/images/vases/terralumiere2.jpg"
+
       ],
       pieceDetail: [
         "Pièce façonnée à la main (2 pièces détachées)",
@@ -118,9 +126,9 @@ async function main() {
       ],
       colors: ["#dcdcdc", "#333333", "#a0522d"],
       images: [
-        "/images/vases/abla-1.jpg",
-        "/images/vases/abla-2.jpg",
-        "/images/vases/abla-3.jpg"
+        "/images/abla-1.jpg",
+        "/images/abla-2.jpg",
+        "/images/abla-3.jpg"
       ],
       pieceDetail: [
         "Pièce façonnée à la main avec motifs rayés appliqués individuellement",
@@ -154,9 +162,9 @@ async function main() {
       ],
       colors: ["#ffffff"],
       images: [
-        "/images/vases/blancheneige-tall.jpg",
-        "/images/vases/blancheneige-medium.jpg",
-        "/images/vases/blancheneige-short.jpg"
+        "/images/blancheneige-1.jpg",
+        "/images/blancheneige-2.jpg",
+        "/images/blancheneige-3.jpg"
       ],
       pieceDetail: [
         "Pièce façonnée à la main avec texture naturelle unique",

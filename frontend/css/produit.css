@@ -562,3 +562,23 @@ details > p {
   background:#fff; color:#7f0000; font-family: 'Urbanist', sans-serif; cursor:pointer;
 }
 .size-option.selected { background:#7f0000; color:#fff; }
+
+.size-option {
+  padding: 6px 14px;
+  border: 1.5px solid #7f0000;
+  border-radius: 999px;
+  background: #fff;
+  color: #7f0000;
+  font-family: 'Urbanist', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.size-option:hover {
+  background: #f4f1ec;
+}
+
+.size-option.selected {
+  background: #7f0000;
+  color: #fff;
+}

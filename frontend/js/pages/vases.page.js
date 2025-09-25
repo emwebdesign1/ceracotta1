@@ -17,8 +17,10 @@ function render(itemsToAdd) {
       <h3 class="product-title">${product.title}</h3>
       <p class="product-price">CHF ${(product.price / 100).toFixed(2)}</p>
       <div class="color-dots">
-        ${(product.variants || []).slice(0, 3).map(v => `<span class="dot" style="background:${v.color || '#ccc'}"></span>`).join('')}
-        ${product.variants?.length > 3 ? `<span class="dot more-dot">+${product.variants.length - 3}</span>` : ''}
+        ${(product.colors || []).slice(0, 3).map(c => `
+          <span class="dot" style="background:${c}"></span>
+        `).join('')}
+        ${product.colors?.length > 3 ? `<span class="dot more-dot">+${product.colors.length - 3}</span>` : ''}
       </div>
     `;
     grid.appendChild(card);

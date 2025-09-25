@@ -17,9 +17,7 @@
   <header>
     <div class="header-left">
       <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </div>
     </div>
     <div class="header-center">
@@ -30,8 +28,7 @@
     <div class="header-right">
       <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path
-            d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z" />
+          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z" />
         </svg>
       </a>
       <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
@@ -45,26 +42,12 @@
       </a>
       <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path
-            d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
+          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
         </svg>
       </a>
     </div>
-    <nav id="side-menu" aria-label="Navigation principale">
-      <ul>
-        <li><a href="#">Accueil</a></li>
-        <li class="dropdown">
-          <a href="#" id="collections-link">Collections</a>
-          <ul class="dropdown-list">
-            <li><a href="vaisselle.html">Vaisselle</a></li>
-            <li><a href="vases.html">Vases</a></li>
-          </ul>
-        </li>
-        <li><a href="apropos.html">À propos</a></li>
-      </ul>
-    </nav>
-    <div class="overlay" id="overlay"></div>
   </header>
+
   <main class="auth-wrap">
     <section class="auth-card">
       <h1>Créer un compte</h1>
@@ -100,6 +83,28 @@
           <input type="password" name="passwordConfirm" minlength="8" required>
         </label>
 
+        <!-- ✅ Bloc Adresse -->
+        <h2 class="form-subtitle">Adresse</h2>
+        <div class="grid-2">
+          <label>Adresse (ligne 1)
+            <input name="addressLine1" required autocomplete="address-line1" />
+          </label>
+          <label>Complément (ligne 2)
+            <input name="addressLine2" autocomplete="address-line2" />
+          </label>
+        </div>
+        <div class="grid-3">
+          <label>NPA / Code postal
+            <input name="postalCode" required inputmode="numeric" />
+          </label>
+          <label>Ville
+            <input name="city" required autocomplete="address-level2" />
+          </label>
+          <label>Pays
+            <input name="country" required value="Suisse" autocomplete="country-name" />
+          </label>
+        </div>
+
         <label class="check">
           <input type="checkbox" name="newsletter">
           S’abonner à la newsletter
@@ -109,48 +114,21 @@
         <p id="reg-msg" class="form-msg" aria-live="polite"></p>
       </form>
 
-      <p class="alt">Déjà inscrit ? <a href="/index.html" class="link">Se connecter</a></p>
+      <p class="alt">Déjà inscrit ? <a href="/index.html#login" class="link">Se connecter</a></p>
     </section>
   </main>
 
   <script type="module" src="/js/boot.js"></script>
   <script type="module" src="/js/pages/register.page.js"></script>
 
-   <footer>
+  <footer>
     <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
     <div class="footer-links">
       <a href="mentions.html">Mentions légales</a>
       <a href="conditions.html">Conditions générales</a>
       <a href="confidentialite.html">Politique de confidentialité</a>
-       <a href="retours.html">Retours & remboursement</a>
+      <a href="retours.html">Retours & remboursement</a>
     </div>
   </footer>
-
-
-    <!-- SIDE PANELS -->
-  <div id="panel-compte" class="side-panel">
-    <button class="close-btn">&times;</button>
-    <h2>Mon compte</h2>
-    <form>
-      <label>Email</label>
-      <input type="email" placeholder="Votre email">
-      <label>Mot de passe</label>
-      <input type="password" placeholder="Votre mot de passe">
-      <button type="submit">Connexion</button>
-      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
-    </form>
-  </div>
-  <div id="panel-favoris" class="side-panel">
-    <button class="close-btn">&times;</button>
-    <h2>Vos favoris</h2>
-    <p>Aucun favori pour le moment.</p>
-  </div>
-  <div id="panel-panier" class="side-panel">
-    <button class="close-btn">&times;</button>
-    <h2>Votre panier</h2>
-    <p>Votre panier est vide.</p>
-  </div>
 </body>
-
-
 </html>

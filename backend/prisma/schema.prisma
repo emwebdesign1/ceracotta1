@@ -33,24 +33,27 @@ enum PaymentProvider {
 
 // ========= Modèles =========
 model User {
-  id           String   @id @default(cuid())
+  id           String   @id @default(cuid())        // ← String au lieu de Int
   email        String   @unique
   passwordHash String
-  role         Role     @default(CUSTOMER)
   firstName    String?
   lastName     String?
   username     String?  @unique
   phone        String?
+  role         String   @default("CUSTOMER")
+
+  // Adresse
   addressLine1 String?
   addressLine2 String?
   zip          String?
   city         String?
   country      String?
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  cart   Cart?
-  orders Order[]
+  cart         Cart?
+  orders       Order[]
 
   @@index([email])
 }
@@ -62,7 +65,6 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // back-relation OK
   products Product[]
 }
 
@@ -74,15 +76,14 @@ model Product {
   title       String
   slug        String  @unique
   description String? @db.MediumText
-  price       Int // centimes
+  price       Int
 
-  // ❗️NOUVEAU : relation vers Category
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   stock          Int     @default(0)
-  pieceDetail    String? @db.MediumText   // <<— change ici
-  careAdvice     String? @db.MediumText   // <<— et ici
+  pieceDetail    String? @db.MediumText
+  careAdvice     String? @db.MediumText
   shippingReturn String? @db.MediumText
 
   images   ProductImage[]
@@ -133,7 +134,7 @@ model Variant {
 
 model Cart {
   id        String     @id @default(cuid())
-  userId    String     @unique
+  userId    String     @unique                 // ← String
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     CartItem[]
   createdAt DateTime   @default(now())
@@ -144,7 +145,7 @@ model CartItem {
   id        String  @id @default(cuid())
   cartId    String
   productId String
-  variantId String? // 🔥 variante choisie
+  variantId String?
 
   title     String
   unitPrice Int
@@ -162,7 +163,7 @@ model CartItem {
 
 model Order {
   id              String          @id @default(cuid())
-  userId          String?
+  userId          String?                               // ← String?
   amount          Int
   currency        String          @default("CHF")
   status          OrderStatus     @default(PENDING)
@@ -185,7 +186,7 @@ model OrderItem {
   id        String  @id @default(cuid())
   orderId   String
   productId String
-  variantId String? // 🔥 variante choisie
+  variantId String?
 
   title     String
   unitPrice Int

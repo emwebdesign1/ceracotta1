@@ -1,17 +1,15 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Admin – Céracotta</title>
-  <link rel="stylesheet" href="/css/index.css"/>
-  <link rel="stylesheet" href="/css/admin.css"/>
-  <!-- (optionnel) séparer ce bloc dans /css/admin.css -->
- 
 
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin – Céracotta</title>
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/admin.css" />
 </head>
+
 <body class="page-admin">
-  <!-- Header public (identique au site) -->
   <header>
     <div class="header-left">
       <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
@@ -25,7 +23,6 @@
         <img src="images/logo.png" alt="Logo Céracotta" class="logo-image" />
       </a>
     </div>
-
     <div class="header-right">
       <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
@@ -65,8 +62,7 @@
     <div class="overlay" id="overlay"></div>
   </header>
 
-
-  <!-- Shell admin : menu + contenu -->
+  <!-- Shell admin -->
   <main class="ad-shell">
     <!-- Menu admin -->
     <aside class="ad-menu">
@@ -81,7 +77,7 @@
     <section class="ad-content">
       <div id="msg" class="muted"></div>
 
-      <!-- ====== Commandes ====== -->
+      <!-- ===== Commandes ===== -->
       <section class="card view" id="view-orders">
         <div class="toolbar">
           <h2>Toutes les commandes</h2>
@@ -102,12 +98,12 @@
         </table>
       </section>
 
-      <!-- ====== Produits (CRUD) ====== -->
+      <!-- ===== Produits ===== -->
       <section class="card view" id="view-products" hidden>
         <div class="toolbar">
           <h2>Produits</h2>
           <div class="search">
-            <input id="prodSearch" type="search" placeholder="Rechercher un produit…"/>
+            <input id="prodSearch" type="search" placeholder="Rechercher un produit…" />
             <button id="prodRefresh" class="btn">Rafraîchir</button>
           </div>
         </div>
@@ -126,36 +122,45 @@
           <tbody></tbody>
         </table>
 
-        <hr style="border:none; border-top:1px solid #efeae2; margin:12px 0"/>
+        <hr class="sep" />
 
+        <!-- Formulaire produit -->
         <form id="productForm" class="grid">
-          <input type="hidden" id="prodId"/>
-          <label>
-            Titre
-            <input id="prodTitle" required />
-          </label>
-          <label>
-            Slug
-            <input id="prodSlug" required />
-          </label>
-          <label>
-            Prix (centimes)
-            <input id="prodPrice" type="number" min="0" step="1" required />
-          </label>
-          <label>
-            Stock
-            <input id="prodStock" type="number" min="0" step="1" required />
-          </label>
-          <label>
-            Catégorie
+          <input type="hidden" id="prodId" />
+          <label>Titre<input id="prodTitle" required /></label>
+          <label>Slug<input id="prodSlug" required /></label>
+          <label>Prix (centimes)<input id="prodPrice" type="number" min="0" step="1" required /></label>
+          <label>Stock<input id="prodStock" type="number" min="0" step="1" required /></label>
+          <label>Catégorie
             <select id="prodCategory">
               <option value="vaisselle">Vaisselle</option>
               <option value="vases">Vases</option>
             </select>
           </label>
-          <label class="full">
-            Description
-            <textarea id="prodDesc" rows="3"></textarea>
+          <label class="full">Description<textarea id="prodDesc" rows="3"></textarea></label>
+          <label class="full">Couleurs (HEX, séparées par des virgules)
+            <input id="prodColors" placeholder="#7f0000,#f4f1ec,#000000" />
+          </label>
+          <div id="prodColorsDots" style="display:flex;gap:8px;margin:.25rem 0 .75rem"></div>
+
+          <label class="full">Votre pièce en détail
+            <textarea id="prodPieceDetail" rows="5"
+              placeholder="Une ligne par caractéristique (sera stocké en texte multi-ligne)"></textarea>
+          </label>
+
+          <label class="full">Conseils d’entretien
+            <textarea id="prodCare" rows="4" placeholder="Une ligne par conseil"></textarea>
+          </label>
+
+          <label class="full">Livraison & retours
+            <textarea id="prodShipping" rows="4" placeholder="Ex: Délais, emballage, politique de retour"></textarea>
+          </label>
+
+          <label class="full">Fichiers (images/vidéos)
+            <input type="file" id="prodFiles" name="files" multiple accept="image/*,video/*" />
+            <div id="prodImagesPreview" class="thumbs" style="display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0;">
+            </div>
+
           </label>
           <div class="actions">
             <button type="button" id="prodReset" class="btn">Réinitialiser</button>
@@ -164,16 +169,15 @@
         </form>
       </section>
 
-      <!-- ====== Utilisateurs (CRUD léger) ====== -->
+      <!-- ===== Utilisateurs ===== -->
       <section class="card view" id="view-users" hidden>
         <div class="toolbar">
           <h2>Utilisateurs</h2>
           <div class="search">
-            <input id="userSearch" type="search" placeholder="Rechercher un utilisateur…"/>
+            <input id="userSearch" type="search" placeholder="Rechercher un utilisateur…" />
             <button id="userRefresh" class="btn">Rafraîchir</button>
           </div>
         </div>
-
         <table id="usersTable" class="table">
           <thead>
             <tr>
@@ -189,43 +193,17 @@
         </table>
       </section>
 
-      <!-- ====== Paramètres (placeholder) ====== -->
+      <!-- ===== Paramètres ===== -->
       <section class="card view" id="view-settings" hidden>
         <h2>Paramètres</h2>
-        <p class="muted">Paramètres généraux de l’admin. (Section à compléter selon besoins.)</p>
+        <p class="muted">Paramètres généraux de l’admin (à compléter).</p>
       </section>
     </section>
-    
   </main>
 
   <!-- JS -->
   <script type="module" src="/js/pages/admin.page.js"></script>
-  <!-- Bouton flottant Déconnexion -->
-<button id="logoutBtn" class="fab-logout" type="button" title="Se déconnecter">Déconnexion</button>
-
-  <!-- SIDE PANELS -->
-  <div id="panel-compte" class="side-panel">
-    <button class="close-btn">&times;</button>
-    <h2>Mon compte</h2>
-    <form>
-      <label>Email</label>
-      <input type="email" placeholder="Votre email">
-      <label>Mot de passe</label>
-      <input type="password" placeholder="Votre mot de passe">
-      <button type="submit">Connexion</button>
-      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
-    </form>
-  </div>
-  <div id="panel-favoris" class="side-panel">
-    <button class="close-btn">&times;</button>
-    <h2>Vos favoris</h2>
-    <p>Aucun favori pour le moment.</p>
-  </div>
-  <div id="panel-panier" class="side-panel">
-    <button class="close-btn">&times;</button>
-    <h2>Votre panier</h2>
-    <p>Votre panier est vide.</p>
-  </div>
- 
+  <button id="logoutBtn" class="fab-logout" type="button">Déconnexion</button>
 </body>
+
 </html>
