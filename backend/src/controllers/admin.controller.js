@@ -9,7 +9,8 @@ export const adminCreateProduct = async (req, res, next) => {
     const {
       title, slug, description,
       pieceDetail, careAdvice, shippingReturn,
-      price, stock, categorySlug
+      price, stock, categorySlug,
+      colors = [] // ← NEW
     } = req.body;
 
     const category = categorySlug
@@ -26,8 +27,13 @@ export const adminCreateProduct = async (req, res, next) => {
         shippingReturn: shippingReturn || null,
         price: Number(price),
         stock: Number(stock),
-        ...(category ? { category: { connect: { id: category.id } } } : {})
-      }
+        ...(category ? { category: { connect: { id: category.id } } } : {}),
+        // ← NEW: créer les couleurs si fournies
+        colors: Array.isArray(colors) && colors.length
+          ? { create: colors.map((hex) => ({ hex })) }
+          : undefined
+      },
+      include: { colors: true } // utile pour le retour immédiat
     });
 
     res.status(201).json(p);
@@ -40,6 +46,7 @@ export const adminUpdateProduct = async (req, res, next) => {
     const { id } = req.params;
     const {
       categorySlug, price, stock,
+      colors,               // ← NEW
       ...data
     } = req.body;
 
@@ -50,10 +57,28 @@ export const adminUpdateProduct = async (req, res, next) => {
     if (price != null) data.price = Number(price);
     if (stock != null) data.stock = Number(stock);
 
-    const p = await prisma.product.update({ where: { id }, data });
+    // 1) Update des champs simples
+    const base = await prisma.product.update({ where: { id }, data });
+
+    // 2) Si colors fourni : on remplace l’ensemble
+    if (Array.isArray(colors)) {
+      await prisma.productColor.deleteMany({ where: { productId: id } });
+      if (colors.length) {
+        await prisma.productColor.createMany({
+          data: colors.map((hex) => ({ productId: id, hex }))
+        });
+      }
+    }
+
+    // 3) Retour complet (avec couleurs)
+    const p = await prisma.product.findUnique({
+      where: { id },
+      include: { colors: true }
+    });
     res.json(p);
   } catch (e) { next(e); }
 };
+
 
 // DELETE (id = string CUID)
 export const adminDeleteProduct = async (req, res, next) => {

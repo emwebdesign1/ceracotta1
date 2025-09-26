@@ -161,6 +161,10 @@ function renderProducts(list = []) {
     tr.dataset.careAdvice = p.careAdvice || '';
     tr.dataset.shippingReturn = p.shippingReturn || '';
     tr.dataset.images = JSON.stringify(p.images || []); // pour le preview à l'édition
+
+    // === NEW: stocker les couleurs pour l'édition (sans changer l'affichage du tableau)
+    tr.dataset.colors = JSON.stringify((p.colors || []).map(c => c?.hex ?? c).filter(Boolean));
+
     tr.innerHTML = `
       <td>${productThumbHTML(p)}</td>
       <td>${p.slug || '—'}</td>
@@ -229,11 +233,42 @@ const prodPiece = document.getElementById('prodPieceDetail');
 const prodCare = document.getElementById('prodCare');
 const prodShip = document.getElementById('prodShipping');
 
+// === NEW: éléments couleurs (déjà présents en HTML)
+const prodColorsInput = document.getElementById('prodColors');
+const prodColorsDots  = document.getElementById('prodColorsDots');
+
+// === NEW: helpers couleurs (HEX)
+const HEX_RE = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
+function parseColors(inputValue) {
+  if (!inputValue) return [];
+  return inputValue
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(s => (s.startsWith('#') ? s : '#' + s))
+    .filter(hex => HEX_RE.test(hex));
+}
+function renderColorDotsFromInput() {
+  if (!prodColorsDots) return;
+  const colors = parseColors(prodColorsInput?.value || '');
+  prodColorsDots.innerHTML = '';
+  colors.forEach(hex => {
+    const dot = document.createElement('span');
+    dot.title = hex;
+    dot.style.cssText = 'width:20px;height:20px;border-radius:50%;border:1px solid #ddd;display:inline-block;margin-right:6px;background:'+hex;
+    prodColorsDots.appendChild(dot);
+  });
+}
+prodColorsInput?.addEventListener('input', renderColorDotsFromInput);
+
 document.getElementById('prodReset')?.addEventListener('click', (e) => {
   e.preventDefault();
   prodForm.reset();
   prodId.value = '';
   renderImagePreview([]); // clean preview
+  // === NEW: nettoyer les couleurs
+  if (prodColorsInput) prodColorsInput.value = '';
+  renderColorDotsFromInput();
 });
 
 prodForm?.addEventListener('submit', async (e) => {
@@ -248,6 +283,8 @@ prodForm?.addEventListener('submit', async (e) => {
     pieceDetail: (prodPiece?.value || '').trim(),
     careAdvice: (prodCare?.value || '').trim(),
     shippingReturn: (prodShip?.value || '').trim(),
+    // === NEW: envoyer les couleurs
+    colors: parseColors(prodColorsInput?.value || ''),
   };
 
   try {
@@ -273,6 +310,10 @@ prodForm?.addEventListener('submit', async (e) => {
     prodForm.reset();
     prodId.value = '';
     renderImagePreview([]);
+    // === NEW: reset couleurs
+    if (prodColorsInput) prodColorsInput.value = '';
+    renderColorDotsFromInput();
+
     await loadProducts();
     if (msg) {
       msg.textContent = 'Produit enregistré avec images.';
@@ -313,6 +354,17 @@ prodTableBody?.addEventListener('click', async (e) => {
     // APRÈS — on passe aussi l'id du produit pour activer la croix si possible
     const imgs = JSON.parse(tr.dataset.images || '[]');
     renderImagePreview(imgs, prodId.value);
+
+    // === NEW: pré-remplir les couleurs depuis la ligne sélectionnée
+    try {
+      const cols = JSON.parse(tr.dataset.colors || '[]');
+      const value = (Array.isArray(cols) ? cols : []).join(',');
+      if (prodColorsInput) prodColorsInput.value = value;
+      renderColorDotsFromInput();
+    } catch {
+      if (prodColorsInput) prodColorsInput.value = '';
+      renderColorDotsFromInput();
+    }
 
     prodTitle.focus();
   }

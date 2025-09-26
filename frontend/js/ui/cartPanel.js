@@ -3,8 +3,15 @@ import { updateCartItem, removeCartItem, clearCart, getCart } from '../api.js';
 import { state } from '../state.js';
 
 const panel = () => document.getElementById('panel-panier');
+const CHF   = (cents) => `CHF ${(Number(cents || 0) / 100).toFixed(2)}`;
 
-function CHF(cents) { return `CHF ${(Number(cents || 0) / 100).toFixed(2)}`; }
+function pick(...vals){ for (const v of vals) if (v !== undefined && v !== null && v !== '') return v; return null; }
+function readColor(it){
+  return pick(it.color, it.variantColor, it?.variant?.color, it?.options?.color, it?.meta?.color, it?.attributes?.colorHex, it?.attributes?.color);
+}
+function readSize(it){
+  return pick(it.size, it.variantSize, it?.variant?.size, it?.options?.size, it?.meta?.size, it?.attributes?.size, it?.sizeLabel);
+}
 
 export async function openCartPanel() {
   const root = panel();
@@ -27,7 +34,7 @@ export function renderCartPanel(cart) {
 
     <div class="cart-header">
       <h2>Votre panier</h2>
-      <span class="cart-count">${items.length} article${items.length>1?'s':''}</span>
+      <span class="cart-count">${items.length} article${items.length > 1 ? 's' : ''}</span>
     </div>
 
     <div class="cart-body">
@@ -37,23 +44,30 @@ export function renderCartPanel(cart) {
         </div>
       ` : `
         <ul class="cart-list">
-          ${items.map(it => `
-            <li class="cart-item" data-id="${it.id}">
-              <div class="thumb">
-                ${it.image ? `<img src="${it.image}" alt="${(it.title||'Produit')}" />` : `<div class="ph"></div>`}
-              </div>
-              <div class="meta">
-                <div class="title">${it.title || 'Produit'}</div>
-                <div class="price">${CHF(it.unitPrice)}</div>
-                <div class="qty-controls" role="group" aria-label="Quantité">
-                  <button class="qty dec" aria-label="Diminuer">−</button>
-                  <span class="qty-val" aria-live="polite">${it.quantity || 1}</span>
-                  <button class="qty inc" aria-label="Augmenter">+</button>
-                </div>
-              </div>
-              <button class="rm" aria-label="Retirer">×</button>
-            </li>
-          `).join('')}
+          ${items.map(it => {
+            const color = readColor(it);
+            const size  = readSize(it);
+            return `
+<li class="cart-item" data-id="${it.id}">
+  <div class="thumb">
+    ${it.image ? `<img src="${it.image}" alt="${(it.title || 'Produit')}" />` : `<div class="ph"></div>`}
+  </div>
+  <div class="meta">
+    <div class="title">${it.title || 'Produit'}</div>
+    <div class="variant">
+      ${color ? `<span>Couleur : ${color}</span>` : ''}
+      ${size  ? `<span>${color ? ' | ' : ''}Taille : ${size}</span>` : ''}
+    </div>
+    <div class="price">${CHF(it.unitPrice)}</div>
+    <div class="qty-controls" role="group" aria-label="Quantité">
+      <button class="qty dec" aria-label="Diminuer">−</button>
+      <span class="qty-val" aria-live="polite">${it.quantity || 1}</span>
+      <button class="qty inc" aria-label="Augmenter">+</button>
+    </div>
+  </div>
+  <button class="rm" aria-label="Retirer">×</button>
+</li>`;
+          }).join('')}
         </ul>
       `}
     </div>

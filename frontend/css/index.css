@@ -928,3 +928,14 @@ footer {
 .user-link:hover {
   color: #5a0000;        /* légèrement plus foncé au hover */
 }
+
+/* Panier : affichage couleur/taille */
+.cart-item .meta .variant {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 2px 0 6px;
+}
+.cart-item .meta .variant span + span {
+  margin-left: 4px;
+}
+

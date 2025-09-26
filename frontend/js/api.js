@@ -1,5 +1,5 @@
 // /js/api.js
-import { state, authHeaders, saveCart, setAuth, clearAuth } from './state.js';
+import { state, authHeaders, saveCart, setAuth, clearAuth } from '/js/state.js';
 
 // Active les mocks uniquement si besoin
 const MOCK = { products: false, cart: false, auth: false };
@@ -118,19 +118,41 @@ export async function getCart() {
   return cart;
 }
 
-export async function addToCart({ productId, quantity = 1 }) {
+// /js/api.js
+export async function addToCart({ productId, quantity = 1, variantId=null, title=null, unitPrice=null, slug=null, image=null, color=null, size=null }) {
   const r = await fetch('/api/carts/items', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ productId, quantity })
+    body: JSON.stringify({ productId, quantity, variantId, title, unitPrice, slug, image, color, size })
   });
   if (!r.ok) {
     const e = await r.json().catch(() => ({}));
-    // remonte le message back si dispo (ex: "Produit introuvable")
     throw new Error(e?.message || e?.error || `Erreur panier (${r.status})`);
   }
-  return await getCart();
+
+  // récupère le panier "source de vérité"
+  const cart = await getCart();
+
+  // si le back n'a pas renvoyé color/size, on enrichit l'item localement
+  try {
+    const it = cart.items.slice().reverse().find(i =>
+      String(i.productId ?? i.product?.id ?? '') === String(productId ?? '') &&
+      (variantId ? String(i.variantId ?? '') === String(variantId) : true)
+    ) || cart.items[cart.items.length - 1];
+
+    if (it) {
+      if (color && !it.color) it.color = color;
+      if (size  && !it.size ) it.size  = size;
+      if (image && !it.image) it.image = image;
+      // persiste côté front
+      saveCart();
+    }
+  } catch { /* noop */ }
+
+  return cart;
 }
+
+
 
 export async function updateCartItem({ itemId, quantity }) {
   if (MOCK.cart) {
