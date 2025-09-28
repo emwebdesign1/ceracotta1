@@ -2,6 +2,17 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+/* ---------------- Helpers ---------------- */
+function toMultiline(arr) {
+  return Array.isArray(arr) ? arr.join('\n') : null;
+}
+function normHex(v) {
+  if (!v) return null;
+  const s = String(v).trim().toLowerCase();
+  return s.startsWith('#') ? s : `#${s}`;
+}
+
+/* ---------------- Main ---------------- */
 async function main() {
   const vasesCat = await prisma.category.upsert({
     where: { slug: 'vases' },
@@ -9,13 +20,11 @@ async function main() {
     create: { name: 'Vases', slug: 'vases' }
   });
 
-  // prisma/seed.js
-const vaisselleCat = await prisma.category.upsert({
-  where: { slug: 'vaisselle' },
-  update: {},
-  create: { name: 'Vaisselle', slug: 'vaisselle' }
-});
-
+  const vaisselleCat = await prisma.category.upsert({
+    where: { slug: 'vaisselle' },
+    update: {},
+    create: { name: 'Vaisselle', slug: 'vaisselle' }
+  });
 
   const products = [
     {
@@ -92,7 +101,6 @@ const vaisselleCat = await prisma.category.upsert({
       colors: ["#ffffff"],
       images: [
         "/images/vase-terralumiere1.jpg",
-
       ],
       pieceDetail: [
         "Pièce façonnée à la main (2 pièces détachées)",
@@ -187,8 +195,6 @@ const vaisselleCat = await prisma.category.upsert({
     }
   ];
 
-  const toMultiline = (arr) => (Array.isArray(arr) ? arr.join('\n') : null);
-
   for (const p of products) {
     const variantExtraLines =
       (p.variants || [])
@@ -199,7 +205,8 @@ const vaisselleCat = await prisma.category.upsert({
       ...(variantExtraLines || [])
     ];
 
-    await prisma.product.upsert({
+    // Upsert produit (images/couleurs/variants créés à la création)
+    const product = await prisma.product.upsert({
       where: { slug: p.slug },
       update: {
         title: p.title,
@@ -209,7 +216,7 @@ const vaisselleCat = await prisma.category.upsert({
         pieceDetail: toMultiline(pieceDetailLines),
         careAdvice: toMultiline(p.care),
         shippingReturn: toMultiline(p.shipping),
-        // ⚠️ on laisse les images/couleurs/variants gérés à la création pour éviter les doublons
+        // ⚠️ on laisse images/couleurs/variants gérés à la création pour éviter les doublons
       },
       create: {
         title: p.title,
@@ -221,7 +228,7 @@ const vaisselleCat = await prisma.category.upsert({
         careAdvice: toMultiline(p.care),
         shippingReturn: toMultiline(p.shipping),
 
-        // IMAGES
+        // IMAGES (galerie produit – ProductImage)
         images: {
           create: (p.images || []).map((url, idx) => ({
             url,
@@ -229,22 +236,112 @@ const vaisselleCat = await prisma.category.upsert({
           }))
         },
 
-        // COULEURS
+        // COULEURS (ProductColor)
         colors: {
-          create: (p.colors || []).map(hex => ({ hex }))
+          create: (p.colors || []).map(hex => ({ hex: normHex(hex) }))
         },
 
-        // VARIANTS
+        // VARIANTS (taille/prix de base)
         variants: {
           create: (p.variants || []).map(v => ({
             size: v.size || null,
             price: v.price ?? null,
-            color: null,
-            stock: 0
+            color: null, // on laisse la couleur au niveau ProductColor
+            stock: 0,
+            sku: null
           }))
         }
       }
     });
+
+    /* ---------- Liaisons Image <-> Couleur / Variante selon les cas ---------- */
+
+    const hasColors = Array.isArray(p.colors) && p.colors.length > 0;
+    const hasVariants = Array.isArray(p.variants) && p.variants.length > 0;
+    const hasImages = Array.isArray(p.images) && p.images.length > 0;
+
+    const colors = (p.colors || []).map(normHex);
+    const variants = hasVariants
+      ? await prisma.variant.findMany({ where: { productId: product.id }, orderBy: { id: 'asc' } })
+      : [];
+
+    // 1) Cas: variantes ont leurs propres images (v.images)
+    if (hasVariants) {
+      for (const v of p.variants) {
+        if (Array.isArray(v.images) && v.images.length) {
+          const variantRow = await prisma.variant.findFirst({
+            where: { productId: product.id, size: v.size || null }
+          });
+          if (variantRow) {
+            // seed idempotent
+            await prisma.image.deleteMany({ where: { variantId: variantRow.id } });
+            await prisma.image.createMany({
+              data: v.images.map((url, idx) => ({
+                url,
+                position: idx,
+                variantId: variantRow.id
+              }))
+            });
+          }
+        }
+      }
+    }
+
+    // 2) Cas: parité COULEURS <-> IMAGES => lier colorHex
+    if (hasColors && hasImages && colors.length === p.images.length) {
+      // purge images colorées existantes pour idempotence
+      await prisma.image.deleteMany({
+        where: { productId: product.id, colorHex: { not: null } }
+      });
+
+      // si parité TAILLES aussi, on liera à la fois colorHex + variantId (voir plus bas)
+      // sinon, on crée déjà l'entrée colorée simple ici
+      if (!(hasVariants && variants.length === p.images.length)) {
+        await prisma.image.createMany({
+          data: p.images.map((url, idx) => ({
+            url,
+            position: idx,
+            productId: product.id,
+            colorHex: colors[idx]
+          }))
+        });
+      }
+    }
+
+    // 3) Cas: parité TAILLES <-> IMAGES et AUCUNE variante n’a v.images
+    const noVariantHasOwnImages = hasVariants
+      ? !(p.variants || []).some(v => Array.isArray(v.images) && v.images.length)
+      : true;
+
+    if (hasVariants && hasImages && variants.length === p.images.length && noVariantHasOwnImages) {
+      // purge images de variantes existantes pour idempotence
+      await prisma.image.deleteMany({
+        where: { variantId: { in: variants.map(v => v.id) } }
+      });
+
+      // Si parité COULEURS aussi → on lie la même image à la fois à la couleur ET à la variante (une seule ligne, deux colonnes)
+      if (hasColors && colors.length === p.images.length) {
+        const data = p.images.map((url, idx) => ({
+          url,
+          position: idx,
+          productId: product.id,
+          variantId: variants[idx].id,
+          colorHex: colors[idx]
+        }));
+        await prisma.image.createMany({ data });
+      } else {
+        // Sinon on lie juste aux variantes
+        const data = p.images.map((url, idx) => ({
+          url,
+          position: idx,
+          variantId: variants[idx].id
+        }));
+        await prisma.image.createMany({ data });
+      }
+    }
+
+    // 4) Cas: ni parité couleurs, ni parité tailles → rien à faire ici,
+    // le front utilisera la galerie produit en fallback.
   }
 }
 
