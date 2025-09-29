@@ -6,7 +6,10 @@ import {
   adminCreateProduct,
   adminUpdateProduct,
   adminDeleteProduct,
-  adminListProducts
+  adminListProducts,
+  analyticsSummary,
+  analyticsFunnel,
+  analyticsTopProducts
 } from "../controllers/admin.controller.js";
 
 import multer from "multer";
@@ -49,6 +52,10 @@ r.get("/products", adminListProducts);
 r.post("/products", adminCreateProduct);
 r.put("/products/:id", adminUpdateProduct);
 r.delete("/products/:id", adminDeleteProduct);
+
+r.get("/analytics/summary", analyticsSummary);
+r.get("/analytics/funnel", analyticsFunnel);
+r.get("/analytics/top-products", analyticsTopProducts);
 
 // ===== Upload multi-fichiers (images/vidéos) =====
 r.post("/products/:id/files", upload.array("files", 12), async (req, res, next) => {

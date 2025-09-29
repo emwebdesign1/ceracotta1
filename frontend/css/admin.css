@@ -211,3 +211,171 @@ tbody tr { border-bottom:1px solid #efeae2; }
   font-size: 14px;
   cursor: pointer;
 }
+
+/* --- Stats --- */
+.kpi h3 { margin:0 0 6px; font-size:14px; color:#6a6157; }
+.kpi-val { font-weight:800; font-size:1.4rem; color:var(--bordeaux); }
+
+.funnel { display:grid; gap:8px; }
+.funnel .step {
+  display:flex; align-items:center; justify-content:space-between;
+  border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fff;
+}
+
+/* ======================= Céracotta Admin — Mobile+ ======================= */
+
+/* 0) Base mobile */
+@media (max-width: 980px){
+  body.page-admin{ font-size:15px; }
+  header .logo-image{ height: 28px; }
+  .ad-shell{ grid-template-columns: 1fr; margin:14px auto; padding:0 12px; gap:14px; }
+  .ad-content{ gap:14px; }
+  .card{ padding:14px; border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.04); }
+  .btn{ padding:12px 14px; border-radius:12px; }
+}
+
+/* 1) Header plus compact en mobile */
+@media (max-width: 980px){
+  header{ padding:8px 10px; }
+  .header-left,.header-right{ gap:8px; }
+  .icon-link{ display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; }
+  .hamburger{ width:32px; height:28px; }
+}
+
+/* 2) MENU ADMIN → pills défilables avec snap */
+@media (max-width: 980px){
+  .ad-menu{
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap:8px;
+    overflow-x: auto;
+    padding: 0 2px 4px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .ad-menu h1{ display:none; }
+  .ad-tab{
+    flex:0 0 auto;
+    white-space:nowrap;
+    scroll-snap-align:start;
+    border-radius:999px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+  .ad-tab.is-active{ border-color:#caa18b; box-shadow:0 0 0 3px rgba(202,161,139,.18); }
+}
+
+/* 3) Toolbars en pile + champs full-width */
+@media (max-width: 860px){
+  .toolbar{ flex-direction: column; align-items: stretch; gap:8px; }
+  .toolbar h2{ margin:0; }
+  .search{ width:100%; }
+  .search input{ width:100%; min-height:42px; }
+  .search .btn{ width:100%; }
+}
+
+/* 4) Formulaires : 1 colonne, zones tactiles confortables */
+@media (max-width: 980px){
+  .grid{ grid-template-columns: 1fr; gap:10px; }
+  .grid label{ font-size:14px; }
+  .grid input,
+  .grid textarea,
+  .grid select{
+    padding:12px 14px;
+    border-radius:12px;
+  }
+  .actions{ gap:8px; }
+  .actions .btn{ flex:1 1 0; }
+}
+
+/* 5) KPI & Stats */
+@media (max-width: 1024px){
+  #kpiCards{ grid-template-columns: repeat(2, 1fr) !important; gap:10px; }
+}
+@media (max-width: 420px){
+  #kpiCards{ grid-template-columns: 1fr !important; }
+  .kpi h3{ font-size:13px; }
+  .kpi-val{ font-size:1.25rem; }
+}
+
+/* 6) Vignettes upload (doigt) */
+@media (max-width: 780px){
+  #prodImagesPreview.thumbs .img-wrapper img{ width:92px; height:92px; }
+  #prodImagesPreview.thumbs .img-wrapper .delete-btn{
+    width:22px;height:22px;line-height:20px;font-size:14px;
+  }
+}
+
+/* 7) Side-panels en plein écran sur mobile (si utilisés) */
+@media (max-width: 980px){
+  .side-panel{
+    width:100vw; max-width:none; right:0; left:0;
+    transform: translateY(100%); bottom:0; top:auto; border-radius:16px 16px 0 0;
+  }
+  .side-panel.open{ transform: translateY(0); }
+  .side-panel .close-btn{ right:10px; top:10px; }
+}
+
+/* 8) TABLES → deux modes:
+      - <= 860px : scroll horizontal amélioré
+      - <= 640px : rendu "cartes" lisible (avec étiquettes)          */
+
+/* 8.a) Scroll horizontal smooth + sticky header */
+@media (max-width: 860px){
+  table{
+    display:block; width:100%;
+    overflow-x:auto; white-space:nowrap;
+    -webkit-overflow-scrolling:touch;
+  }
+  thead{ position: sticky; top: 0; background:#fff; z-index:1; }
+  th, td{ padding:10px 12px; }
+  /* masquer quelques colonnes non essentielles sur petit écran */
+  /* Commandes : Adresse + Articles */
+  #ordersTable th:nth-child(4), #ordersTable td:nth-child(4),
+  #ordersTable th:nth-child(5), #ordersTable td:nth-child(5){ display:none; }
+  /* Produits : Slug */
+  #productsTable th:nth-child(2), #productsTable td:nth-child(2){ display:none; }
+  /* Utilisateurs : Téléphone + Adresse */
+  #usersTable th:nth-child(3), #usersTable td:nth-child(3),
+  #usersTable th:nth-child(5), #usersTable td:nth-child(5){ display:none; }
+}
+
+/* 8.b) Ultra-mobile (cartes empilées) */
+@media (max-width: 640px){
+  /* on cache l’en-tête et on transforme chaque ligne */
+  table{ border:0; }
+  thead{ display:none; }
+  tbody{ display:grid; gap:10px; }
+  tbody tr{
+    display:grid;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.03);
+  }
+  tbody td{
+    display:flex; align-items:flex-start; gap:8px;
+    padding:8px 6px;
+    border:none; white-space:normal;
+  }
+  /* étiquette auto via [data-th] ajouté en JS (voir snippet) */
+  tbody td::before{
+    content: attr(data-th);
+    min-width:105px;
+    color:#6a6157;
+    font-weight:600;
+    font-size:12.5px;
+  }
+
+  /* espaces finaux (cellule actions vide) */
+  tbody td:last-child{ justify-content:flex-end; }
+}
+
+/* 9) Finesse */
+@media (max-width: 520px){
+  .fab-logout{ padding:10px 14px; bottom:12px; right:12px; }
+}
+

@@ -114,12 +114,12 @@ export const adminListProducts = async (req, res, next) => {
 
     const where = q
       ? {
-          OR: [
-            { title: { contains: String(q), mode: 'insensitive' } },
-            { slug: { contains: String(q), mode: 'insensitive' } },
-            { description: { contains: String(q), mode: 'insensitive' } },
-          ]
-        }
+        OR: [
+          { title: { contains: String(q), mode: 'insensitive' } },
+          { slug: { contains: String(q), mode: 'insensitive' } },
+          { description: { contains: String(q), mode: 'insensitive' } },
+        ]
+      }
       : {};
 
     const rows = await prisma.product.findMany({
@@ -134,9 +134,9 @@ export const adminListProducts = async (req, res, next) => {
     });
 
     const list = rows.map(p => {
- const images = (p.images || [])
-  .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-  .map(i => ({ id: i.id, url: i.url }));
+      const images = (p.images || [])
+        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+        .map(i => ({ id: i.id, url: i.url }));
 
 
       const colors = (p.colors || []).map(c => c.hex).filter(Boolean);
@@ -165,5 +165,120 @@ export const adminListProducts = async (req, res, next) => {
     });
 
     res.json(list);
+  } catch (e) { next(e); }
+};
+
+// ============ ANALYTICS ============
+
+// Résumé global
+export const analyticsSummary = async (req, res, next) => {
+  try {
+    const { from, to } = req.query;
+    const whereDate = (tbl) => (from || to)
+      ? { createdAt: { ...(from ? { gte: new Date(from) } : {}), ...(to ? { lte: new Date(to + 'T23:59:59') } : {}) } }
+      : {};
+
+    // visiteurs/sessions (si pas encore d'événements => 0)
+    const [visitors, sessions] = await Promise.all([
+      prisma.visitor.count(),
+      prisma.session.count(),
+    ]);
+
+    // achats & CA (basé sur Order)
+    const orders = await prisma.order.findMany({
+      where: whereDate('order'),
+      select: { id: true, amount: true }
+    });
+    const purchases = orders.length;
+    const revenue = orders.reduce((s, o) => s + (o.amount || 0), 0);
+
+    // product views approximatives via Event
+    const productViews = await prisma.event.count({
+      where: { type: 'PRODUCT_VIEW', ...(from || to ? { createdAt: whereDate().createdAt } : {}) }
+    });
+
+    const conversionRate = productViews ? purchases / productViews : null;
+
+    res.json({ visitors, sessions, purchases, revenue, productViews, conversionRate });
+  } catch (e) { next(e); }
+};
+
+// Funnel simple
+export const analyticsFunnel = async (req, res, next) => {
+  try {
+    const { from, to } = req.query;
+    const createdAt = (from || to)
+      ? { ...(from ? { gte: new Date(from) } : {}), ...(to ? { lte: new Date(to + 'T23:59:59') } : {}) }
+      : undefined;
+
+    const whereEv = (type) => ({ type, ...(createdAt ? { createdAt } : {}) });
+
+    const [productViews, addToCarts, beginCheckouts] = await Promise.all([
+      prisma.event.count({ where: whereEv('PRODUCT_VIEW') }),
+      prisma.event.count({ where: whereEv('ADD_TO_CART') }),
+      prisma.event.count({ where: whereEv('BEGIN_CHECKOUT') }),
+    ]);
+
+    const purchases = await prisma.order.count({
+      where: (from || to) ? { createdAt } : {}
+    });
+
+    res.json({ productViews, addToCarts, beginCheckouts, purchases });
+  } catch (e) { next(e); }
+};
+
+// Top produits (vues/ATC/achats/revenu)
+export const analyticsTopProducts = async (req, res, next) => {
+  try {
+    const { from, to, limit = 10 } = req.query;
+    const createdAt = (from || to)
+      ? { ...(from ? { gte: new Date(from) } : {}), ...(to ? { lte: new Date(to + 'T23:59:59') } : {}) }
+      : undefined;
+
+    // 1) agrégats journaliers si existants
+    const daily = await prisma.dailyProductStat.groupBy({
+      by: ['productId'],
+      _sum: { views: true, addToCarts: true, purchases: true, revenue: true, favorites: true },
+      where: (from || to) ? { date: { gte: new Date(from), lte: new Date(to || from) } } : undefined
+    });
+
+
+    // 2) fallback achats/revenu depuis OrderItem si jamais daily vide
+    let map = new Map(daily.map(d => [d.productId, {
+      views: d._sum.views || 0,
+      addToCarts: d._sum.addToCarts || 0,
+      purchases: d._sum.purchases || 0,
+      revenue: d._sum.revenue || 0,
+      favorites: d._sum.favorites || 0
+    }]));
+
+    if (!daily.length) {
+      const items = await prisma.orderItem.findMany({
+        where: (from || to) ? { order: { createdAt } } : {},
+        select: { productId: true, quantity: true, unitPrice: true }
+      });
+      map = new Map();
+      for (const it of items) {
+        const e = map.get(it.productId) || { views: 0, addToCarts: 0, purchases: 0, revenue: 0 };
+        e.purchases += it.quantity || 0;
+        e.revenue += (it.unitPrice || 0) * (it.quantity || 0);
+        map.set(it.productId, e);
+      }
+    }
+
+    const products = await prisma.product.findMany({
+      where: { id: { in: Array.from(map.keys()) } },
+      select: { id: true, title: true }
+    });
+
+    const result = products.map(p => ({
+      productId: p.id,
+      title: p.title,
+      ...(map.get(p.id) || { views: 0, addToCarts: 0, purchases: 0, revenue: 0 })
+    }))
+      .sort((a, b) => (b.revenue - a.revenue) || (b.purchases - a.purchases))
+      .slice(0, Number(limit));
+
+    res.json(result);
   } catch (e) { next(e); }
 };

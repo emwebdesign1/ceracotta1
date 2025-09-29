@@ -33,7 +33,6 @@ function renderImagePreview(images = [], productId = null) {
   box.innerHTML = '';
 
   images.forEach((it) => {
-    // it peut être soit une string (URL), soit un objet { id, url, ... }
     const url = typeof it === 'string' ? it : it.url;
     const imageId = typeof it === 'object' && it ? it.id : null;
 
@@ -46,7 +45,6 @@ function renderImagePreview(images = [], productId = null) {
 
     wrap.appendChild(img);
 
-    // Ajouter la croix seulement si on a l'id pour pouvoir supprimer
     if (productId && imageId) {
       const delBtn = document.createElement('button');
       delBtn.className = 'delete-btn';
@@ -63,8 +61,6 @@ function renderImagePreview(images = [], productId = null) {
             headers: { ...authHeaders() },
           });
           if (!res.ok) throw new Error('Erreur suppression image');
-
-          // Retire du DOM
           wrap.remove();
         } catch (err) {
           alert('Impossible de supprimer : ' + (err?.message || 'Erreur'));
@@ -85,6 +81,7 @@ const views = {
   users: document.getElementById('view-users'),
   orders: document.getElementById('view-orders'),
   settings: document.getElementById('view-settings'),
+  stats: document.getElementById('view-stats'),
 };
 function show(name) {
   Object.entries(views).forEach(([k, el]) => {
@@ -103,6 +100,7 @@ document.querySelectorAll('[data-view]').forEach((el) => {
     if (v === 'products') loadProducts();
     if (v === 'users') loadUsers();
     if (v === 'orders') loadOrders();
+    if (v === 'stats') loadStats();
   });
 });
 const initial = (location.hash || '#products').slice(1);
@@ -146,7 +144,6 @@ function productThumbHTML(p) {
   `;
 }
 
-
 function renderProducts(list = []) {
   if (!prodTableBody) return;
   prodTableBody.innerHTML = '';
@@ -160,9 +157,8 @@ function renderProducts(list = []) {
     tr.dataset.pieceDetail = p.pieceDetail || '';
     tr.dataset.careAdvice = p.careAdvice || '';
     tr.dataset.shippingReturn = p.shippingReturn || '';
-    tr.dataset.images = JSON.stringify(p.images || []); // pour le preview à l'édition
+    tr.dataset.images = JSON.stringify(p.images || []);
 
-    // === NEW: stocker les couleurs pour l'édition (sans changer l'affichage du tableau)
     tr.dataset.colors = JSON.stringify((p.colors || []).map(c => c?.hex ?? c).filter(Boolean));
 
     tr.innerHTML = `
@@ -233,11 +229,9 @@ const prodPiece = document.getElementById('prodPieceDetail');
 const prodCare = document.getElementById('prodCare');
 const prodShip = document.getElementById('prodShipping');
 
-// === NEW: éléments couleurs (déjà présents en HTML)
 const prodColorsInput = document.getElementById('prodColors');
 const prodColorsDots  = document.getElementById('prodColorsDots');
 
-// === NEW: helpers couleurs (HEX)
 const HEX_RE = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
 function parseColors(inputValue) {
   if (!inputValue) return [];
@@ -265,8 +259,7 @@ document.getElementById('prodReset')?.addEventListener('click', (e) => {
   e.preventDefault();
   prodForm.reset();
   prodId.value = '';
-  renderImagePreview([]); // clean preview
-  // === NEW: nettoyer les couleurs
+  renderImagePreview([]);
   if (prodColorsInput) prodColorsInput.value = '';
   renderColorDotsFromInput();
 });
@@ -283,7 +276,6 @@ prodForm?.addEventListener('submit', async (e) => {
     pieceDetail: (prodPiece?.value || '').trim(),
     careAdvice: (prodCare?.value || '').trim(),
     shippingReturn: (prodShip?.value || '').trim(),
-    // === NEW: envoyer les couleurs
     colors: parseColors(prodColorsInput?.value || ''),
   };
 
@@ -292,7 +284,6 @@ prodForm?.addEventListener('submit', async (e) => {
     if (prodId.value) product = await updateProduct(prodId.value, payload);
     else product = await createProduct(payload);
 
-    // Étape 2 : upload multi-fichiers (images/vidéos)
     const filesInput = document.getElementById('prodFiles');
     const fileList = filesInput?.files || [];
     if (fileList.length) {
@@ -300,7 +291,7 @@ prodForm?.addEventListener('submit', async (e) => {
       for (const f of fileList) fd.append('files', f);
       const up = await fetch(`${API_BASE}/api/admin/products/${product.id}/files`, {
         method: 'POST',
-        headers: { ...authHeaders() }, // ne pas fixer Content-Type
+        headers: { ...authHeaders() },
         body: fd,
       });
       if (!up.ok) throw new Error('Erreur upload images');
@@ -310,7 +301,6 @@ prodForm?.addEventListener('submit', async (e) => {
     prodForm.reset();
     prodId.value = '';
     renderImagePreview([]);
-    // === NEW: reset couleurs
     if (prodColorsInput) prodColorsInput.value = '';
     renderColorDotsFromInput();
 
@@ -328,7 +318,6 @@ prodForm?.addEventListener('submit', async (e) => {
   }
 });
 
-// actions table (edit/delete)
 prodTableBody?.addEventListener('click', async (e) => {
   const t = e.target;
   if (!(t instanceof HTMLElement)) return;
@@ -350,12 +339,9 @@ prodTableBody?.addEventListener('click', async (e) => {
     if (prodPiece) prodPiece.value = tr.dataset.pieceDetail || '';
     if (prodCare) prodCare.value = tr.dataset.careAdvice || '';
     if (prodShip) prodShip.value = tr.dataset.shippingReturn || '';
-    // Preview des images existantes
-    // APRÈS — on passe aussi l'id du produit pour activer la croix si possible
     const imgs = JSON.parse(tr.dataset.images || '[]');
     renderImagePreview(imgs, prodId.value);
 
-    // === NEW: pré-remplir les couleurs depuis la ligne sélectionnée
     try {
       const cols = JSON.parse(tr.dataset.colors || '[]');
       const value = (Array.isArray(cols) ? cols : []).join(',');
@@ -523,9 +509,100 @@ usersTableBody?.addEventListener('click', async (e) => {
   }
 });
 
+// ------------------------------------------------------
+// =============== STATISTIQUES ==========================
+// ------------------------------------------------------
+const statsFrom = document.getElementById('statsFrom');
+const statsTo   = document.getElementById('statsTo');
+document.getElementById('statsRefresh')?.addEventListener('click', () => loadStats());
+
+async function fetchJSON(url) {
+  const r = await fetch(url, { headers: { ...authHeaders() } });
+  if (!r.ok) throw new Error('Erreur chargement stats');
+  return r.json();
+}
+
+function dateParam() {
+  const from = statsFrom?.value;
+  const to   = statsTo?.value;
+  const qs = new URLSearchParams();
+  if (from) qs.set('from', from);
+  if (to)   qs.set('to', to);
+  const q = qs.toString();
+  return q ? `?${q}` : '';
+}
+
+async function loadStats() {
+  try {
+    const [summary, funnel, top] = await Promise.all([
+      fetchJSON(`${API_BASE}/api/admin/analytics/summary${dateParam()}`),
+      fetchJSON(`${API_BASE}/api/admin/analytics/funnel${dateParam()}`),
+      fetchJSON(`${API_BASE}/api/admin/analytics/top-products${dateParam()}`),
+    ]);
+
+    document.getElementById('kpiVisitors').textContent = summary.visitors ?? '—';
+    document.getElementById('kpiSessions').textContent = summary.sessions ?? '—';
+    document.getElementById('kpiRevenue').textContent  = `CHF ${(Number(summary.revenue||0)/100).toFixed(2)}`;
+    document.getElementById('kpiCVR').textContent      = summary.conversionRate != null
+      ? (summary.conversionRate * 100).toFixed(2) + '%'
+      : '—';
+
+    document.getElementById('fvViews').textContent    = funnel.productViews ?? '—';
+    document.getElementById('fvATC').textContent      = funnel.addToCarts ?? '—';
+    document.getElementById('fvCheckout').textContent = funnel.beginCheckouts ?? '—';
+    document.getElementById('fvPurchase').textContent = funnel.purchases ?? '—';
+
+    renderTopProducts(top || []);
+  } catch (e) {
+    console.error(e);
+    if (msg) {
+      msg.textContent = e.message || 'Erreur chargement statistiques.';
+      msg.style.color = '#b00020';
+    }
+  }
+}
+
+function renderTopProducts(list = []) {
+  const tb = document.querySelector('#topProductsTable tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  if (!list.length) {
+    tb.innerHTML = `<tr><td colspan="6" class="muted">Aucune donnée.</td></tr>`;
+    return;
+  }
+  for (const p of list) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${p.title || '—'}</strong></td>
+      <td>${p.views ?? 0}</td>
+      <td>${p.addToCarts ?? 0}</td>
+      <td>${p.purchases ?? 0}</td>
+      <td>${p.favorites ?? 0}</td>
+      <td>CHF ${(Number(p.revenue||0)/100).toFixed(2)}</td>
+    `;
+    tb.appendChild(tr);
+  }
+}
+
+// ===== Responsive table labels =====
+(function responsiveTableLabels(){
+  const tables = document.querySelectorAll('table');
+  tables.forEach(table => {
+    const heads = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+    table.querySelectorAll('tbody tr').forEach(row => {
+      Array.from(row.children).forEach((td, i) => {
+        const label = heads[i] || '';
+        if (label) td.setAttribute('data-th', label);
+      });
+    });
+  });
+})();
+  
+
 // ===== Boot
 const startView = (location.hash || '#products').slice(1);
 show(startView);
 if (startView === 'products') loadProducts();
 if (startView === 'users') loadUsers();
 if (startView === 'orders') loadOrders();
+if (startView === 'stats') loadStats();

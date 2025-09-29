@@ -7,6 +7,9 @@ import cartsRoutes from './carts.routes.js';
 import ordersRoutes from './orders.routes.js';
 import adminRoutes from './admin.routes.js';
 import payments from './payments.routes.js';
+import trackRoutes from './track.routes.js';
+import wishlistRoutes from './wishlist.routes.js';
+ 
 
 
 const r = Router();
@@ -20,5 +23,7 @@ r.use('/carts', cartsRoutes);
 r.use('/orders', ordersRoutes);
 r.use('/admin', adminRoutes);
 r.use('/payments', payments);
+r.use('/track', trackRoutes);
+r.use('/wishlist', wishlistRoutes);
 
 export default r;

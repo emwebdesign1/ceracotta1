@@ -9,6 +9,19 @@ async function ensureCart(userId) {
   return cart;
 }
 
+// en haut du fichier (helper robuste pour extraire la 1re image produit/variant)
+function firstImageOf(value) {
+  try {
+    if (Array.isArray(value) && value.length) return value[0];
+    if (typeof value === 'string') {
+      const arr = JSON.parse(value);
+      if (Array.isArray(arr) && arr.length) return arr[0];
+    }
+  } catch { }
+  return null;
+}
+
+
 /**
  * GET /api/carts/
  */
@@ -37,39 +50,54 @@ export async function getMyCart(req, res) {
 export async function addToCart(req, res) {
   try {
     const userId = req.user.id;
-    let { productId, quantity = 1 } = req.body;
+    let { productId, quantity = 1, variantId = null, color = null, size = null, image = null } = req.body;
 
     if (!productId) return res.status(400).json({ error: 'productId manquant' });
     if (quantity < 1) return res.status(400).json({ error: 'quantity invalide' });
 
     const cart = await ensureCart(userId);
 
-    // ✅ Accepter id string ou number
-    //    - si "123" => 123
-    //    - sinon garder tel quel (UUID/cuid)
-    if (typeof productId === 'string' && /^\d+$/.test(productId)) {
-      productId = parseInt(productId, 10);
-    }
-
-    // ✅ findUnique tolérant au type
+    // Récup produit
     const product = await prisma.product.findUnique({ where: { id: productId } });
-
-    // ✅ Ne pas bloquer si le schéma n'a pas "active"
-    const hasActive = product && Object.prototype.hasOwnProperty.call(product, 'active');
-    if (!product || (hasActive && !product.active)) {
+    if (!product || (Object.hasOwn(product, 'active') && !product.active)) {
       return res.status(404).json({ error: 'Produit introuvable' });
     }
 
-    // Cherche si l’item existe déjà
-    const existing = await prisma.cartItem.findFirst({
-      where: { cartId: cart.id, productId: product.id }
-    });
+    // Prix & image selon variante
+    let unitPrice = product.price;
+    let variant = null;
+    if (variantId) {
+      variant = await prisma.variant.findUnique({ where: { id: variantId } }).catch(() => null);
+      if (variant) {
+        if (variant.price != null) unitPrice = variant.price;
+        if (!image) image = firstImageOf(variant.images);
+        // si tu veux afficher l’option choisie dans le titre :
+        if (variant.size || variant.color) {
+          // ajoute un suffixe lisible
+        }
+      }
+    }
+    if (!image) image = firstImageOf(product.images);
+
+    // Chercher un item identique (même produit + même variante OU pas de variante)
+    const where = {
+      cartId: cart.id,
+      productId: product.id,
+      variantId: variantId ?? null,
+      color: color ?? null,
+      size: size ?? null,
+    };
+    const existing = await prisma.cartItem.findFirst({ where });
 
     let item;
     if (existing) {
       item = await prisma.cartItem.update({
         where: { id: existing.id },
-        data: { quantity: existing.quantity + quantity }
+        data: {
+          quantity: existing.quantity + quantity,
+          ...(existing.unitPrice == null && unitPrice != null ? { unitPrice } : {}),
+          ...(existing.image == null && image ? { image } : {}),
+        },
       });
     } else {
       item = await prisma.cartItem.create({
@@ -77,10 +105,12 @@ export async function addToCart(req, res) {
           cartId: cart.id,
           productId: product.id,
           title: product.title,
-          unitPrice: product.price,
-          image: Array.isArray(product.images) ? product.images[0] ?? null : null,
-          quantity
-        }
+          unitPrice,
+          image,
+          // relation variante si présente
+          ...(variantId ? { variant: { connect: { id: variantId } } } : {}),
+          quantity,
+        },
       });
     }
 
@@ -90,6 +120,7 @@ export async function addToCart(req, res) {
     return res.status(500).json({ error: 'Erreur serveur' });
   }
 }
+
 
 /**
  * PATCH /api/carts/items/:itemId

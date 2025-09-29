@@ -1,7 +1,7 @@
 // /js/pages/produit.page.js
 import { getProductBySlug, getProducts, addToCart } from '/js/api.js';
-import { addFavorite, isFavorite } from '/js/state.js';
 import { showToast } from '/js/ui/toast.js';
+import { addFavorite, removeFavorite } from '/js/state.js'; // ← sync favoris locaux
 
 const $  = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -39,8 +39,8 @@ const careP     = document.querySelector('.accordion-section details:nth-of-type
 const shippingP = document.querySelector('.accordion-section details:nth-of-type(3) > p');
 
 let currentVariant = null;
-let currentColor   = null;  // couleur sélectionnée
-let colorImageMap  = {};    // { hex -> imageURL[] }
+let currentColor   = null;
+let colorImageMap  = {};
 
 // --------- Helpers galerie (taille + couleur) ---------
 function asUrl(u) { return typeof u === 'string' ? u : (u?.url || ''); }
@@ -49,19 +49,15 @@ function getGallery({ product, variant, colorHex }) {
   const key = (colorHex || '').toLowerCase();
   const productImages = (product?.images || []).map(asUrl);
 
-  // 1) images couleur spécifiques à la variante
   if (variant?.colorImageMap && key && Array.isArray(variant.colorImageMap[key]) && variant.colorImageMap[key].length) {
     return variant.colorImageMap[key].map(asUrl);
   }
-  // 2) images génériques de la variante
   if (variant?.images?.length) {
     return (variant.images || []).map(asUrl);
   }
-  // 3) images de la couleur au niveau produit
   if (key && product?.colorImageMap && Array.isArray(product.colorImageMap[key]) && product.colorImageMap[key].length) {
     return product.colorImageMap[key].map(asUrl);
   }
-  // 4) fallback : galerie produit
   return productImages;
 }
 
@@ -69,13 +65,11 @@ function renderGallery(urls, { title = '' } = {}) {
   const list = Array.isArray(urls) ? urls.filter(Boolean) : [];
   const first = list[0] || '/images/bols.png';
 
-  // image principale
   if (mainImg) {
     mainImg.src = first;
     mainImg.alt = title || '';
   }
 
-  // vignettes
   if (thumbsWrap) {
     thumbsWrap.innerHTML = list.map(u => `<img class="thumbnail" src="${u}" alt="${title}">`).join('');
     thumbsWrap.onclick = (e) => {
@@ -87,10 +81,26 @@ function renderGallery(urls, { title = '' } = {}) {
   }
 }
 
-// --- meilleure image unique (utilisé pour le panier, etc.)
 function pickBestImage({ product, variant, colorHex }) {
   const gallery = getGallery({ product, variant, colorHex });
   return gallery[0] || '/images/bols.png';
+}
+
+// ---- Wishlist helpers ----
+async function wishlistStatus(productId) {
+  const r = await fetch(`/api/wishlist/status?productId=${encodeURIComponent(productId)}`, { credentials: 'include' });
+  if (!r.ok) return { favored: false };
+  return r.json();
+}
+async function wishlistToggle(productId) {
+  const r = await fetch('/api/wishlist/toggle', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ productId })
+  });
+  if (!r.ok) throw new Error('Wishlist toggle failed');
+  return r.json();
 }
 
 async function init(){
@@ -98,16 +108,16 @@ async function init(){
     const p = await getProductBySlug(slug);
     if (!p) throw new Error('Produit introuvable');
 
+    const productId = p.id;
+
     titleEl.textContent = p.title || '';
     priceEl.textContent = CHF(p.price);
     descEl.textContent  = p.description || '';
 
-    // Détails / entretien / livraison
     if (detailsP)  detailsP.innerHTML  = renderMultilineToHTML(p.pieceDetail);
     if (careP)     careP.innerHTML     = renderMultilineToHTML(p.careAdvice);
     if (shippingP) shippingP.innerHTML = renderMultilineToHTML(p.shippingReturn);
 
-    // --- couleurs ---
     const colors = Array.isArray(p.colors) ? p.colors : [];
     colorImageMap = p.colorImageMap || {};
     if (colors.length) {
@@ -127,13 +137,10 @@ async function init(){
         btn.setAttribute('aria-pressed', 'true');
 
         currentColor = (btn.dataset.color || '').toLowerCase();
-
-        // (re)construit la galerie selon taille + couleur
         const gallery = getGallery({ product: p, variant: currentVariant, colorHex: currentColor });
         renderGallery(gallery, { title: p.title });
       });
 
-      // sélectionne la première couleur par défaut
       const first = colorWrap.querySelector('.color-dot');
       if (first) first.click();
     } else {
@@ -141,7 +148,6 @@ async function init(){
       currentColor = null;
     }
 
-    // --- variantes / tailles ---
     if (p.variants && p.variants.length) {
       sizeWrap.style.display = 'block';
       sizeOpts.innerHTML = '';
@@ -156,52 +162,70 @@ async function init(){
 
           priceEl.textContent = CHF(v.price ?? p.price);
 
-          // (re)construit la galerie selon taille + couleur
           const gallery = getGallery({ product: p, variant: currentVariant, colorHex: currentColor });
           renderGallery(gallery, { title: p.title });
         });
         sizeOpts.appendChild(btn);
       });
-      sizeOpts.querySelector('.size-option')?.click(); // sélectionne la première taille
+      sizeOpts.querySelector('.size-option')?.click();
     } else {
       sizeWrap.style.display = 'none';
       currentVariant = null;
     }
 
-    // favoris
-    try{
-      if (isFavorite && isFavorite(p.slug)) {
-        favHeart.textContent = '❤';
-        favBtn?.classList.add('active');
-      }
-    }catch{}
-
-    favBtn?.addEventListener('click', ()=>{
+    // ---- Wishlist (serveur) + SYNC favoris locaux (pour le panneau)
+    async function refreshFav() {
       try{
-        addFavorite && addFavorite({
-          slug: p.slug,
-          color: currentColor || null,
-          size: currentVariant?.size || null
-        });
-        if (isFavorite && isFavorite(p.slug)) {
-          favHeart.textContent = '❤';
-          favBtn.classList.add('active');
-        } else {
-          favHeart.textContent = '♡';
-          favBtn.classList.remove('active');
-        }
+        const { favored } = await wishlistStatus(productId);
+        favHeart.textContent = favored ? '❤' : '♡';
+        favBtn.classList.toggle('active', !!favored);
+
+        // sync localStorage favoris (alimentera le panneau)
+        if (favored) addFavorite({ slug: p.slug });
+        else removeFavorite({ slug: p.slug });
+      }catch{
+        favHeart.textContent = '♡';
+        favBtn.classList.remove('active');
+      }
+    }
+    await refreshFav();
+
+    favBtn?.addEventListener('click', async ()=>{
+      try{
+        const { favored } = await wishlistToggle(productId);
+        favHeart.textContent = favored ? '❤' : '♡';
+        favBtn.classList.toggle('active', !!favored);
+
+        // sync localStorage favoris pour le panneau
+        if (favored) addFavorite({ slug: p.slug });
+        else removeFavorite({ slug: p.slug });
+
+        // Optionnel: tracer l'intérêt
+        try {
+          await fetch('/api/track', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            credentials:'include',
+            body: JSON.stringify({
+              type: favored ? 'FAVORITE_ADD' : 'FAVORITE_REMOVE',
+              productId,
+              path: location.pathname
+            })
+          });
+        } catch {}
         showToast && showToast('Favoris mis à jour');
-      }catch{}
+      }catch(e){
+        console.error(e);
+      }
     });
 
     // panier
     addBtn?.addEventListener('click', async () => {
       try {
-        const productId = p?.id;
         if (!productId) throw new Error('ID produit introuvable.');
 
         await addToCart({
-          productId,
+          productId: p.id,
           quantity: 1,
           variantId: currentVariant?.id || null,
           title: p.title,
@@ -213,13 +237,23 @@ async function init(){
         });
 
         showToast && showToast('Ajouté au panier');
+
+        // tracer ATC
+        try {
+          await fetch('/api/track', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            credentials:'include',
+            body: JSON.stringify({ type:'ADD_TO_CART', productId, path: location.pathname })
+          });
+        } catch {}
       } catch (e) {
         console.error(e);
         alert(e?.message || 'Impossible d’ajouter au panier.');
       }
     });
 
-    // ---- Slider Caractéristiques (4 visibles, décalage de 2) ----
+    // ---- Slider Caractéristiques (2 visibles, navigation dots) ----
     function setupCaracSlider() {
       const slider = document.querySelector('.icons-banner-slider');
       const dots   = Array.from(document.querySelectorAll('.dots .dot'));
@@ -228,8 +262,8 @@ async function init(){
       if (!slider || dots.length === 0) return;
 
       let index = 0;
-      const visible = 2; // combien d’éléments visibles
-      const step = 1;    // combien on décale
+      const visible = 2;
+      const step = 1;
       const totalPages = Math.ceil((items.length - visible) / step) + 1;
 
       const goTo = (i) => {
@@ -240,10 +274,8 @@ async function init(){
       };
 
       dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
-
       goTo(0);
     }
-
     setupCaracSlider();
 
     // ===== "Tu aimerais aussi" — charge les vases depuis la DB =====
@@ -254,7 +286,6 @@ async function init(){
       const btnR = document.querySelector('.aimerais-aussi .carousel-btn.right');
       if (!wrap || !rail) return;
 
-      // 1) Essayer par catégorie "vases"
       let items = [];
       try {
         const res = await getProducts({ category: 'vases', sort: '-createdAt', limit: 20 });
@@ -263,7 +294,6 @@ async function init(){
         console.warn('getProducts vases failed', e);
       }
 
-      // 2) Fallback si vide → filtre local par nom/slug/catégorie
       if (!items.length) {
         try {
           const res2 = await getProducts({ sort: '-createdAt', limit: 50 });
@@ -274,23 +304,19 @@ async function init(){
             /vase/i.test(p?.category || '')
           );
         } catch (e) {
-          console.warn('getProducts all failed', e);
         }
       }
 
-      // 3) Rien trouvé → cacher la section
       if (!items.length) { wrap.style.display = 'none'; return; }
 
-      // Helpers
       const CHF = cents => typeof cents === 'number' ? `CHF ${(cents/100).toFixed(2)}` : '';
       const firstImg = (p) => {
         const imgs = p?.images || [];
         if (!imgs?.length) return '/images/bols.png';
         const it = imgs[0];
         return typeof it === 'string' ? it : (it.url || '/images/bols.png');
-      };
+        };
 
-      // 4) Rendu des cartes
       rail.innerHTML = items.map(p => `
         <a class="produit-card" href="/produit.html?slug=${encodeURIComponent(p.slug || '')}">
           <img src="${firstImg(p)}" alt="${(p.title || '').replace(/"/g,'&quot;')}" loading="lazy">
@@ -299,7 +325,6 @@ async function init(){
         </a>
       `).join('');
 
-      // 5) Scroll gauche/droite (2 cartes par clic)
       const step = () => {
         const card = rail.querySelector('.produit-card');
         const gap = parseFloat(getComputedStyle(rail).gap || '16');
@@ -310,9 +335,17 @@ async function init(){
       btnL?.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
       btnR?.addEventListener('click', () => rail.scrollBy({ left:  step(), behavior: 'smooth' }));
     }
-
-    // ⚠️ lance le chargement des vases
     loadAlsoLike();
+
+    // tracer la vue produit
+    try {
+      await fetch('/api/track', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        credentials:'include',
+        body: JSON.stringify({ type:'PRODUCT_VIEW', productId, path: location.pathname })
+      });
+    } catch {}
 
   }catch(err){
     console.error(err);

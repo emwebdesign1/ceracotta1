@@ -71,6 +71,7 @@
       <button class="ad-tab" data-view="products">Produits</button>
       <button class="ad-tab" data-view="users">Utilisateurs</button>
       <button class="ad-tab" data-view="settings">Paramètres</button>
+      <button class="ad-tab" data-view="stats">Statistiques</button>
     </aside>
 
     <!-- Contenu -->
@@ -198,12 +199,74 @@
         <h2>Paramètres</h2>
         <p class="muted">Paramètres généraux de l’admin (à compléter).</p>
       </section>
+
+      <!-- ===== Statistiques ===== -->
+      <section class="card view" id="view-stats" hidden>
+        <div class="toolbar">
+          <h2>Statistiques</h2>
+          <div class="search">
+            <input id="statsFrom" type="date" />
+            <input id="statsTo" type="date" />
+            <button id="statsRefresh" class="btn">Actualiser</button>
+          </div>
+        </div>
+
+        <!-- KPI -->
+        <div class="grid" id="kpiCards" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="kpi card">
+            <h3>Visiteurs</h3>
+            <div class="kpi-val" id="kpiVisitors">—</div>
+          </div>
+          <div class="kpi card">
+            <h3>Sessions</h3>
+            <div class="kpi-val" id="kpiSessions">—</div>
+          </div>
+          <div class="kpi card">
+            <h3>Conversion</h3>
+            <div class="kpi-val" id="kpiCVR">—</div>
+          </div>
+          <div class="kpi card">
+            <h3>CA</h3>
+            <div class="kpi-val" id="kpiRevenue">—</div>
+          </div>
+        </div>
+
+        <hr class="sep" />
+
+        <!-- Funnel -->
+        <div class="card">
+          <h3>Funnel</h3>
+          <div id="funnel" class="funnel">
+            <div class="step"><span>Vues produit</span><strong id="fvViews">—</strong></div>
+            <div class="step"><span>Add to Cart</span><strong id="fvATC">—</strong></div>
+            <div class="step"><span>Checkout</span><strong id="fvCheckout">—</strong></div>
+            <div class="step"><span>Achat</span><strong id="fvPurchase">—</strong></div>
+          </div>
+        </div>
+
+        <hr class="sep" />
+
+        <!-- Top produits -->
+        <div class="card">
+          <h3>Top produits</h3>
+          <table id="topProductsTable" class="table">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Vues</th>
+                <th>ATC</th>
+                <th>Achats</th>
+                <th>Favoris</th>
+                <th>Revenu</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
     </section>
   </main>
-
-  
-
-    <!-- SIDE PANELS -->
+  <!-- SIDE PANELS -->
   <div id="panel-compte" class="side-panel">
     <button class="close-btn">&times;</button>
     <h2>Mon compte</h2>
@@ -225,8 +288,33 @@
     <p>Votre panier est vide.</p>
   </div>
 
+    <!-- SIDE PANELS -->
+  <div id="panel-compte" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Mon compte</h2>
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Votre email">
+      <label>Mot de passe</label>
+      <input type="password" placeholder="Votre mot de passe">
+      <button type="submit">Connexion</button>
+      <p class="alt-action">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
+    </form>
+  </div>
+  <div id="panel-favoris" class="side-panel">
+    <button class="close-btn">&times;</button>
+  </div>
+  <div id="panel-panier" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Votre panier</h2>
+    <p>Votre panier est vide.</p>
+  </div>
+
+
   <!-- JS -->
   <script type="module" src="/js/pages/admin.page.js"></script>
+  <script type="module" src="/js/boot.js"></script>
+  <script src="/js/tracker.js" defer></script>
   <button id="logoutBtn" class="fab-logout" type="button">Déconnexion</button>
 </body>
 
