@@ -33,11 +33,10 @@ async function main() {
       description:
         "Le vase Nova ! Ses sphères organiques asymétriques transforment chaque espace en galerie d'art contemporain. Une pièce maîtresse qui sublime votre intérieur, avec ou sans bouquet.",
       price: 3500,
-      colors: ["#ffffff"], // blanc
+      colors: ["#ffffff"],
       images: [
         "/images/vase-cosmo1.jpg",
         "/images/vase-cosmo2.jpg",
-        "/images/vase-cosmo3.jpg"
       ],
       pieceDetail: [
         "Pièce façonnée à la main",
@@ -72,7 +71,7 @@ async function main() {
       colors: ["#ffffff", "#000000"],
       images: [
         "/images/vase-medusa-blanc.jpg",
-        "/images/vase-medusa-noir.jpg",
+        "/images/vase-medusa-noir.jpg"
       ],
       pieceDetail: [
         "Pièce façonnée à la main",
@@ -100,7 +99,7 @@ async function main() {
       price: 4500,
       colors: ["#ffffff"],
       images: [
-        "/images/vase-terralumiere1.jpg",
+        "/images/vase-terralumiere1.jpg"
       ],
       pieceDetail: [
         "Pièce façonnée à la main (2 pièces détachées)",
@@ -127,17 +126,46 @@ async function main() {
       description:
         "Vase en céramique rayée : élégance moderne et raffinement artisanal. Motifs rayés délicats qui captent la lumière avec subtilité. Trois coloris intemporels : blanc-gris, anthracite, tons terreux.",
       price: 5500,
+
+      // ✅ tailles + IMAGES PAR COULEUR
       variants: [
-        { size: "Petit", price: 5500 },
-        { size: "Moyen", price: 6000 },
-        { size: "Grand", price: 6500 }
+        {
+          size: "Petit",
+          price: 5500,
+          imagesByColor: {
+            "#a0522d": ["/images/vase-abla-s-brun.jpeg"],
+            "#dcdcdc": ["/images/vase-abla-s-blanc.jpg"],
+            "#333333": ["/images/vase-abla-s-noir.jpeg"]
+          }
+        },
+        {
+          size: "Moyen",
+          price: 6000,
+          imagesByColor: {
+            "#a0522d": ["/images/vase-abla-m-brun.jpeg"],
+            "#dcdcdc": ["/images/vase-abla-m-blanc.jpg"],
+            "#333333": ["/images/vase-abla-m-noir.jpeg"]
+          }
+        },
+        {
+          size: "Grand",
+          price: 6500,
+          imagesByColor: {
+            "#a0522d": ["/images/vase-abla-l-brun.jpeg"],
+            "#dcdcdc": ["/images/abla-4.jpg"],
+            "#333333": ["/images/vase-abla-l-noir.jpeg"]
+          }
+        }
       ],
+
+      // ✅ couleurs & images “couleur” (fallback global)
       colors: ["#dcdcdc", "#333333", "#a0522d"],
       images: [
         "/images/abla-1.jpg",
         "/images/abla-2.jpg",
         "/images/abla-3.jpg"
       ],
+
       pieceDetail: [
         "Pièce façonnée à la main avec motifs rayés appliqués individuellement",
         "Variations naturelles dans les rayures, reflet de l’artisanat",
@@ -265,38 +293,67 @@ async function main() {
       ? await prisma.variant.findMany({ where: { productId: product.id }, orderBy: { id: 'asc' } })
       : [];
 
-    // 1) Cas: variantes ont leurs propres images (v.images)
+    // 1) Variantes avec v.images OU v.imagesByColor
     if (hasVariants) {
       for (const v of p.variants) {
+        const variantRow = await prisma.variant.findFirst({
+          where: { productId: product.id, size: v.size || null }
+        });
+        if (!variantRow) continue;
+
+        // idempotence : purge toutes les images de cette variante (on recrée proprement)
+        await prisma.image.deleteMany({ where: { variantId: variantRow.id } });
+
+        // 1A) images simples par variante
         if (Array.isArray(v.images) && v.images.length) {
-          const variantRow = await prisma.variant.findFirst({
-            where: { productId: product.id, size: v.size || null }
+          await prisma.image.createMany({
+            data: v.images.map((url, idx) => ({
+              url,
+              position: idx,
+              variantId: variantRow.id
+            }))
           });
-          if (variantRow) {
-            // seed idempotent
-            await prisma.image.deleteMany({ where: { variantId: variantRow.id } });
-            await prisma.image.createMany({
-              data: v.images.map((url, idx) => ({
+        }
+
+        // 1B) images par couleur pour cette variante
+        if (v.imagesByColor && typeof v.imagesByColor === 'object') {
+          const entries = Object.entries(v.imagesByColor);
+          const data = [];
+          for (const [hex, arr] of entries) {
+            const color = normHex(hex);
+            if (!Array.isArray(arr) || !arr.length || !color) continue;
+            arr.forEach((url, idx) => {
+              data.push({
                 url,
-                position: idx,
-                variantId: variantRow.id
-              }))
+                position: idx,      // ordre dans la couleur pour cette variante
+                variantId: variantRow.id,
+                colorHex: color     // 👈 lien TAILLE + COULEUR
+              });
             });
+          }
+          if (data.length) {
+            await prisma.image.createMany({ data });
           }
         }
       }
     }
 
-    // 2) Cas: parité COULEURS <-> IMAGES => lier colorHex
+    // 2) Parité COULEURS <-> IMAGES → lier colorHex au produit (fallback global)
     if (hasColors && hasImages && colors.length === p.images.length) {
       // purge images colorées existantes pour idempotence
       await prisma.image.deleteMany({
-        where: { productId: product.id, colorHex: { not: null } }
+        where: { productId: product.id, colorHex: { not: null }, variantId: null }
       });
 
-      // si parité TAILLES aussi, on liera à la fois colorHex + variantId (voir plus bas)
-      // sinon, on crée déjà l'entrée colorée simple ici
-      if (!(hasVariants && variants.length === p.images.length)) {
+      // si parité TAILLES et aucune v.imagesByColor/v.images n'ont été utilisées,
+      // on évite de créer ici (voir étape 3 pour lier une seule ligne avec variantId+colorHex)
+      const someVariantHasOwn =
+        (p.variants || []).some(v =>
+          (Array.isArray(v.images) && v.images.length) ||
+          (v.imagesByColor && Object.keys(v.imagesByColor).length)
+        );
+
+      if (!(hasVariants && variants.length === p.images.length && !someVariantHasOwn)) {
         await prisma.image.createMany({
           data: p.images.map((url, idx) => ({
             url,
@@ -308,9 +365,12 @@ async function main() {
       }
     }
 
-    // 3) Cas: parité TAILLES <-> IMAGES et AUCUNE variante n’a v.images
+    // 3) Parité TAILLES <-> IMAGES (et AUCUNE variante n’a v.images/v.imagesByColor)
     const noVariantHasOwnImages = hasVariants
-      ? !(p.variants || []).some(v => Array.isArray(v.images) && v.images.length)
+      ? !(p.variants || []).some(v =>
+        (Array.isArray(v.images) && v.images.length) ||
+        (v.imagesByColor && Object.keys(v.imagesByColor).length)
+      )
       : true;
 
     if (hasVariants && hasImages && variants.length === p.images.length && noVariantHasOwnImages) {
@@ -319,7 +379,7 @@ async function main() {
         where: { variantId: { in: variants.map(v => v.id) } }
       });
 
-      // Si parité COULEURS aussi → on lie la même image à la fois à la couleur ET à la variante (une seule ligne, deux colonnes)
+      // Si parité COULEURS aussi → lier la même image à la fois à la couleur ET à la variante (une seule ligne)
       if (hasColors && colors.length === p.images.length) {
         const data = p.images.map((url, idx) => ({
           url,
@@ -330,7 +390,7 @@ async function main() {
         }));
         await prisma.image.createMany({ data });
       } else {
-        // Sinon on lie juste aux variantes
+        // Sinon lier juste aux variantes
         const data = p.images.map((url, idx) => ({
           url,
           position: idx,
@@ -340,8 +400,7 @@ async function main() {
       }
     }
 
-    // 4) Cas: ni parité couleurs, ni parité tailles → rien à faire ici,
-    // le front utilisera la galerie produit en fallback.
+    // 4) Ni parité claire, ni images spécifiques → fallback : galerie produit
   }
 }
 

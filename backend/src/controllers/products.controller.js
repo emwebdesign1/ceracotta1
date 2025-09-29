@@ -25,10 +25,10 @@ function mapProduct(p) {
 
   const colors = Array.from(new Set([...colorHexesFromColors, ...colorHexesFromVariants]));
 
-  // 3) colorImageMap (depuis Image.colorHex via back-relation Product.imagesLinked)
+  // 3) colorImageMap produit (depuis Image.colorHex SANS variantId)
   const colorImageMap = {};
   for (const img of (p.imagesLinked || [])) {
-    if (img.colorHex) {
+    if (img.colorHex && !img.variantId) {
       const key = normHex(img.colorHex);
       if (!key) continue;
       if (!colorImageMap[key]) colorImageMap[key] = [];
@@ -36,11 +36,26 @@ function mapProduct(p) {
     }
   }
 
-  // 4) variantes enrichies (images propres à la variante si présentes)
+  // 4) variantes enrichies (images génériques + images par couleur)
   const variants = (p.variants || []).map(v => {
-    const vImages = (v.images || [])
-      .sort((a, b) => a.position - b.position)
+    const imgs = (v.images || []).sort((a, b) => a.position - b.position);
+
+    const generic = imgs
+      .filter(i => !i.colorHex)        // uniquement les images sans couleur
       .map(i => i.url);
+
+    const colorMap = {};
+    for (const i of imgs) {
+      if (i.colorHex) {
+        const key = normHex(i.colorHex);
+        if (!key) continue;
+        if (!colorMap[key]) colorMap[key] = [];
+        colorMap[key].push(i.url);
+      }
+    }
+
+    const firstColorImg = Object.values(colorMap)[0]?.[0] || null;
+
     return {
       id: v.id,
       sku: v.sku,
@@ -48,8 +63,9 @@ function mapProduct(p) {
       size: v.size,
       price: v.price ?? p.price,
       stock: v.stock,
-      images: vImages,
-      primaryImageUrl: vImages[0] || null
+      images: generic,                         // images génériques de la variante
+      colorImageMap: colorMap,                 // images de la variante par couleur
+      primaryImageUrl: generic[0] || firstColorImg || null
     };
   });
 
@@ -62,11 +78,11 @@ function mapProduct(p) {
     category: p.category ? { slug: p.category.slug, name: p.category.name } : null,
     images,                 // galerie "produit"
     colors,                 // pastilles HEX
-    colorImageMap,          // 🔥 clé: "#hex" → [urls]
+    colorImageMap,          // 🔥 clé: "#hex" → [urls] (niveau produit)
     pieceDetail: p.pieceDetail ?? null,
     careAdvice: p.careAdvice ?? null,
     shippingReturn: p.shippingReturn ?? null,
-    variants,               // avec images + primaryImageUrl
+    variants,               // avec images génériques + colorImageMap + primaryImageUrl
   };
 }
 
@@ -97,9 +113,9 @@ export async function listProducts(req, res) {
       take,
       include: {
         images: true,              // ProductImage[]
-        imagesLinked: true,        // Image[] (back-relation pour colorHex)
+        imagesLinked: true,        // Image[] (back-relation pour colorHex / variantId)
         colors: true,
-        variants: { include: { images: true } }, // 🔥 images de variantes
+        variants: { include: { images: true } }, // 🔥 images de variantes (avec colorHex possible)
         category: true
       }
     })
@@ -114,7 +130,7 @@ export async function getProduct(req, res) {
     where: { slug },
     include: {
       images: true,               // ProductImage[]
-      imagesLinked: true,         // Image[] (colorHex / variantId potentiellement vides)
+      imagesLinked: true,         // Image[] (colorHex / variantId potentiellement présents)
       colors: true,
       variants: { include: { images: true } }, // 🔥
       category: true
