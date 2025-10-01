@@ -379,3 +379,24 @@ tbody tr { border-bottom:1px solid #efeae2; }
   .fab-logout{ padding:10px 14px; bottom:12px; right:12px; }
 }
 
+
+/* Variantes */
+.variants-list { display: grid; gap: 10px; }
+.variant-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr)) auto;
+  gap: 10px;
+  align-items: end;
+  background: #f7f5f1;
+  border: 1px solid #e9e6e0;
+  padding: 10px;
+  border-radius: 10px;
+}
+.variant-row label { display: flex; flex-direction: column; font-size: 14px; }
+.variant-row input { padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+.variant-row .v-active-wrap { align-items: center; }
+.variant-row .v-active { width: auto; height: auto; margin-top: 6px; }
+.variant-row .v-del { align-self: center; }
+@media (max-width: 900px) {
+  .variant-row { grid-template-columns: 1fr 1fr; }
+}

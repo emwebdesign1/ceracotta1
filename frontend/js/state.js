@@ -43,7 +43,13 @@ export function setAuth({ user = null, accessToken = null } = {}) {
 
 export function clearAuth() {
   setAuth({ user: null, accessToken: null });
+  // recharger la liste invité (sans fusion)
+  state.favs = (function(){
+    try { return JSON.parse(localStorage.getItem('favs.guest.v1') || '[]'); } catch { return []; }
+  })();
+  document.dispatchEvent(new CustomEvent('fav:changed', { detail: state.favs }));
 }
+
 
 // === Panier ===
 export function saveCart() {
@@ -165,40 +171,16 @@ function migrateGuestFavsIntoUser() {
   localStorage.removeItem(guestKey);
 }
 
-/* NEW: fusionne toutes les anciennes clés favs.*.v1 vers la clé du user courant */
-function mergeAllFavsIntoCurrentUser() {
-  const u = state.user;
-  const uid = u?.id || u?._id || u?.email || u?.username || 'guest';
-  const targetKey = `favs.${uid}.v1`;
-
-  const migrate = (raw) => migrateArray(raw);
-  const eq = (a,b) => favEquals(a,b);
-
-  let current = [];
-  try { current = migrate(JSON.parse(localStorage.getItem(targetKey) || '[]')); } catch {}
-
-  const allKeys = Object.keys(localStorage).filter(k => /^favs\..+\.v1$/.test(k));
-  for (const k of allKeys) {
-    if (k === targetKey) continue;
-    try {
-      const arr = migrate(JSON.parse(localStorage.getItem(k) || '[]'));
-      for (const f of arr) if (!current.some(x => eq(x, f))) current.push(f);
-      localStorage.removeItem(k);
-    } catch {}
-  }
-
-  localStorage.setItem(targetKey, JSON.stringify(current));
-  state.favs = current;
-}
-
 /* Boot favoris */
 loadFavsForCurrentUser();
-mergeAllFavsIntoCurrentUser();
 
-// Hooke le changement d’auth pour recharger/fusionner
+// Après login : fusionne juste les favoris invités → utilisateur connecté.
+// Après logout : recharge la clé du "guest" sans fusionner.
 document.addEventListener('auth:changed', () => {
+  if (state.user) { 
+    migrateGuestFavsIntoUser();
+  }
   loadFavsForCurrentUser();
-  migrateGuestFavsIntoUser();
-  mergeAllFavsIntoCurrentUser();
   document.dispatchEvent(new CustomEvent('fav:changed', { detail: state.favs }));
 });
+

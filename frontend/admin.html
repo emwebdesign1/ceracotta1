@@ -72,6 +72,8 @@
       <button class="ad-tab" data-view="users">Utilisateurs</button>
       <button class="ad-tab" data-view="settings">Paramètres</button>
       <button class="ad-tab" data-view="stats">Statistiques</button>
+      <button class="ad-tab" data-view="surveys">Sondages</button>
+
     </aside>
 
     <!-- Contenu -->
@@ -162,11 +164,55 @@
             <div id="prodImagesPreview" class="thumbs" style="display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0;">
             </div>
 
+            <!-- ===== Variantes ===== -->
+            <div class="full" style="margin-top:1rem">
+              <h3 style="margin:.25rem 0 .5rem">Variantes</h3>
+
+              <div id="variantsList" class="variants-list"></div>
+
+              <button type="button" id="variantAddBtn" class="btn" style="margin-top:.5rem">+ Ajouter une
+                variante</button>
+
+              <!-- template ligne variante -->
+              <template id="variantRowTpl">
+                <div class="variant-row">
+                  <label>
+                    Couleur (HEX)
+                    <input class="v-color" placeholder="#000000" />
+                  </label>
+                  <label>
+                    Taille
+                    <input class="v-size" placeholder="Petit / Moyen / Grand" />
+                  </label>
+                  <label>
+                    Prix (centimes)
+                    <input class="v-price" type="number" step="1" min="0" placeholder="ex: 5900" />
+                  </label>
+                  <label>
+                    Stock
+                    <input class="v-stock" type="number" step="1" min="0" placeholder="0" />
+                  </label>
+                  <label>
+                    SKU
+                    <input class="v-sku" placeholder="optionnel" />
+                  </label>
+                  <label class="v-active-wrap">
+                    Actif
+                    <input class="v-active" type="checkbox" checked />
+                  </label>
+                  <button type="button" class="btn danger v-del">Supprimer</button>
+                </div>
+              </template>
+            </div>
+
+
           </label>
           <div class="actions">
             <button type="button" id="prodReset" class="btn">Réinitialiser</button>
             <button type="submit" class="btn primary" id="prodSave">Enregistrer</button>
           </div>
+
+
         </form>
       </section>
 
@@ -264,6 +310,48 @@
           </table>
         </div>
       </section>
+
+      <!-- ===== Sondages ===== -->
+      <section class="card view" id="view-surveys" hidden>
+        <div class="toolbar">
+          <h2>Réponses au sondage “Vaisselle”</h2>
+          <button id="survRefresh" class="btn">Rafraîchir</button>
+        </div>
+
+        <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="kpi card">
+            <h3>Total</h3>
+            <div class="kpi-val" id="svTotal">—</div>
+          </div>
+          <div class="kpi card">
+            <h3>Mugs</h3>
+            <div class="kpi-val" id="svMugs">—</div>
+          </div>
+          <div class="kpi card">
+            <h3>Assiettes</h3>
+            <div class="kpi-val" id="svPlates">—</div>
+          </div>
+          <div class="kpi card">
+            <h3>Bols</h3>
+            <div class="kpi-val" id="svBowls">—</div>
+          </div>
+        </div>
+
+        <hr class="sep" />
+
+        <table id="surveysTable" class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Choix</th>
+              <th>Autre (texte)</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
     </section>
   </main>
   <!-- SIDE PANELS -->
@@ -288,7 +376,7 @@
     <p>Votre panier est vide.</p>
   </div>
 
-    <!-- SIDE PANELS -->
+  <!-- SIDE PANELS -->
   <div id="panel-compte" class="side-panel">
     <button class="close-btn">&times;</button>
     <h2>Mon compte</h2>

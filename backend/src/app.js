@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 
 import routes from './routes/index.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import surveyRoutes from './routes/survey.routes.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -67,6 +68,8 @@ app.get('/', (_req, res) => res.sendFile(path.join(FRONT_DIR, 'index.html')));
 app.use('/api', routes);
 app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 
+app.use('/api/survey', surveyRoutes);
+
 // 👉 Alias: tout ce qui est sous /uploads sera aussi visible sous /images
 app.use('/images',  express.static(path.join(process.cwd(), 'public', 'uploads')));
 
@@ -76,5 +79,6 @@ app.use((req, res, next) => next({ status: 404, message: 'Not Found' }));
 
 /* ---------------- Gestion d'erreurs ---------------- */
 app.use(errorHandler);
+
 
 export default app;

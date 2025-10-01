@@ -369,5 +369,50 @@ body {
   }
 }
 
+/* ===== SONDAGE VAISSELLE ===== */
+.survey-hero{
+  margin: 90px auto 30px;
+  padding: 26px 18px;
+  background: linear-gradient(135deg, #f4f1ec, #fcf8f1);
+  border:1px solid #e8e2d9; border-radius:18px;
+  max-width: 1100px;
+}
+.survey-hero-inner{ text-align:center; }
+.survey-title{ margin:0 0 8px; font-size:28px; color:#7f0000; }
+.survey-text{ margin:0 0 6px; font-size:18px; }
+.survey-bonus{ margin:0 0 14px; color:#6a6157; }
+.survey-cta{
+  padding:12px 22px; border:none; border-radius:999px;
+  background:#7f0000; color:#fff; font-weight:700; cursor:pointer;
+}
+
+/* Modal */
+.survey-modal{
+  position:fixed; inset:0; background:rgba(0,0,0,.35);
+  display:none; align-items:center; justify-content:center; z-index:1200;
+}
+.survey-modal.open{ display:flex; }
+.survey-dialog{
+  width:min(560px, 92vw); background:#fff; border-radius:16px; padding:18px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15); position:relative;
+}
+.survey-close{
+  position:absolute; right:10px; top:8px; border:none; background:transparent;
+  font-size:26px; cursor:pointer; color:#7f0000;
+}
+.survey-group{ border:1px solid #efe7dd; border-radius:12px; padding:12px 12px 4px; }
+.survey-group legend{ color:#6a6157; padding:0 6px; }
+.survey-group .opt{ display:block; margin:8px 0; }
+#survey-other{
+  width:100%; margin:8px 0 0; padding:10px 12px; border-radius:12px; border:1px solid #e7e0d7;
+}
+.survey-email{ display:block; margin:12px 0 0; }
+.survey-email input{
+  width:100%; margin-top:6px; padding:10px 12px; border-radius:12px; border:1px solid #e7e0d7;
+}
+.survey-actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+.btn.primary{ background:#7f0000; color:#fff; }
+.btn.ghost{ background:#fff; color:#7f0000; border:1px solid #7f0000; }
+
 
 

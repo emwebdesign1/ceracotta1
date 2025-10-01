@@ -66,6 +66,55 @@
   <main>
     <h1 class="page-title">Collection Vaisselle</h1>
 
+    <!-- ===== SONDAGE VAISSELLE (Marketing participatif) ===== -->
+<section id="survey-hero" class="survey-hero">
+  <div class="survey-hero-inner">
+    <h2 class="survey-title">Aidez-nous à façonner la prochaine collection</h2>
+    <p class="survey-text">
+      La vaisselle Céracotta est en cours de création.<br/>
+      Voulez-vous des <strong>mugs colorés</strong> ? Des <strong>assiettes minimalistes</strong> ? Des <strong>bols généreux</strong> ?
+    </p>
+    <p class="survey-bonus">Donnez votre avis et recevez une surprise lors du lancement !</p>
+    <button id="survey-open" class="survey-cta">Participer au sondage</button>
+  </div>
+</section>
+
+<!-- Modal sondage -->
+<div id="survey-modal" class="survey-modal" aria-hidden="true">
+  <div class="survey-dialog" role="dialog" aria-modal="true" aria-labelledby="survey-heading">
+    <button class="survey-close" id="survey-close" aria-label="Fermer">×</button>
+    <h3 id="survey-heading">Votre avis compte !</h3>
+
+    <form id="survey-form">
+      <fieldset class="survey-group">
+        <legend>Que voulez-vous dans la prochaine collection ?</legend>
+        <label class="opt"><input type="radio" name="choice" value="MUGS_COLORFUL" required> Mugs colorés</label>
+        <label class="opt"><input type="radio" name="choice" value="PLATES_MINIMAL"> Assiettes minimalistes</label>
+        <label class="opt"><input type="radio" name="choice" value="BOWLS_GENEROUS"> Bols généreux</label>
+        <label class="opt">
+          <input type="radio" name="choice" value="OTHER"> Autre
+        </label>
+        <input type="text" id="survey-other" name="otherText" placeholder="Précisez votre idée (facultatif)" />
+      </fieldset>
+
+      <label class="survey-email">
+        Laissez votre email pour la surprise (facultatif)
+        <input type="email" name="email" placeholder="nom@exemple.ch" />
+      </label>
+
+      <!-- honeypot anti-bot -->
+      <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true"/>
+
+      <div class="survey-actions">
+        <button type="button" class="btn ghost" id="survey-cancel">Annuler</button>
+        <button type="submit" class="btn primary">Envoyer</button>
+      </div>
+      <p id="survey-msg" class="muted" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+
     <div class="sort-filter-container">
       <label for="category-filter">Trier par :</label>
       <select id="category-filter">

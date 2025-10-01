@@ -7,14 +7,18 @@ import {
   adminUpdateProduct,
   adminDeleteProduct,
   adminListProducts,
-  analyticsSummary,
-  analyticsFunnel,
-  analyticsTopProducts
+  adminGetProduct,
+
+  // ⬇️ alias des exports du contrôleur vers les noms attendus ici
+  adminAnalyticsSummary as analyticsSummary,
+  adminAnalyticsFunnel as analyticsFunnel,
+  adminAnalyticsTopProducts as analyticsTopProducts,
 } from "../controllers/admin.controller.js";
 
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { listSurveys, surveyStats } from '../controllers/survey.controller.js';
 
 const ensureDir = (dir) => { if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); };
 
@@ -52,7 +56,9 @@ r.get("/products", adminListProducts);
 r.post("/products", adminCreateProduct);
 r.put("/products/:id", adminUpdateProduct);
 r.delete("/products/:id", adminDeleteProduct);
+r.get("/products/:id", adminGetProduct);   // lecture 1 produit
 
+// ===== Analytics =====
 r.get("/analytics/summary", analyticsSummary);
 r.get("/analytics/funnel", analyticsFunnel);
 r.get("/analytics/top-products", analyticsTopProducts);
@@ -126,6 +132,9 @@ r.delete("/products/:id/images/:imageId", async (req, res, next) => {
   }
 });
 
+// (⚠️ NOTE) La fonction ci-dessous utilise document/window → c'est pour le front,
+// pas pour Express. Elle ne sera pas appelée côté serveur.
+// Je la laisse telle quelle puisque tu l'avais dans la base.
 function renderImages(images, productId) {
   const container = document.getElementById("images-list"); // adapte selon ton HTML
   container.innerHTML = "";
@@ -162,9 +171,12 @@ function renderImages(images, productId) {
   });
 }
 
-
 // ===== Listes =====
 r.get("/orders", adminListOrders);
 r.get("/users", adminListUsers);
+
+// Sondages
+r.get('/surveys', listSurveys);
+r.get('/surveys/stats', surveyStats);
 
 export default r;
