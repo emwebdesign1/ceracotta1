@@ -940,3 +940,21 @@ footer {
 }
 
 
+
+.fav-badge { display: none !important; }
+
+/* Auth: harmoniser les <select> avec les <input> */
+.auth-form select{
+  background:#fcf8f1;
+  border:1px solid #e7e0d7;
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:1rem;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+  appearance:none; /* look propre */
+}
+.auth-form select:focus{
+  border-color:#caa18b;
+  box-shadow:0 0 0 3px rgba(202,161,139,.22);
+}

@@ -242,9 +242,47 @@
 
       <!-- ===== Paramètres ===== -->
       <section class="card view" id="view-settings" hidden>
-        <h2>Paramètres</h2>
-        <p class="muted">Paramètres généraux de l’admin (à compléter).</p>
-      </section>
+   <h2>Paramètres du compte</h2>
+
+  <div class="grid" style="grid-template-columns:1fr 1fr; gap:20px;">
+    <!-- Profil -->
+    <form id="formProfile" class="card" style="padding:16px">
+      <h3>Mon profil</h3>
+      <label>Prénom
+        <input id="setFirstName" placeholder="Prénom">
+      </label>
+      <label>Nom
+        <input id="setLastName" placeholder="Nom">
+      </label>
+      <label>Téléphone
+        <input id="setPhone" placeholder="+41 ...">
+      </label>
+      <label>Email
+        <input id="setEmail" type="email" placeholder="email@exemple.com">
+      </label>
+      <div class="actions">
+        <button type="submit" class="btn primary">Enregistrer le profil</button>
+      </div>
+    </form>
+
+    <!-- Mot de passe -->
+    <form id="formPassword" class="card" style="padding:16px">
+      <h3>Changer le mot de passe</h3>
+      <label>Mot de passe actuel
+        <input id="pwdCurrent" type="password" placeholder="••••••••" required>
+      </label>
+      <label>Nouveau mot de passe
+        <input id="pwdNew" type="password" placeholder="••••••••" required>
+      </label>
+      <label>Confirmer le nouveau
+        <input id="pwdNew2" type="password" placeholder="••••••••" required>
+      </label>
+      <div class="actions">
+        <button type="submit" class="btn danger">Mettre à jour le mot de passe</button>
+      </div>
+    </form>
+  </div>
+</section>
 
       <!-- ===== Statistiques ===== -->
       <section class="card view" id="view-stats" hidden>

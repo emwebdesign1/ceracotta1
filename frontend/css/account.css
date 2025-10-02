@@ -54,3 +54,79 @@
   .account-shell{ grid-template-columns:1fr; }
   .settings-info{ grid-template-columns:1fr; }
 }
+
+/* ===== Formulaires (Paramètres compte) ===== */
+.form-block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+
+.form-block label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.form-block input {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--ink);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-block input:focus {
+  border-color: var(--brand);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(127, 0, 0, 0.15);
+}
+
+.form-block button {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.form-block .btn.primary {
+  background: #f7f0ea;
+  color: var(--ink);
+}
+
+.form-block .btn.primary:hover {
+  background: #f1e6de;
+}
+
+.form-block .btn.danger {
+  background: var(--brand);
+  color: #fff;
+}
+
+.form-block .btn.danger:hover {
+  background: #a00000;
+}
+
+.msg {
+  margin: 10px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-block input:disabled {
+  background: #f5f5f5;
+  color: #888;
+  cursor: not-allowed;
+}

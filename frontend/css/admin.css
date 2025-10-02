@@ -323,14 +323,8 @@ tbody tr { border-bottom:1px solid #efeae2; }
       - <= 640px : rendu "cartes" lisible (avec étiquettes)          */
 
 /* 8.a) Scroll horizontal smooth + sticky header */
+/* 8.a) Scroll horizontal smooth + sticky header */
 @media (max-width: 860px){
-  table{
-    display:block; width:100%;
-    overflow-x:auto; white-space:nowrap;
-    -webkit-overflow-scrolling:touch;
-  }
-  thead{ position: sticky; top: 0; background:#fff; z-index:1; }
-  th, td{ padding:10px 12px; }
   /* masquer quelques colonnes non essentielles sur petit écran */
   /* Commandes : Adresse + Articles */
   #ordersTable th:nth-child(4), #ordersTable td:nth-child(4),
@@ -341,7 +335,6 @@ tbody tr { border-bottom:1px solid #efeae2; }
   #usersTable th:nth-child(3), #usersTable td:nth-child(3),
   #usersTable th:nth-child(5), #usersTable td:nth-child(5){ display:none; }
 }
-
 /* 8.b) Ultra-mobile (cartes empilées) */
 @media (max-width: 640px){
   /* on cache l’en-tête et on transforme chaque ligne */

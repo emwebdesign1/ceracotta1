@@ -26,6 +26,7 @@ async function main() {
     update: {},
     create: { name: 'Vaisselle', slug: 'vaisselle' }
   });
+  
 
   const products = [
     {
@@ -100,7 +101,10 @@ async function main() {
       price: 4500,
       colors: ["#ffffff"],
       images: [
-        "/images/vase-terralumiere1.jpg"
+        "/images/vase-terralumiere1.jpg",
+       "/images/vase-terralumiere2.jpg",
+        "/images/vase-terralumiere3.jpg",
+        "/images/vase-terralumiere4.jpg"
       ],
       pieceDetail: [
         "Pièce façonnée à la main (2 pièces détachées)",

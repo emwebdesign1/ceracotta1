@@ -96,26 +96,44 @@
       </section>
     </div>
 
-    <!-- Paramètres -->
-    <div class="view" id="view-settings" hidden>
-      <section class="card">
-        <h3>Paramètres du compte</h3>
-        <div id="meMsg" class="msg"></div>
-        <div class="settings-info">
-          <div class="info-row"><span class="info-label">Nom d’utilisateur</span><span class="info-value" id="username">–</span></div>
-          <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="email">–</span></div>
-          <div class="info-row"><span class="info-label">Prénom</span><span class="info-value" id="firstName">–</span></div>
-          <div class="info-row"><span class="info-label">Nom</span><span class="info-value" id="lastName">–</span></div>
-          <div class="info-row"><span class="info-label">Téléphone</span><span class="info-value" id="phone">–</span></div>
-          <div class="info-row"><span class="info-label">Adresse</span><span class="info-value" id="address">–</span></div>
-          <div class="info-row"><span class="info-label">Ville</span><span class="info-value" id="city">–</span></div>
-          <div class="info-row"><span class="info-label">Pays</span><span class="info-value" id="country">–</span></div>
-        </div>
-        <div class="actions-bar">
-          <button id="logoutBtn" class="btn danger" type="button">Déconnexion</button>
-        </div>
-      </section>
+<!-- Paramètres -->
+<div class="view" id="view-settings" hidden>
+  <section class="card">
+    <h3>Paramètres du compte</h3>
+    <div id="meMsg" class="msg"></div>
+
+<!-- Form profil -->
+<form id="formProfile" class="form-block">
+  <label>Nom d'utilisateur
+    <input id="setUsername" disabled>
+  </label>
+  <label>Email
+    <input id="setEmail" type="email" disabled>
+  </label>
+  <label>Prénom <input id="setFirstName"></label>
+  <label>Nom <input id="setLastName"></label>
+  <label>Téléphone <input id="setPhone"></label>
+  <label>Adresse <input id="setAddressLine1"></label>
+  <label>Complément <input id="setAddressLine2"></label>
+  <label>NPA <input id="setZip"></label>
+  <label>Ville <input id="setCity"></label>
+  <label>Pays <input id="setCountry"></label>
+  <button type="submit" class="btn primary">Enregistrer le profil</button>
+</form>
+
+    <!-- Form mot de passe -->
+    <form id="formPassword" class="form-block">
+      <label>Mot de passe actuel <input id="pwdCurrent" type="password" required></label>
+      <label>Nouveau mot de passe <input id="pwdNew" type="password" required></label>
+      <label>Confirmer <input id="pwdNew2" type="password" required></label>
+      <button type="submit" class="btn danger">Changer le mot de passe</button>
+    </form>
+
+    <div class="actions-bar">
+      <button id="logoutBtn" class="btn danger" type="button">Déconnexion</button>
     </div>
+  </section>
+</div>
   </section>
  
 </main>

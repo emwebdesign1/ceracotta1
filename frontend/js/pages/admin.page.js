@@ -2,6 +2,8 @@
 import { authHeaders } from '/js/state.js';
 import { logout, me } from '/js/api.js';
 
+const API_BASE = 'http://localhost:4000'; // mets '' si ton API est sur le même domaine
+
 /* ================== GUARDE ADMIN ================== */
 (async () => {
   try {
@@ -15,11 +17,18 @@ import { logout, me } from '/js/api.js';
 })();
 
 /* ================== CONFIG ================== */
-const API_BASE = 'http://localhost:4000'; // mets '' si ton API est sur le même domaine
+
+
+
+// === API Settings ===
+// === API Settings ===
+const SETTINGS_ME_API = `${API_BASE}/api/admin/me`;
+const SETTINGS_PWD_API = `${API_BASE}/api/admin/me/password`;
 
 // ==== SONDAGES (endpoints admin) ====
 const SURVEY_API = `${API_BASE}/api/admin/surveys`;
 const SURVEY_STATS_API = `${API_BASE}/api/admin/surveys/stats`;
+
 
 /* ================== HELPERS UI ================== */
 const $ = (s) => document.querySelector(s);
@@ -81,6 +90,85 @@ function renderImagePreview(images = [], productId = null) {
     box.appendChild(wrap);
   });
 }
+
+async function fetchMe() {
+  const r = await fetch(SETTINGS_ME_API, { headers: { ...authHeaders() } });
+  if (!r.ok) throw new Error('Erreur chargement profil');
+  return r.json();
+}
+
+function fillProfileForm(me) {
+  $('#setFirstName').value = me.firstName || '';
+  $('#setLastName').value  = me.lastName || '';
+  $('#setPhone').value     = me.phone || '';
+  $('#setEmail').value     = me.email || '';
+}
+
+async function loadSettings() {
+  try {
+    const me = await fetchMe();
+    fillProfileForm(me);
+  } catch (e) {
+    console.error(e);
+    if (msg) { msg.textContent = e.message || 'Erreur chargement paramètres.'; msg.style.color = '#b00020'; }
+  }
+}
+
+// Envoi profil
+$('#formProfile')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    const payload = {
+      firstName: $('#setFirstName')?.value || null,
+      lastName:  $('#setLastName')?.value || null,
+      phone:     $('#setPhone')?.value || null,
+      email:     $('#setEmail')?.value || null,
+    };
+    const r = await fetch(SETTINGS_ME_API, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', ...authHeaders() },
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok) throw new Error(await r.text());
+    const meUpdated = await r.json();
+    fillProfileForm(meUpdated);
+    if (msg) { msg.textContent = 'Profil mis à jour.'; msg.style.color = '#1b5e20'; }
+  } catch (err) {
+    console.error(err);
+    if (msg) { msg.textContent = 'Erreur mise à jour profil.'; msg.style.color = '#b00020'; }
+  }
+});
+
+// Envoi mot de passe
+$('#formPassword')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const cur = $('#pwdCurrent')?.value || '';
+  const n1  = $('#pwdNew')?.value || '';
+  const n2  = $('#pwdNew2')?.value || '';
+  if (n1 !== n2) {
+    if (msg) { msg.textContent = 'Les nouveaux mots de passe ne correspondent pas.'; msg.style.color = '#b00020'; }
+    return;
+  }
+  try {
+    const r = await fetch(SETTINGS_PWD_API, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', ...authHeaders() },
+      body: JSON.stringify({ currentPassword: cur, newPassword: n1 }),
+    });
+    const t = await r.text();
+    if (!r.ok) throw new Error(t || 'Erreur');
+    // reset champs
+    $('#pwdCurrent').value = '';
+    $('#pwdNew').value = '';
+    $('#pwdNew2').value = '';
+    if (msg) { msg.textContent = 'Mot de passe mis à jour.'; msg.style.color = '#1b5e20'; }
+  } catch (err) {
+    console.error(err);
+    if (msg) { msg.textContent = 'Erreur changement de mot de passe.'; msg.style.color = '#b00020'; }
+  }
+});
+
+
 
 /* ================== VARIANTES (UI) ================== */
 const variantsList = document.getElementById('variantsList');
@@ -172,6 +260,8 @@ document.querySelectorAll('[data-view]').forEach((el) => {
     if (v === 'orders') loadOrders();
     if (v === 'stats') loadStats();
     if (v === 'surveys') loadSurveys();
+    if (v === 'settings') loadSettings();
+
   });
 });
 const initial = (location.hash || '#orders').slice(1);
@@ -185,6 +275,30 @@ document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     location.href = '/index.html';
   }
 });
+
+
+function pick(...vals){ for (const v of vals) if (v !== undefined && v !== null && v !== '') return v; return null; }
+
+function readColor(it){
+  const v = it.variant || {};
+  // Ajout d’un log pour debug
+  console.log('item:', it);
+
+  // Prend la couleur dans la variante si présente
+  return pick(
+    v.color, v.colorHex, v.hex,
+    it.color, it.variantColor,
+    it.options?.color, it.meta?.color, it.attributes?.colorHex, it.attributes?.color
+  );
+}
+
+function readSize(it){
+  const v = it.variant || {};
+  return pick(
+    it.size, it.variantSize, v.size, v.labelSize,
+    it.options?.size, it.meta?.size, it.attributes?.size, it.sizeLabel
+  );
+}
 
 /* ================== COMMANDES ================== */
 const ordersTableBody = document.querySelector('#ordersTable tbody');
@@ -200,8 +314,23 @@ function renderOrders(list = []) {
     const user = o.user || {};
     const d = new Date(o.createdAt || Date.now());
     const items = (o.items || [])
-      .map(it => `${it.quantity}× ${it.title}${it.variant ? ` (${it.variant})` : ''}`)
+      .map(it => {
+        const color = it.color || it.variant?.color || null;
+        const size  = it.size  || it.variant?.size  || null;
+        
+        const colorHtml = color
+          ? `<span style="display:inline-block;width:16px;height:16px;border-radius:50%;background:${color};border:1px solid #ccc;margin-right:4px;vertical-align:middle"></span><span>${color}</span>`
+          : null;
+        
+        const variantTxt = [
+          colorHtml ? `Couleur : ${colorHtml}` : null,
+          size ? `Taille : ${size}` : null
+        ].filter(Boolean).join(' | ');
+
+        return `${it.quantity}× ${it.title}${variantTxt ? ` <span class="muted">(${variantTxt})</span>` : ''}`;
+      })
       .join('<br/>');
+
     const pay = o.paymentMethod ? `<span class="tag">${o.paymentMethod}</span>` : '-';
     const status = o.isPaid ? '<span class="tag payee">Payée</span>' : (o.status || '-');
     const tr = document.createElement('tr');
@@ -295,15 +424,24 @@ async function createProduct(payload) {
   if (!r.ok) throw new Error('Erreur création produit');
   return r.json();
 }
+// admin.page.js
 async function updateProduct(id, payload) {
   const r = await fetch(`${API_BASE}/api/admin/products/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...authHeaders() },
     body: JSON.stringify(payload),
   });
-  if (!r.ok) throw new Error('Erreur mise à jour produit');
-  return r.json();
+
+  if (!r.ok) {
+    const msg = await r.text().catch(() => '');
+    throw new Error(msg || 'Erreur mise à jour produit');
+  }
+
+  if (r.status === 204) return { ok: true };
+  const text = await r.text();
+  return text ? JSON.parse(text) : { ok: true };
 }
+
 async function deleteProduct(id) {
   const r = await fetch(`${API_BASE}/api/admin/products/${id}`, {
     method: 'DELETE',
@@ -717,3 +855,4 @@ if (initial === 'users') loadUsers();
 if (initial === 'orders') loadOrders();
 if (initial === 'stats') loadStats();
 if (initial === 'surveys') loadSurveys();
+if (initial === 'settings') loadSettings();
