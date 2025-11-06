@@ -107,13 +107,32 @@ export const confirmOrder = async (req, res, next) => {
               variantId: it.variantId ?? null,
               quantity: it.quantity,
               unitPrice: it.unitPrice,
-              // champs requis / utiles dans ton schema.prisma
               title: it.title || it.product?.title || 'Produit',
               image:
                 it.image ||
                 (Array.isArray(it.product?.images) ? it.product.images[0] ?? null : null),
+              // 🆕 Ajout couleur et taille si présentes
+              color:
+                it.color ||
+                it.variant?.color ||
+                it.variantColor ||
+                it.options?.color ||
+                it.meta?.color ||
+                it.attributes?.colorHex ||
+                it.attributes?.color ||
+                null,
+              size:
+                it.size ||
+                it.variant?.size ||
+                it.variantSize ||
+                it.options?.size ||
+                it.meta?.size ||
+                it.attributes?.size ||
+                it.sizeLabel ||
+                null,
             })),
           },
+
         },
         include: { items: true },
       });
