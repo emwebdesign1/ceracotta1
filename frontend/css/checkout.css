@@ -804,3 +804,41 @@ label{ color:#5a554f; font-weight:600; }
 .checkout-page #overlay:not(.active){
   display:none !important; pointer-events:none !important;
 }
+
+/* === Harmonisation du SELECT (Pays) === */
+.checkout-page select[name="country"] {
+  width: 100%;
+  height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #e5e2db;
+  border-radius: 12px;
+  background-color: #fff;
+  color: #2f2a26;
+  font-family: 'Urbanist', sans-serif;
+  font-size: 1rem;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  appearance: none;
+  -webkit-appearance: none; /* Chrome/Safari */
+  -moz-appearance: none; /* Firefox */
+  cursor: pointer;
+}
+
+
+/* FIX: Rien ne doit recouvrir le bouton payer */
+.pay-panel {
+  z-index: 1 !important;
+}
+
+.pay-panel.open {
+  z-index: 1 !important;
+}
+
+.checkout-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.btn.primary {
+  position: relative;
+  z-index: 9999 !important;
+}

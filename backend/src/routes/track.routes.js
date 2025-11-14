@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
       }
     });
 
-    // 4) Agrégats journaliers (si produit)
+      // 4) Agrégats journaliers (si produit)
     if (productId && type === 'PRODUCT_VIEW') {
       const day = new Date(); day.setHours(0, 0, 0, 0);
       await prisma.dailyProductStat.upsert({
@@ -69,6 +69,7 @@ router.post('/', async (req, res) => {
         create: { date: day, productId, views: 1 }
       });
     }
+
     if (productId && type === 'ADD_TO_CART') {
       const day = new Date(); day.setHours(0, 0, 0, 0);
       await prisma.dailyProductStat.upsert({
@@ -77,21 +78,50 @@ router.post('/', async (req, res) => {
         create: { date: day, productId, addToCarts: 1 }
       });
     }
+
     if (productId && type === 'FAVORITE_ADD') {
       const day = new Date(); day.setHours(0, 0, 0, 0);
       await prisma.dailyProductStat.upsert({
         where: { date_productId: { date: day, productId } },
-        update: { favorites: { increment: 1 } }, // on ne décrémente pas à REMOVE
+        update: { favorites: { increment: 1 } },
         create: { date: day, productId, favorites: 1 }
+      });
+    }
+
+    // 🟣 Nouveau : suivi global du checkout / achat
+    if (type === 'BEGIN_CHECKOUT') {
+      const day = new Date(); day.setHours(0, 0, 0, 0);
+      await prisma.event.create({
+        data: {
+          type: 'BEGIN_CHECKOUT',
+          sessionId: session.id,
+          path,
+          value: null,
+          currency: null,
+        },
+      });
+    }
+
+    if (type === 'PURCHASE') {
+      const day = new Date(); day.setHours(0, 0, 0, 0);
+      await prisma.event.create({
+        data: {
+          type: 'PURCHASE',
+          sessionId: session.id,
+          path,
+          value: typeof value === 'number' ? value : null,
+          currency: currency || 'CHF',
+        },
       });
     }
 
     res.json({ ok: true });
   } catch (e) {
     console.error('[track] error', e);
-    // ne casse jamais le front à cause d’analytics
     res.json({ ok: true });
   }
 });
 
+
 export default router;
+

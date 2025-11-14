@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { requireAuth as auth } from '../middleware/auth.js';
+// src/routes/carts.routes.js
+import express from 'express';
 import {
   getMyCart,
   addToCart,
@@ -7,25 +7,30 @@ import {
   removeCartItem,
   clearCart
 } from '../controllers/carts.controller.js';
+import { verifyJWT } from '../middleware/auth.js'; // ✅ Import du middleware d’authentification
 
-const r = Router();
+const router = express.Router();
 
-// Toutes les routes du panier nécessitent l’auth
-r.use(auth);
+/* ---------------------------------------------------
+   ROUTES PANIER UTILISATEUR (protégées par JWT)
+--------------------------------------------------- */
 
-// Récupérer le panier courant de l'utilisateur
-r.get('/', getMyCart);
+// ✅ Applique le middleware à toutes les routes ci-dessous
+router.use(verifyJWT);
 
-// Ajouter un produit au panier
-r.post('/items', addToCart);
+// Récupère le panier de l'utilisateur connecté
+router.get('/', getMyCart);
 
-// Modifier la quantité d’un item
-r.patch('/items/:itemId', updateCartItem);
+// Ajoute un produit au panier
+router.post('/items', addToCart);
 
-// Supprimer un item
-r.delete('/items/:itemId', removeCartItem);
+// Met à jour la quantité d’un article du panier
+router.patch('/items/:itemId', updateCartItem);
 
-// Vider le panier
-r.delete('/', clearCart);
+// Supprime un article du panier
+router.delete('/items/:itemId', removeCartItem);
 
-export default r;
+// Vide complètement le panier
+router.delete('/', clearCart);
+
+export default router;

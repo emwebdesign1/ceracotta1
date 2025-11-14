@@ -31,20 +31,23 @@
           <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
         </svg>
       </a>
-      <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 
-          7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
-          14.76 3 16.5 3 19.58 3 22 5.42 22 
-          8.5c0 3.78-3.4 6.86-8.55 
-          11.54L12 21.35z"/>
-        </svg>
-      </a>
-      <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
-        </svg>
-      </a>
+<a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="feather feather-heart">
+    <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+      5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+      1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+  <span id="fav-badge">0</span>
+</a>
+<a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+    <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
+  </svg>
+  <span id="cart-badge" class="cart-badge"></span>
+</a>
+
     </div>
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
@@ -114,7 +117,6 @@
 <script type="module" src="/js/boot.js"></script>
 <script type="module" src="/js/pages/vases.page.js"></script>
 <script src="/js/tracker.js" defer></script>
-
 
 
 </body>

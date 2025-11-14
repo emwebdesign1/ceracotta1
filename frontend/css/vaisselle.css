@@ -415,4 +415,52 @@ body {
 .btn.ghost{ background:#fff; color:#7f0000; border:1px solid #7f0000; }
 
 
+.product-image-wrapper {
+  position: relative;
+}
 
+.sold-out-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: rgba(127, 0, 0, 0.9);
+  color: white;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.sold-out-text {
+  color: #999;
+  font-weight: 600;
+}
+
+.product-image-wrapper {
+  position: relative;
+}
+
+.sold-out-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: rgba(127, 0, 0, 0.9);
+  color: white;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.sold-out-text {
+  color: #999;
+  font-weight: 600;
+}
+
+.product-image.disabled {
+  opacity: 0.6;
+  filter: grayscale(50%);
+}

@@ -2,13 +2,14 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma.js';
+
 import { z } from 'zod';
 
 const registerSchema = z.object({
   firstName: z.string().min(1, 'Prénom requis'),
   lastName: z.string().min(1, 'Nom requis'),
   username: z.string().min(3, 'Nom d’utilisateur trop court').max(32),
-  phone: z.string().min(6, 'Téléphone invalide').max(32),
+  phone: z.string().min(6, 'Téléphone invalide').max(12),
   email: z.string().email('Email invalide'),
   password: z.string().min(8, 'Mot de passe trop court (≥ 8)'),
 

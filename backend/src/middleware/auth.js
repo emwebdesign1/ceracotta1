@@ -1,6 +1,7 @@
 // src/middleware/auth.js
 import jwt from 'jsonwebtoken';
-import { prisma } from '../config/db.js';
+import prisma from '../config/db.js';
+
 
 const { JWT_SECRET = 'dev-secret' } = process.env;
 

@@ -68,6 +68,7 @@ app.get('/', (_req, res) => res.sendFile(path.join(FRONT_DIR, 'index.html')));
 app.use('/api', routes);
 app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')));
 
+
 app.use('/api/survey', surveyRoutes);
 
 // 👉 Alias: tout ce qui est sous /uploads sera aussi visible sous /images

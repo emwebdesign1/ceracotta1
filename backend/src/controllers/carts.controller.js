@@ -1,6 +1,6 @@
-import { prisma } from '../config/db.js';
+import prisma from '../lib/prisma.js';
 
-// Helper: garantit l'existence du panier utilisateur
+// 🧩 Helper : garantit l'existence du panier utilisateur
 async function ensureCart(userId) {
   let cart = await prisma.cart.findUnique({ where: { userId } });
   if (!cart) {
@@ -9,7 +9,7 @@ async function ensureCart(userId) {
   return cart;
 }
 
-// en haut du fichier (helper robuste pour extraire la 1re image produit/variant)
+// 🧩 Helper : extrait la 1ʳᵉ image d’un produit ou d’une variante
 function firstImageOf(value) {
   try {
     if (Array.isArray(value) && value.length) return value[0];
@@ -21,34 +21,43 @@ function firstImageOf(value) {
   return null;
 }
 
-
 /**
  * GET /api/carts/
  */
-// .../controllers/carts.controller.js
 export async function getMyCart(req, res) {
   try {
     const userId = req.user.id;
     const cart = await ensureCart(userId);
+
     const full = await prisma.cart.findUnique({
       where: { id: cart.id },
       include: {
-        items: { include: { variant: true } } // ⬅️ important
+        cartitem: {
+          include: {
+            product: true,
+            variant: true
+          }
+        }
       }
     });
-    return res.json({ cart: full });
+
+    // 🪄 Renomme cartitem → items pour compatibilité front
+    const result = {
+      ...full,
+      items: full.cartitem || []
+    };
+
+    return res.json({ cart: result });
   } catch (err) {
     console.error('getMyCart error:', err);
     return res.status(500).json({ error: 'Erreur serveur' });
   }
 }
 
-
 /**
  * POST /api/carts/items
- * body: { productId, quantity? }
+ * body: { productId, quantity?, variantId?, color?, size?, image? }
  */
-// ...
 export async function addToCart(req, res) {
   try {
     const userId = req.user.id;
@@ -68,11 +77,9 @@ export async function addToCart(req, res) {
 
     // Produit
     const product = await prisma.product.findUnique({ where: { id: productId } });
-    if (!product || (Object.hasOwn(product, 'active') && !product.active)) {
-      return res.status(404).json({ error: 'Produit introuvable' });
-    }
+    if (!product) return res.status(404).json({ error: 'Produit introuvable' });
 
-    // Variante (optionnelle) + check d’appartenance au produit
+    // Variante (optionnelle)
     let unitPrice = product.price;
     let variant = null;
     if (variantId) {
@@ -82,79 +89,68 @@ export async function addToCart(req, res) {
       }
       if (variant.price != null) unitPrice = variant.price;
       if (!image) image = firstImageOf(variant.images);
-      // Normaliser color/size depuis la variante si non fournis
       if (!color && variant.color) color = variant.color;
-      if (!size  && variant.size)  size  = variant.size;
+      if (!size && variant.size) size = variant.size;
     }
     if (!image) image = firstImageOf(product.images);
 
-    // Normalisation (évite les faux négatifs au matching)
-    color = (color || null);
-    size  = (size  || null);
+    // Normalisation
+    color = color || null;
+    size = size || null;
     variantId = variantId || null;
 
-    // Chercher un item identique
-    const existing = await prisma.cartItem.findFirst({
-      where: { cartId: cart.id, productId: product.id, variantId, color, size }
+    // 🔍 Chercher un item identique
+    const existing = await prisma.cartitem.findFirst({
+      where: { cartId: cart.id, productId: product.id, variantId, color, size },
     });
 
     let item;
     if (existing) {
-      item = await prisma.cartItem.update({
+      item = await prisma.cartitem.update({
         where: { id: existing.id },
         data: {
           quantity: existing.quantity + quantity,
           ...(existing.unitPrice == null && unitPrice != null ? { unitPrice } : {}),
           ...(existing.image == null && image ? { image } : {}),
-          // garde color/size telles quelles si déjà présentes
-        }
+        },
       });
     } else {
-      // ⚠️ Selon ton schema, soit tu as `variantId` (Int?) + relation, soit une relation nommée `variant`.
-      // Variante 1 (la plus simple/robuste si tu as un champ variantId):
-      item = await prisma.cartItem.create({
+      item = await prisma.cartitem.create({
         data: {
           cartId: cart.id,
           productId: product.id,
           title: product.title,
           unitPrice,
           image,
-          variantId,     // ⬅️ si ton modèle a bien `variantId`
-          color,         // ⬅️ on PERSISTE
-          size,          // ⬅️ on PERSISTE
-          quantity
-        }
+          variantId,
+          color,
+          size,
+          quantity,
+        },
       });
-
-      // Variante 2 (si ta relation s’appelle `variant` sans `variantId` brut) :
-      // item = await prisma.cartItem.create({
-      //   data: {
-      //     cartId: cart.id,
-      //     productId: product.id,
-      //     title: product.title,
-      //     unitPrice,
-      //     image,
-      //     ...(variantId ? { variant: { connect: { id: variantId } } } : {}),
-      //     color,
-      //     size,
-      //     quantity,
-      //   },
-      // });
     }
 
-    // renvoyer le panier à jour (souvent plus pratique côté front)
+    // Renvoyer le panier complet mis à jour
     const full = await prisma.cart.findUnique({
       where: { id: cart.id },
-      include: { items: { include: { variant: true } } }
+      include: {
+        cartitem: {
+          include: {
+            product: true,
+            variant: true
+          }
+        }
+      }
     });
 
-    return res.status(201).json({ cart: full, item });
+    const result = { ...full, items: full.cartitem || [] };
+
+    return res.status(201).json({ cart: result, item });
   } catch (err) {
     console.error('addToCart error:', err);
     return res.status(500).json({ error: 'Erreur serveur' });
   }
 }
-
 
 /**
  * PATCH /api/carts/items/:itemId
@@ -168,19 +164,33 @@ export async function updateCartItem(req, res) {
 
     if (!quantity || quantity < 1) return res.status(400).json({ error: 'quantity invalide' });
 
-    // Vérifie que l’item appartient bien au panier de l’utilisateur
-    const item = await prisma.cartItem.findUnique({ where: { id: itemId } });
+    const item = await prisma.cartitem.findUnique({ where: { id: itemId } });
     if (!item) return res.status(404).json({ error: 'Item introuvable' });
 
     const cart = await prisma.cart.findUnique({ where: { id: item.cartId } });
     if (!cart || cart.userId !== userId) return res.status(403).json({ error: 'Accès refusé' });
 
-    const updated = await prisma.cartItem.update({
+    const updated = await prisma.cartitem.update({
       where: { id: itemId },
-      data: { quantity }
+      data: { quantity },
     });
 
-    return res.json({ item: updated });
+    // Renvoyer le panier à jour
+    const full = await prisma.cart.findUnique({
+      where: { id: cart.id },
+      include: {
+        cartitem: {
+          include: {
+            product: true,
+            variant: true
+          }
+        }
+      }
+    });
+
+    const result = { ...full, items: full.cartitem || [] };
+
+    return res.json({ cart: result });
   } catch (err) {
     console.error('updateCartItem error:', err);
     return res.status(500).json({ error: 'Erreur serveur' });
@@ -195,14 +205,29 @@ export async function removeCartItem(req, res) {
     const userId = req.user.id;
     const { itemId } = req.params;
 
-    const item = await prisma.cartItem.findUnique({ where: { id: itemId } });
+    const item = await prisma.cartitem.findUnique({ where: { id: itemId } });
     if (!item) return res.status(404).json({ error: 'Item introuvable' });
 
     const cart = await prisma.cart.findUnique({ where: { id: item.cartId } });
     if (!cart || cart.userId !== userId) return res.status(403).json({ error: 'Accès refusé' });
 
-    await prisma.cartItem.delete({ where: { id: itemId } });
-    return res.status(204).send();
+    await prisma.cartitem.delete({ where: { id: itemId } });
+
+    const full = await prisma.cart.findUnique({
+      where: { id: cart.id },
+      include: {
+        cartitem: {
+          include: {
+            product: true,
+            variant: true
+          }
+        }
+      }
+    });
+
+    const result = { ...full, items: full.cartitem || [] };
+
+    return res.status(200).json({ cart: result });
   } catch (err) {
     console.error('removeCartItem error:', err);
     return res.status(500).json({ error: 'Erreur serveur' });
@@ -217,8 +242,10 @@ export async function clearCart(req, res) {
     const userId = req.user.id;
     const cart = await ensureCart(userId);
 
-    await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
-    return res.status(204).send();
+    await prisma.cartitem.deleteMany({ where: { cartId: cart.id } });
+
+    const emptyCart = { ...cart, items: [] };
+    return res.status(200).json({ cart: emptyCart });
   } catch (err) {
     console.error('clearCart error:', err);
     return res.status(500).json({ error: 'Erreur serveur' });

@@ -958,3 +958,518 @@ footer {
   border-color:#caa18b;
   box-shadow:0 0 0 3px rgba(202,161,139,.22);
 }
+
+/* === FAVORIS PANEL === */
+#panel-favoris {
+  background-color: #f4f1ec;
+  color: #2b2b2b;
+  font-family: 'Urbanist', sans-serif;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+#panel-favoris .fav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+#panel-favoris .fav-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: #7f0000;
+  margin: 0;
+}
+
+#panel-favoris .fav-count {
+  font-size: 0.95rem;
+  color: #7f0000;
+  font-weight: 600;
+}
+
+#panel-favoris .fav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+#panel-favoris .fav-item {
+  display: flex;
+  gap: 1rem;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  align-items: center;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#panel-favoris .fav-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+#panel-favoris .fav-item img {
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+#panel-favoris .fav-item .meta {
+  flex: 1;
+}
+
+#panel-favoris .fav-item .title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  color: #2b2b2b;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+#panel-favoris .fav-item .price {
+  color: #7f0000;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+#panel-favoris .variant-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.6rem;
+}
+
+#panel-favoris .color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #999;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#panel-favoris .size-tag {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid #7f0000;
+  color: #7f0000;
+  background-color: #f8f5f2;
+  font-weight: 500;
+}
+
+#panel-favoris .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#panel-favoris .btn {
+  border: none;
+  cursor: pointer;
+  font-family: 'Urbanist', sans-serif;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  transition: all 0.25s ease;
+}
+
+#panel-favoris .btn.ghost {
+  background-color: #f4f1ec;
+  border: 1px solid #7f0000;
+  color: #7f0000;
+}
+
+#panel-favoris .btn.ghost:hover {
+  background-color: #7f0000;
+  color: #fff;
+}
+
+#panel-favoris .btn.danger {
+  background-color: transparent;
+  color: #b00020;
+  font-weight: bold;
+}
+
+#panel-favoris .btn.danger:hover {
+  text-decoration: underline;
+  color: #7f0000;
+}
+
+#panel-favoris .fav-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #7f0000;
+  font-size: 1rem;
+}
+
+/* Scroll bar fine et discrète */
+#panel-favoris::-webkit-scrollbar {
+  width: 6px;
+}
+#panel-favoris::-webkit-scrollbar-thumb {
+  background: #c8bcb1;
+  border-radius: 10px;
+}
+#panel-favoris::-webkit-scrollbar-thumb:hover {
+  background: #7f0000;
+}
+
+/* === FAVORIS PANEL – ANIMATIONS ET FLUIDITÉ === */
+
+/* Effet d'apparition du panneau entier */
+#panel-favoris {
+  scroll-behavior: smooth;
+  animation: favPanelFadeIn 0.5s ease forwards;
+  transform-origin: top center;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes favPanelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation d'apparition des items */
+#panel-favoris .fav-item {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: favItemAppear 0.45s ease forwards;
+}
+#panel-favoris .fav-item:nth-child(1) { animation-delay: 0.1s; }
+#panel-favoris .fav-item:nth-child(2) { animation-delay: 0.2s; }
+#panel-favoris .fav-item:nth-child(3) { animation-delay: 0.3s; }
+#panel-favoris .fav-item:nth-child(4) { animation-delay: 0.4s; }
+#panel-favoris .fav-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes favItemAppear {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Petit hover flottant haut de gamme */
+#panel-favoris .fav-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Scroll doux et discret */
+#panel-favoris {
+  scrollbar-width: thin;
+  scrollbar-color: #c8bcb1 #f4f1ec;
+}
+#panel-favoris::-webkit-scrollbar {
+  width: 6px;
+}
+#panel-favoris::-webkit-scrollbar-thumb {
+  background: #c8bcb1;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+#panel-favoris::-webkit-scrollbar-thumb:hover {
+  background: #7f0000;
+}
+
+/* Boutons avec micro-transition tactile */
+#panel-favoris .btn {
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+#panel-favoris .btn:active {
+  transform: scale(0.96);
+}
+#open-favoris { position: relative; }
+
+#open-favoris {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #7f0000;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+}
+
+#open-favoris:hover {
+  transform: scale(1.05);
+}
+
+#open-favoris svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* --- Icône favoris header parfaitement alignée --- */
+#open-favoris {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #7f0000;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+}
+
+#open-favoris:hover {
+  transform: scale(1.05);
+}
+
+/* le cœur est naturellement trop bas → on le remonte un peu */
+#open-favoris svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  transform: translateY(-3.5px); /* ✅ remonte le cœur */
+}
+
+/* --- Badge compteur --- */
+#fav-badge {
+  position: absolute;
+  top: -6px;    
+  right: -8px;   
+  background-color: #7f0000;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 15px;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+  display: none;
+  box-shadow: 0 0 3px rgba(127, 0, 0, 0.25);
+  transform: scale(1);
+  transition: transform 0.2s ease;
+}
+
+/* Petit effet rebond sur changement */
+#fav-badge.bump {
+  transform: scale(1.25);
+}
+
+
+.cart-badge {
+  display: none;
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #7f0000;
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  width: 15px;
+  height: 15px;
+  line-height: 17px;
+  text-align: center;
+  transition: transform 0.25s;
+}
+
+.cart-badge.bump {
+  transform: scale(1.25);
+}
+
+.lang-switch {
+  text-align: center;
+  margin: 20px 0;
+  font-weight: 600;
+  color: #fffaf2;
+  font-family: 'Montserrat', sans-serif;
+}
+.lang-switch a {
+  color: #fffaf2;
+  text-decoration: none;
+  margin: 0 4px;
+  transition: opacity 0.3s;
+}
+.lang-switch a:hover {
+  opacity: 0.7;
+}
+.lang-switch a.active {
+  text-decoration: underline;
+}
+
+/* === Sélecteur de langue menu latéral === */
+.lang-switch {
+  position: absolute;
+  bottom: 30px;               /* colle tout en bas du nav */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fffaf2;
+  opacity: 0.9;
+}
+
+.lang-switch a {
+  color: #fffaf2;
+  text-decoration: none;
+  margin: 0 6px;
+  transition: all 0.3s ease;
+}
+
+.lang-switch a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.lang-switch a.active {
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* pour les écrans petits */
+@media (max-height: 600px) {
+  .lang-switch {
+    bottom: 15px;
+  }
+}
+
+/* === Sélecteur de langue (bas du menu latéral) === */
+.lang-switch {
+  position: absolute;
+  bottom: 0; /* ✅ vraiment collé tout en bas */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 18px 0 22px; /* espace vertical pour respirer un peu */
+  border-top: 1px solid rgba(255, 255, 255, 0.25); /* fine ligne séparatrice */
+  background: linear-gradient(to top, rgba(0,0,0,0.05), transparent); /* léger effet luxe */
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.4px;
+  color: #fffaf2;
+}
+
+.lang-switch a {
+  color: #fffaf2;
+  text-decoration: none;
+  margin: 0 8px;
+  transition: all 0.3s ease;
+  opacity: 0.85;
+}
+
+.lang-switch a:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.lang-switch a.active {
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* Adaptation petits écrans */
+@media (max-height: 600px) {
+  .lang-switch {
+    padding: 12px 0 16px;
+  }
+}
+
+/* === Sélecteur de langue minimaliste, collé en bas === */
+.lang-switch {
+  position: absolute;
+  bottom: 0;               /* ✅ tout en bas */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10 0 10px;    /* bel équilibre vertical */
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fffaf2;
+  letter-spacing: 0.6px;
+  background: transparent; /* aucune bordure ni effet */
+}
+
+.lang-switch a {
+  color: #fffaf2;
+  text-decoration: none;
+  margin: 0 4px;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.lang-switch a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.lang-switch a.active {
+  opacity: 1;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Adaptation mobile */
+@media (max-width: 768px) {
+  .lang-switch {
+    padding: 18px 0 22px;
+    font-size: 0.9rem;
+  }
+}
+
+/* === Sélecteur de langue bas du menu (version finale centrée) === */
+.lang-switch {
+  position: absolute;
+  bottom: 0;
+  left: 50%;                      /* centre horizontalement */
+  transform: translateX(-50%);    /* corrige le centrage */
+  width: 100%;
+  text-align: center;
+  padding: 22px 0 26px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fffaf2;
+  letter-spacing: 0.6px;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.lang-switch a {
+  color: #fffaf2;
+  text-decoration: none;
+  margin: 0 10px;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.lang-switch a:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.lang-switch a.active {
+  opacity: 1;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Adaptation mobile */
+@media (max-width: 768px) {
+  .lang-switch {
+    padding: 18px 0 22px;
+    font-size: 0.9rem;
+  }
+}

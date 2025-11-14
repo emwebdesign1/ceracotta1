@@ -50,7 +50,6 @@ export function clearAuth() {
   document.dispatchEvent(new CustomEvent('fav:changed', { detail: state.favs }));
 }
 
-
 // === Panier ===
 export function saveCart() {
   localStorage.setItem(LS.CART, JSON.stringify(state.cart));
@@ -67,6 +66,7 @@ function normalizeFav(input) {
   if (!slug) return null;
   return { slug, color, size };
 }
+
 function favEquals(a, b) {
   if (!a || !b) return false;
   return a.slug === b.slug
@@ -102,15 +102,20 @@ function loadFavsFromStorage() {
 
 function saveFavsToStorage() {
   localStorage.setItem(favKey(), JSON.stringify(state.favs));
+  localStorage.setItem('fav.count', (state.favs?.length || 0).toString());
 }
 
 export function getFavorites() {
-  if (!Array.isArray(state.favs)) state.favs = [];
+  if (!Array.isArray(state.favs)) state.favs = loadFavsFromStorage();
   return state.favs;
 }
+
 export function favoritesCount() {
-  return Array.isArray(state.favs) ? state.favs.length : 0;
+  const count = Array.isArray(state.favs) ? state.favs.length : 0;
+  localStorage.setItem('fav.count', count.toString());
+  return count;
 }
+
 export function isFavorite(entry) {
   const needle = normalizeFav(entry);
   if (!needle) return false;
@@ -122,19 +127,28 @@ export function isFavorite(entry) {
   }
   return state.favs.some(f => favEquals(f, needle));
 }
+
+// ✅ Corrigé : permet d’ajouter plusieurs tailles d’un même produit
 export function addFavorite(entry) {
   const fav = normalizeFav(entry);
   if (!fav) return;
 
   if (!Array.isArray(state.favs)) state.favs = [];
-  const idx = state.favs.findIndex(f => favEquals(f, fav));
 
-  if (idx === -1) state.favs.push(fav);   // Ajout
-  else state.favs.splice(idx, 1);         // Toggle (retrait)
+  const exists = state.favs.some(f => favEquals(f, fav));
+
+  if (!exists) {
+    // ajoute sans supprimer d’autres variantes
+    state.favs.push(fav);
+  } else {
+    // toggle uniquement si exactement la même variante
+    state.favs = state.favs.filter(f => !favEquals(f, fav));
+  }
 
   saveFavsToStorage();
   document.dispatchEvent(new CustomEvent('fav:changed', { detail: state.favs }));
 }
+
 export function removeFavorite(entry) {
   const fav = normalizeFav(entry);
   if (!fav) return;
@@ -171,11 +185,29 @@ function migrateGuestFavsIntoUser() {
   localStorage.removeItem(guestKey);
 }
 
-/* Boot favoris */
-loadFavsForCurrentUser();
+// === FAVORIS COMPTEUR GLOBAL ===
+export function updateFavCounter() {
+  const badge = document.getElementById('fav-badge');
+  if (!badge) return;
 
-// Après login : fusionne juste les favoris invités → utilisateur connecté.
-// Après logout : recharge la clé du "guest" sans fusionner.
+  const count = getFavorites()?.length || 0;
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+    badge.classList.add('bump');
+    setTimeout(() => badge.classList.remove('bump'), 200);
+  } else {
+    badge.style.display = 'none';
+  }
+
+  localStorage.setItem('fav.count', count.toString());
+}
+
+// ✅ écoute chaque changement de favoris pour MAJ immédiate
+document.addEventListener('fav:changed', updateFavCounter);
+
+// Après login / logout : synchro des favoris
 document.addEventListener('auth:changed', () => {
   if (state.user) { 
     migrateGuestFavsIntoUser();
@@ -183,4 +215,39 @@ document.addEventListener('auth:changed', () => {
   loadFavsForCurrentUser();
   document.dispatchEvent(new CustomEvent('fav:changed', { detail: state.favs }));
 });
+
+
+// === PANIER COMPTEUR GLOBAL ===
+export function updateCartCounter() {
+  const badge = document.getElementById('cart-badge');
+  if (!badge) return;
+
+  const count = Array.isArray(state.cart?.items) ? state.cart.items.length : 0;
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+    badge.classList.add('bump');
+    setTimeout(() => badge.classList.remove('bump'), 200);
+  } else {
+    badge.style.display = 'none';
+  }
+
+  localStorage.setItem('cart.count', count.toString());
+}
+
+// ✅ écouter les changements de panier pour MAJ immédiate
+document.addEventListener('cart:changed', updateCartCounter);
+
+// ✅ initialisation au chargement
+document.addEventListener('DOMContentLoaded', updateCartCounter);
+
+// ✅ Au boot : charger les favoris + compteur persisté
+loadFavsForCurrentUser();
+updateFavCounter();
+updateCartCounter();
+updateFavCounter();
+
+document.addEventListener('DOMContentLoaded', updateFavCounter);
+
 

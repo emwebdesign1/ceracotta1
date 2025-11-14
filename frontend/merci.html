@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Merci pour votre commande – Céracotta</title>
+  <title data-i18n="merci.pageTitle">Merci pour votre commande – Céracotta</title>
   <link rel="stylesheet" href="/css/index.css"/>
   <style>
     :root { --beige:#f4f1ec; --bordeaux:#7f0000; --ivory:#fffaf3; }
@@ -12,8 +12,8 @@
     .card { background:white; border:1px solid #e5e2db; border-radius:16px; padding:24px; }
     h1 { margin:0 0 8px; font-size:28px; letter-spacing:.2px; }
     p.lead { color:#5e564d; margin-top:0; }
-    .actions { display:flex; gap:12px; margin-top:18px; }
-    .btn { display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 16px; border-radius:12px; border:1px solid transparent; text-decoration:none; font-weight:600; }
+    .actions { display:flex; gap:12px; margin-top:18px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 16px; border-radius:12px; border:1px solid transparent; text-decoration:none; font-weight:600; justify-content:center; }
     .btn-primary { background:var(--bordeaux); color:white; }
     .btn-ghost { background:white; color:#2a2a2a; border-color:#d9d5cc; }
     .sum { margin-top:18px; border-top:1px dashed #e5e2db; padding-top:16px; }
@@ -26,28 +26,28 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Merci ✨</h1>
-      <p class="lead">Votre paiement a été confirmé. Nous préparons votre commande.</p>
+      <h1 data-i18n="merci.title">Merci ✨</h1>
+      <p class="lead" data-i18n="merci.text">Votre paiement a été confirmé. Nous préparons votre commande.</p>
 
       <div id="orderBlock" class="sum">
-        <div class="muted">Récapitulatif de la dernière commande</div>
+        <div class="muted" data-i18n="merci.summary">Récapitulatif de la dernière commande</div>
         <table id="orderTable">
           <tbody>
-            <tr><td>Numéro</td><th id="o-id">—</th></tr>
-            <tr><td>Date</td><th id="o-date">—</th></tr>
-            <tr><td>Montant</td><th id="o-amount">—</th></tr>
-            <tr><td>Statut</td><th id="o-status">—</th></tr>
+            <tr><td data-i18n="merci.table.number">Numéro</td><th id="o-id">—</th></tr>
+            <tr><td data-i18n="merci.table.date">Date</td><th id="o-date">—</th></tr>
+            <tr><td data-i18n="merci.table.amount">Montant</td><th id="o-amount">—</th></tr>
+            <tr><td data-i18n="merci.table.status">Statut</td><th id="o-status">—</th></tr>
           </tbody>
         </table>
       </div>
 
       <div class="actions">
-        <a class="btn btn-primary" href="/account.html#orders">Voir mes commandes</a>
-        <a class="btn btn-ghost" href="/index.html">Continuer vos achats</a>
+        <a class="btn btn-primary" href="/account.html#orders" data-i18n="merci.btn.orders">Voir mes commandes</a>
+        <a class="btn btn-ghost" href="/index.html" data-i18n="merci.btn.continue">Continuer vos achats</a>
       </div>
 
-      <p class="muted" style="margin-top:14px;">
-        Astuce : vous pouvez retrouver votre facture et le détail des articles dans <strong>Mon compte &rarr; Mes commandes</strong>.
+      <p class="muted" style="margin-top:14px;" data-i18n="merci.hint">
+        Astuce : vous pouvez retrouver votre facture et le détail des articles dans <strong>Mon compte → Mes commandes</strong>.
       </p>
     </div>
   </div>
@@ -56,15 +56,16 @@
   <script type="module" src="/js/pages/merci.page.js"></script>
   <script src="/js/tracker.js" defer></script>
 
-
-   <footer>
-    <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
+  <footer>
+    <p>&copy; 2025 Céracotta. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
     <div class="footer-links">
-      <a href="mentions.html">Mentions légales</a>
-      <a href="conditions.html">Conditions générales</a>
-      <a href="confidentialite.html">Politique de confidentialité</a>
-       <a href="retours.html">Retours & remboursement</a>
+      <a href="mentions.html" data-i18n="footer.mentions">Mentions légales</a>
+      <a href="conditions.html" data-i18n="footer.conditions">Conditions générales</a>
+      <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
+      <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
     </div>
   </footer>
+
+  </script>
 </body>
 </html>

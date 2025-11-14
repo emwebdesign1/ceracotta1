@@ -12,15 +12,15 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Playfair+Display:wght@700&display=swap"
     rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://js.stripe.com; font-src 'self' https://fonts.gstatic.com data:;">
+
 </head>
 
 <body>
   <header>
     <div class="header-left">
       <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </div>
     </div>
     <div class="header-center">
@@ -36,130 +36,107 @@
         </svg>
       </a>
       <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 
-          7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
-          14.76 3 16.5 3 19.58 3 22 5.42 22 
-          8.5c0 3.78-3.4 6.86-8.55 
-          11.54L12 21.35z" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="feather feather-heart">
+          <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+            5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+            1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
+        <span id="fav-badge">0</span>
       </a>
-      <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
+      <a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
           <path
             d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
         </svg>
+        <span id="cart-badge" class="cart-badge"></span>
       </a>
     </div>
+
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="#">Accueil</a></li>
+        <li><a href="#" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
-          <a href="#" id="collections-link">Collections</a>
+          <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
-            <li><a href="vaisselle.html">Vaisselle</a></li>
-            <li><a href="vases.html">Vases</a></li>
+            <li><a href="vaisselle.html" data-i18n="menu.vaisselle">Vaisselle</a></li>
+            <li><a href="vases.html" data-i18n="menu.vases">Vases</a></li>
           </ul>
         </li>
-        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="apropos.html" data-i18n="menu.about">À propos</a></li>
       </ul>
+
     </nav>
+
     <div class="overlay" id="overlay"></div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <picture>
       <source media="(max-width: 768px)" srcset="images/testtel.png">
       <img src="images/fond3.png" alt="Collection Céracotta" class="hero-image">
     </picture>
     <div class="hero-content">
-      <a href="#univers" class="cta-button">Découvrez notre collection</a>
+      <a href="#univers" class="cta-button" data-i18n="hero.cta">Découvrez notre collection</a>
     </div>
   </section>
 
-  <!-- UNIVERS -->
   <section id="univers" class="section section-beige">
-    <h2>Nos univers</h2>
+    <h2 data-i18n="section.univers">Nos univers</h2>
     <div class="univers-grid">
-      <a href="vaisselle.html" class="univers-item">
-        <img src="images/vaisselle.jpg" alt="Vaisselle">
-      </a>
-      <a href="vases.html" class="univers-item">
-        <img src="images/decoration.jpg" alt="Vases">
-      </a>
-      <a href="apropos.html" class="univers-item">
-        <img src="images/apropos.png" alt="À propos">
-      </a>
+      <a href="vaisselle.html" class="univers-item"><img src="images/vaisselle.jpg" alt="Vaisselle"></a>
+      <a href="vases.html" class="univers-item"><img src="images/decoration.jpg" alt="Vases"></a>
+      <a href="apropos.html" class="univers-item"><img src="images/apropos.png" alt="À propos"></a>
     </div>
   </section>
 
-  <!-- ENGAGEMENTS -->
   <section class="section section-blanc">
-    <h2>Nos engagements</h2>
+    <h2 data-i18n="section.engagements">Nos engagements</h2>
     <div class="carac-grid">
-      <div class="carac-item">
-        <img src="images/livraison.png" alt="Livraison rapide">
-        <p>Livraison rapide</p>
-      </div>
-      <div class="carac-item">
-        <img src="images/artisan.png" alt="Fait main">
-        <p>Fait main</p>
-      </div>
-      <div class="carac-item">
-        <img src="images/livraison.png" alt="Argile naturelle">
-        <p>Argile naturelle</p>
-      </div>
-      <div class="carac-item">
-        <img src="images/livraison.png" alt="Pièce unique">
-        <p>Pièce unique</p>
-      </div>
+      <div class="carac-item"><img src="images/livraison.png" alt="Livraison rapide"><p data-i18n="engagement.fast">Livraison rapide</p></div>
+      <div class="carac-item"><img src="images/artisan.png" alt="Fait main"><p data-i18n="engagement.handmade">Fait main</p></div>
+      <div class="carac-item"><img src="images/argille.png" alt="Argile naturelle"><p data-i18n="engagement.natural">Argile naturelle</p></div>
+      <div class="carac-item"><img src="images/unique.png" alt="Pièce unique"><p data-i18n="engagement.unique">Pièce unique</p></div>
     </div>
   </section>
 
-  <!-- AVIS -->
   <section class="section section-beige avis">
-    <h2>Ils parlent de nous</h2>
+    <h2 data-i18n="section.reviews">Ils parlent de nous</h2>
     <div class="avis-container">
       <button class="avis-arrow" id="avis-prev" aria-label="Avis précédent">&#10094;</button>
       <div class="avis-slider">
         <div class="avis-list">
-          <div class="avis-item">
-            <blockquote>"Chaque pièce est un bijou. J'ai refait toute ma table !"<span>— Camille</span></blockquote>
-          </div>
-          <div class="avis-item">
-            <blockquote>"Des vases magnifiques, un vrai plaisir pour les yeux."<span>— Julien</span></blockquote>
-          </div>
-          <div class="avis-item">
-            <blockquote>"Livraison rapide et produits parfaitement emballés."<span>— Sarah</span></blockquote>
-          </div>
-          <div class="avis-item">
-            <blockquote>"Pièces magnifiques, service parfait !"<span>— Élise</span></blockquote>
-          </div>
+          <div class="avis-item"><blockquote data-i18n="review.1">" Le vase que j’ai commandé chez Ceracotta est magnifique ! Les finitions sont parfaites et l’emballage très soigné. Je suis vraiment ravie de mon achat. - Camilla </blockquote></div>
+          <div class="avis-item"><blockquote data-i18n="review.2">"Des vases magnifiques, un vrai plaisir pour les yeux." — Julien</blockquote></div>
+          <div class="avis-item"><blockquote data-i18n="review.3">"Livraison rapide et produits parfaitement emballés." — Sarah</blockquote></div>
+          <div class="avis-item"><blockquote data-i18n="review.4">"Pièces magnifiques, service parfait !" — Élise</blockquote></div>
         </div>
       </div>
       <button class="avis-arrow" id="avis-next" aria-label="Avis suivant">&#10095;</button>
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section class="section section-blanc contact">
-    <h2>Une question ?</h2>
-    <p>Contactez-nous à <a href="mailto:contact@ceracotta.fr">contact@ceracotta.fr</a></p>
+    <h2 data-i18n="section.contact">Une question ?</h2>
+    <p><span data-i18n="contact.text">Contactez-nous à</span> <a href="mailto:ceracotta@ceracotta.com">ceracotta@ceracotta.com</a></p>
   </section>
 
-  <!-- FOOTER -->
- <footer>
-    <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
+  <footer>
+    <p>&copy; 2025 Céracotta. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
     <div class="footer-links">
-      <a href="mentions.html">Mentions légales</a>
-      <a href="conditions.html">Conditions générales</a>
-      <a href="confidentialite.html">Politique de confidentialité</a>
-       <a href="retours.html">Retours & remboursement</a>
+      <a href="mentions.html" data-i18n="footer.mentions">Mentions légales</a>
+      <a href="cvg.html" data-i18n="footer.conditions">Conditions générales</a>
+      <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
+      <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
     </div>
   </footer>
 
-  <!-- SIDE PANELS -->
+  <script type="module" src="/js/boot.js"></script>
+  <script type="module" src="/js/pages/index.page.js"></script>
+  <script src="/js/tracker.js" defer></script>
+<script type="module" src="/js/initTranslations.js"></script>
+ <!-- SIDE PANELS -->
   <div id="panel-compte" class="side-panel">
     <button class="close-btn">&times;</button>
     <h2>Mon compte</h2>
@@ -181,16 +158,6 @@
     <p>Votre panier est vide.</p>
   </div>
 
-  <!-- Scroll top btn -->
-  <button id="scroll-top" class="scroll-top" aria-label="Retour en haut">&#8679;</button>
-
-<script type="module" src="/js/boot.js"></script>
-<script type="module" src="/js/pages/index.page.js"></script>
-<script src="/js/tracker.js" defer></script>
-
-
-
 
 </body>
-
 </html>

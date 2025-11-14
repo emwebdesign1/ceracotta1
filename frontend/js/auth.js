@@ -1,6 +1,7 @@
 // /js/auth.js
 // Monte le side panel "compte" sur la structure HTML existante (form simple).
 import { login } from '/js/api.js';
+import { setAuth } from '/js/state.js'; // ✅ import ajouté
 
 export function mountAuthPanel() {
   const root = document.getElementById('panel-compte');
@@ -43,7 +44,12 @@ export function mountAuthPanel() {
     try {
       const res = await login({ email, password }); // { user, token }
       const user = res?.user;
-      if (user && res?.token) {
+      const token = res?.token;
+
+      if (user && token) {
+        // ✅ Enregistre dans le state + localStorage (pour le header Authorization)
+        setAuth({ user, accessToken: token });
+
         // Enregistre un displayName pour le header
         const displayName = user.username || user.firstName || user.email || 'Mon compte';
         localStorage.setItem('user.displayName', displayName);
@@ -52,13 +58,14 @@ export function mountAuthPanel() {
         setMsg('Connecté ✔', true);
 
         // Redirection selon le rôle
-        if ((user.role || '').toLowerCase() === 'admin') {
+        const role = (user.role || '').toLowerCase();
+        if (role === 'admin') {
           location.href = '/admin.html';
         } else {
           location.href = '/account.html';
         }
       } else {
-        const m = res?.message || 'Identifiants incorrects';
+        const m = res?.message || 'Identifiants incorrects.';
         if (/incorrect|invalid|mot de passe/i.test(m)) setMsg('Mot de passe incorrect.');
         else setMsg(m);
       }

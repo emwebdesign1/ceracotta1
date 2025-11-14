@@ -1,73 +1,76 @@
-import { PrismaClient } from '@prisma/client';
-import { toHex } from '../utils/colors.js';
-const prisma = new PrismaClient();
+// controllers/products.controller.js
+import prisma from '../lib/prisma.js';
 
+
+import { toHex } from '../utils/colors.js';
+
+
+
+
+
+/* -------------------- UTILITAIRES -------------------- */
 function normHex(v) {
   if (!v) return null;
   const s = String(v).trim().toLowerCase();
-  return s ? (s.startsWith('#') ? s : `#${s}`) : null;
+  return s.startsWith('#') ? s : `#${s}`;
 }
 
+function toMultiline(arr) {
+  return Array.isArray(arr) ? arr.join('\n') : null;
+}
+
+/* -------------------- MAPPING PRODUIT -------------------- */
 function mapProduct(p) {
-  // 1) images générales (ProductImage[])
-  const images = (p.images || [])
+  // Galerie principale du produit
+  const images = (p.image || [])
     .sort((a, b) => a.position - b.position)
     .map(i => i.url);
 
-  // 2) couleurs disponibles (depuis ProductColor + éventuelle couleur de variant)
-  const colorHexesFromColors = (p.colors || [])
+  // Couleurs disponibles
+  const colorHexes = (p.productcolor || [])
     .map(c => normHex(c.hex) || toHex(c.name))
     .filter(Boolean);
 
-  const colorHexesFromVariants = (p.variants || [])
-    .map(v => normHex(v.color) || toHex(v.color))
-    .filter(Boolean);
-
-  const colors = Array.from(new Set([...colorHexesFromColors, ...colorHexesFromVariants]));
-
-  // 3) colorImageMap produit (depuis Image.colorHex SANS variantId)
+  // Map d’images associées à chaque couleur
   const colorImageMap = {};
-  for (const img of (p.imagesLinked || [])) {
-    if (img.colorHex && !img.variantId) {
+  for (const img of p.image || []) {
+    if (img.colorHex) {
       const key = normHex(img.colorHex);
-      if (!key) continue;
       if (!colorImageMap[key]) colorImageMap[key] = [];
       colorImageMap[key].push(img.url);
     }
   }
 
-  // 4) variantes enrichies (images génériques + images par couleur)
-  const variants = (p.variants || []).map(v => {
-    const imgs = (v.images || []).sort((a, b) => a.position - b.position);
-
-    const generic = imgs
-      .filter(i => !i.colorHex)        // uniquement les images sans couleur
-      .map(i => i.url);
-
+  // Variantes enrichies
+  const variants = (p.variant || []).map(v => {
+    const imgs = (v.image || []).sort((a, b) => a.position - b.position);
     const colorMap = {};
     for (const i of imgs) {
       if (i.colorHex) {
         const key = normHex(i.colorHex);
-        if (!key) continue;
         if (!colorMap[key]) colorMap[key] = [];
         colorMap[key].push(i.url);
       }
     }
-
-    const firstColorImg = Object.values(colorMap)[0]?.[0] || null;
-
+    const primary = imgs.find(i => !i.colorHex)?.url || Object.values(colorMap)[0]?.[0] || null;
+   
     return {
       id: v.id,
       sku: v.sku,
-      color: normHex(v.color) || toHex(v.color),
       size: v.size,
       price: v.price ?? p.price,
       stock: v.stock,
-      images: generic,                         // images génériques de la variante
-      colorImageMap: colorMap,                 // images de la variante par couleur
-      primaryImageUrl: generic[0] || firstColorImg || null
+      color: normHex(v.color),
+      images: imgs.map(i => i.url),
+      colorImageMap: colorMap,
+      primaryImageUrl: primary
     };
   });
+
+  
+      const totalStock =
+    (p.stock ?? 0) +
+    variants.reduce((sum, v) => sum + (v.stock ?? 0), 0);
 
   return {
     id: p.id,
@@ -76,66 +79,99 @@ function mapProduct(p) {
     description: p.description,
     price: p.price,
     category: p.category ? { slug: p.category.slug, name: p.category.name } : null,
-    images,                 // galerie "produit"
-    colors,                 // pastilles HEX
-    colorImageMap,          // 🔥 clé: "#hex" → [urls] (niveau produit)
+    images,
+    colors: colorHexes,
+    colorImageMap,
     pieceDetail: p.pieceDetail ?? null,
     careAdvice: p.careAdvice ?? null,
     shippingReturn: p.shippingReturn ?? null,
-    variants,               // avec images génériques + colorImageMap + primaryImageUrl
+    variants,
+        stock: p.stock ?? 0,        // ← ajoute cette ligne
+    totalStock, 
+    createdAt: p.createdAt,
   };
 }
 
+/* -------------------- LISTE PRODUITS -------------------- */
 export async function listProducts(req, res) {
-  const { q = '', category, sort = '-createdAt', page = '1', limit = '12' } = req.query;
-  const take = Math.max(1, parseInt(String(limit)));
-  const skip = (Math.max(1, parseInt(String(page))) - 1) * take;
+  try {
+    const { q = '', category, color, minPrice, maxPrice, sort = '-createdAt', page = '1', limit = '12' } = req.query;
 
-  const where = {};
-  if (category) where.category = { slug: String(category) };
-  if (q) {
-    where.OR = [
-      { title: { contains: String(q), mode: 'insensitive' } },
-      { description: { contains: String(q), mode: 'insensitive' } },
-    ];
+    const take = Math.max(1, parseInt(String(limit)));
+    const skip = (Math.max(1, parseInt(String(page))) - 1) * take;
+
+    // Construction dynamique du WHERE
+    const where = {};
+    if (category) where.category = { slug: String(category) };
+    if (q) {
+      where.OR = [
+        { title: { contains: String(q), mode: 'insensitive' } },
+        { description: { contains: String(q), mode: 'insensitive' } },
+      ];
+    }
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price.gte = parseInt(minPrice);
+      if (maxPrice) where.price.lte = parseInt(maxPrice);
+    }
+    if (color) {
+      where.productcolor = { some: { hex: { equals: normHex(color) } } };
+    }
+
+    // Tri dynamique
+    const orderBy = sort.startsWith('-')
+      ? { [sort.slice(1)]: 'desc' }
+      : { [sort]: 'asc' };
+
+    // Requête principale
+    const [total, rows] = await Promise.all([
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip,
+        take,
+        include: {
+          image: true,
+          productcolor: true,
+          variant: { include: { image: true } },
+          category: true,
+        }
+      })
+    ]);
+
+    // Transformation finale
+    const items = rows.map(mapProduct);
+    res.json({
+      items,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / take),
+      count: items.length,
+    });
+  } catch (error) {
+    console.error('❌ listProducts error:', error);
+    res.status(500).json({ error: 'Erreur interne du serveur' });
   }
-
-  const orderBy = sort.startsWith('-')
-    ? { [sort.slice(1)]: 'desc' }
-    : { [sort]: 'asc' };
-
-  const [total, rows] = await Promise.all([
-    prisma.product.count({ where }),
-    prisma.product.findMany({
-      where,
-      orderBy,
-      skip,
-      take,
-      include: {
-        images: true,              // ProductImage[]
-        imagesLinked: true,        // Image[] (back-relation pour colorHex / variantId)
-        colors: true,
-        variants: { include: { images: true } }, // 🔥 images de variantes (avec colorHex possible)
-        category: true
-      }
-    })
-  ]);
-
-  res.json({ items: rows.map(mapProduct), total });
 }
 
+/* -------------------- PRODUIT UNIQUE -------------------- */
 export async function getProduct(req, res) {
-  const { slug } = req.params;
-  const p = await prisma.product.findUnique({
-    where: { slug },
-    include: {
-      images: true,               // ProductImage[]
-      imagesLinked: true,         // Image[] (colorHex / variantId potentiellement présents)
-      colors: true,
-      variants: { include: { images: true } }, // 🔥
-      category: true
-    }
-  });
-  if (!p) return res.status(404).json({ error: 'Not found' });
-  res.json(mapProduct(p));
+  try {
+    const { slug } = req.params;
+    const p = await prisma.product.findUnique({
+      where: { slug },
+      include: {
+        image: true,
+        productcolor: true,
+        variant: { include: { image: true } },
+        category: true
+      }
+    });
+    if (!p) return res.status(404).json({ error: 'Produit non trouvé' });
+    res.json(mapProduct(p));
+  } catch (error) {
+    console.error('❌ getProduct error:', error);
+    res.status(500).json({ error: 'Erreur interne du serveur' });
+  }
 }

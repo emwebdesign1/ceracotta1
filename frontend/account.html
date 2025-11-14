@@ -1,14 +1,16 @@
 <!doctype html>
 <html lang="fr">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Mon compte – Céracotta</title>
-  <link rel="stylesheet" href="css/index.css"/>
-  <link rel="stylesheet" href="css/admin.css"/>
-  <link rel="stylesheet" href="css/account.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="account.title">Mon compte – Céracotta</title>
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/account.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
 </head>
+
 <body class="page-account">
   <!-- HEADER identique -->
   <header>
@@ -25,7 +27,7 @@
       </a>
     </div>
     <div class="header-right">
-  
+
       <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
           <path
@@ -33,130 +35,120 @@
         </svg>
       </a>
       <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 
-          7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 
-          14.76 3 16.5 3 19.58 3 22 5.42 22 
-          8.5c0 3.78-3.4 6.86-8.55 
-          11.54L12 21.35z" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
+          <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+      5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+      1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
-      </a>
-      <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path
-            d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
-        </svg>
-      </a>
+        <span id="fav-badge">0</span>
+        <a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+            <path
+              d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
+          </svg>
+          <span id="cart-badge" class="cart-badge"></span>
+        </a>
+
     </div>
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="#">Accueil</a></li>
+        <li><a href="#" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
-          <a href="#" id="collections-link">Collections</a>
+          <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
-            <li><a href="vaisselle.html">Vaisselle</a></li>
-            <li><a href="vases.html">Vases</a></li>
+            <li><a href="vaisselle.html" data-i18n="menu.vaisselle">Vaisselle</a></li>
+            <li><a href="vases.html" data-i18n="menu.vases">Vases</a></li>
           </ul>
         </li>
-        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="apropos.html" data-i18n="menu.about">À propos</a></li>
       </ul>
+
     </nav>
     <div class="overlay" id="overlay"></div>
   </header>
 
 
-<!-- ===== PAGE COMPTE : menu à gauche + contenu ===== -->
-<main class="account-shell">
-  <!-- Menu (style Google) -->
-  <aside class="account-menu">
-    <h1>Paramètres</h1>
-    <!-- IMPORTANT: type="button" pour empêcher la soumission -->
-    <button type="button" class="menu-item is-active" data-view="orders">Mes commandes</button>
-    <button type="button" class="menu-item" data-view="settings">Paramètres</button>
-  </aside>
+  <!-- ===== PAGE COMPTE : menu + contenu ===== -->
+  <main class="account-shell">
+    <aside class="account-menu">
+      <h1 data-i18n="account.settings">Paramètres</h1>
+      <button type="button" class="menu-item is-active" data-view="orders" data-i18n="account.orders">Mes commandes</button>
+      <button type="button" class="menu-item" data-view="settings" data-i18n="account.params">Paramètres</button>
+    </aside>
 
-  <!-- Contenu -->
-  <section class="account-content">
-    <div class="hello card">
-      <h2 id="helloText">Bonjour</h2>
-      <p class="muted">Gérez vos commandes et vos informations de compte.</p>
-    </div>
+    <section class="account-content">
+      <div class="hello card">
+        <h2 id="helloText" data-i18n="account.hello">Bonjour</h2>
+        <p class="muted" data-i18n="account.desc">Gérez vos commandes et vos informations de compte.</p>
+      </div>
 
-    <!-- Mes commandes -->
-    <div class="view" id="view-orders">
-      <section class="card">
-        <h3>Mes commandes</h3>
-        <table class="table" id="ordersTable">
-          <thead>
-            <tr><th>Date</th><th>Référence</th><th>Montant</th><th>Statut</th><th>Paiement</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <div id="ordersEmpty" class="empty muted" hidden>Aucune commande pour le moment.</div>
-      </section>
-    </div>
+      <div class="view" id="view-orders">
+        <section class="card">
+          <h3 data-i18n="account.orders">Mes commandes</h3>
+          <table class="table" id="ordersTable">
+            <thead>
+              <tr>
+                <th data-i18n="table.date">Date</th>
+                <th data-i18n="table.ref">Référence</th>
+                <th data-i18n="table.amount">Montant</th>
+                <th data-i18n="table.status">Statut</th>
+                <th data-i18n="table.payment">Paiement</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="ordersEmpty" class="empty muted" hidden data-i18n="account.noorders">Aucune commande pour le moment.</div>
+        </section>
+      </div>
 
-<!-- Paramètres -->
-<div class="view" id="view-settings" hidden>
-  <section class="card">
-    <h3>Paramètres du compte</h3>
-    <div id="meMsg" class="msg"></div>
+      <div class="view" id="view-settings" hidden>
+        <section class="card">
+          <h3 data-i18n="account.profile">Paramètres du compte</h3>
+          <div id="meMsg" class="msg"></div>
 
-<!-- Form profil -->
-<form id="formProfile" class="form-block">
-  <label>Nom d'utilisateur
-    <input id="setUsername" disabled>
-  </label>
-  <label>Email
-    <input id="setEmail" type="email" disabled>
-  </label>
-  <label>Prénom <input id="setFirstName"></label>
-  <label>Nom <input id="setLastName"></label>
-  <label>Téléphone <input id="setPhone"></label>
-  <label>Adresse <input id="setAddressLine1"></label>
-  <label>Complément <input id="setAddressLine2"></label>
-  <label>NPA <input id="setZip"></label>
-  <label>Ville <input id="setCity"></label>
-  <label>Pays <input id="setCountry"></label>
-  <button type="submit" class="btn primary">Enregistrer le profil</button>
-</form>
+          <!-- Form profil -->
+          <form id="formProfile" class="form-block">
+            <label><span data-i18n="field.username">Nom d'utilisateur</span><input id="setUsername" disabled></label>
+            <label><span data-i18n="field.email">Email</span><input id="setEmail" type="email" disabled></label>
+            <label><span data-i18n="field.firstname">Prénom</span><input id="setFirstName"></label>
+            <label><span data-i18n="field.lastname">Nom</span><input id="setLastName"></label>
+            <label><span data-i18n="field.phone">Téléphone</span><input id="setPhone"></label>
+            <label><span data-i18n="field.address1">Adresse</span><input id="setAddressLine1"></label>
+            <label><span data-i18n="field.address2">Complément</span><input id="setAddressLine2"></label>
+            <label><span data-i18n="field.zip">NPA</span><input id="setZip"></label>
+            <label><span data-i18n="field.city">Ville</span><input id="setCity"></label>
+            <label><span data-i18n="field.country">Pays</span><input id="setCountry"></label>
+            <button type="submit" class="btn primary" data-i18n="btn.save">Enregistrer le profil</button>
+          </form>
 
-    <!-- Form mot de passe -->
-    <form id="formPassword" class="form-block">
-      <label>Mot de passe actuel <input id="pwdCurrent" type="password" required></label>
-      <label>Nouveau mot de passe <input id="pwdNew" type="password" required></label>
-      <label>Confirmer <input id="pwdNew2" type="password" required></label>
-      <button type="submit" class="btn danger">Changer le mot de passe</button>
-    </form>
-
-    <div class="actions-bar">
-      <button id="logoutBtn" class="btn danger" type="button">Déconnexion</button>
-    </div>
-  </section>
-</div>
-  </section>
- 
-</main>
-
+          <!-- Form mot de passe -->
+          <form id="formPassword" class="form-block">
+            <label><span data-i18n="field.oldpass">Mot de passe actuel</span><input id="pwdCurrent" type="password" required></label>
+            <label><span data-i18n="field.newpass">Nouveau mot de passe</span><input id="pwdNew" type="password" required></label>
+            <label><span data-i18n="field.confirmpass">Confirmer</span><input id="pwdNew2" type="password" required></label>
+            <button type="submit" class="btn danger" data-i18n="btn.changepass">Changer le mot de passe</button>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
 
   <!-- JS -->
   <script type="module" src="/js/boot.js"></script>
   <script type="module" src="/js/pages/account.page.js"></script>
+
   <button id="logoutBtn" class="fab-logout" type="button" title="Se déconnecter">Déconnexion</button>
 
-
-
-    <!-- SIDE PANELS -->
+  <!-- SIDE PANELS -->
   <div id="panel-compte" class="side-panel">
     <button class="close-btn">&times;</button>
-    <h2>Mon compte</h2>
+    <h2 data-i18n="panel.account">Mon compte</h2>
     <form>
-      <label>Email</label>
-      <input type="email" placeholder="Votre email">
-      <label>Mot de passe</label>
-      <input type="password" placeholder="Votre mot de passe">
-      <button type="submit">Connexion</button>
-      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
+      <label><span>Email</span><input type="email" placeholder="Votre email"></label>
+      <label><span>Mot de passe</span><input type="password" placeholder="Votre mot de passe"></label>
+      <button type="submit" data-i18n="btn.login">Connexion</button>
+      <p class="alt-action" data-i18n="panel.noaccount">Pas encore inscrit ? <a href="register.html" data-i18n="panel.create">Créer un compte</a></p>
     </form>
   </div>
   <div id="panel-favoris" class="side-panel">
@@ -164,9 +156,8 @@
   </div>
   <div id="panel-panier" class="side-panel">
     <button class="close-btn">&times;</button>
-    <h2>Votre panier</h2>
-    <p>Votre panier est vide.</p>
+    <h2 data-i18n="panel.cart">Votre panier</h2>
+    <p data-i18n="panel.empty">Votre panier est vide.</p>
   </div>
-  
 </body>
 </html>

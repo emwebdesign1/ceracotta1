@@ -10,12 +10,25 @@ function render(itemsToAdd) {
   itemsToAdd.forEach(product => {
     const card = document.createElement('div');
     card.className = 'product-card';
+    
+    // Calcule le stock total
+    const totalStock =
+      (product.stock ?? 0) +
+      ((product.variants || []).reduce((sum, v) => sum + (v.stock ?? 0), 0));
+
+    const isSoldOut = totalStock <= 0;
+
     card.innerHTML = `
-      <a href="produit.html?slug=${product.slug}">
-        <img src="${product.images?.[0] || '/images/bols.png'}" alt="${product.title}" class="product-image"/>
-      </a>
+      <div class="product-image-wrapper">
+        <img src="${product.images?.[0] || '/images/bols.png'}"
+             alt="${product.title}"
+             class="product-image ${isSoldOut ? 'disabled' : ''}"/>
+        ${isSoldOut ? `<span class="sold-out-badge">Sold out</span>` : ''}
+      </div>
       <h3 class="product-title">${product.title}</h3>
-      <p class="product-price">CHF ${(product.price / 100).toFixed(2)}</p>
+      <p class="product-price">
+        ${isSoldOut ? '<span class="sold-out-text">Épuisé</span>' : `CHF ${(product.price / 100).toFixed(2)}`}
+      </p>
       <div class="color-dots">
         ${(product.colors || []).slice(0, 3).map(c => `
           <span class="dot" style="background:${c}"></span>
@@ -23,9 +36,22 @@ function render(itemsToAdd) {
         ${product.colors?.length > 3 ? `<span class="dot more-dot">+${product.colors.length - 3}</span>` : ''}
       </div>
     `;
+
+    // Interaction selon le stock
+    if (!isSoldOut) {
+      card.addEventListener('click', () => {
+        window.location.href = `produit.html?slug=${product.slug}`;
+      });
+      card.style.cursor = 'pointer';
+    } else {
+      card.style.cursor = 'not-allowed';
+    }
+
     grid.appendChild(card);
   });
 }
+
+
 
 async function load() {
   if (done) return;

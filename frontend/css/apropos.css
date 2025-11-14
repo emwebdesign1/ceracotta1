@@ -237,6 +237,7 @@ nav ul li.dropdown ul li a {
 }
 
 .text-block {
+  text-align: center;
   flex: 1;
 }
 .text-block h2 {
@@ -366,10 +367,12 @@ footer {
   }
 
   .text-block h2 {
+    text-align: center;
     font-size: 1.6rem;
   }
 
   .text-block p {
+    text-align: center;
     font-size: 1.05rem;
   }
 
@@ -403,10 +406,12 @@ footer {
   }
 
   .text-block h2 {
+    text-align: center;
     font-size: 1.4rem;
   }
 
   .text-block p {
+    text-align: center;
     font-size: 1rem;
   }
 

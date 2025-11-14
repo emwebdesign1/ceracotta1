@@ -4,14 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Produit – Céracotta</title>
+  <title data-i18n="produit.pageTitle">Produit – Céracotta</title>
   <link rel="stylesheet" href="css/produit.css" />
   <link rel="stylesheet" href="css/index.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 
 <body class="produit-page">
@@ -35,29 +33,38 @@
         </svg>
       </a>
       <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="feather feather-heart">
+          <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+            5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+            1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
+        <span id="fav-badge">0</span>
       </a>
-      <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
+
+      <a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
           <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
         </svg>
+        <span id="cart-badge" class="cart-badge"></span>
       </a>
     </div>
 
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="index.html">Accueil</a></li>
+        <li><a href="index.html" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
-          <a href="#" id="collections-link">Collections</a>
+          <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
-            <li><a href="vaisselle.html">Vaisselle</a></li>
-            <li><a href="vases.html">Vases</a></li>
+            <li><a href="vaisselle.html" data-i18n="menu.vaisselle">Vaisselle</a></li>
+            <li><a href="vases.html" data-i18n="menu.vases">Vases</a></li>
           </ul>
         </li>
-        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="apropos.html" data-i18n="menu.about">À propos</a></li>
       </ul>
+
+
     </nav>
     <div class="overlay" id="overlay"></div>
   </header>
@@ -75,72 +82,68 @@
       <p class="description"></p>
 
       <div class="colors">
-        <p>Couleurs disponibles :</p>
+        <p data-i18n="produit.colors">Couleurs disponibles :</p>
         <div class="color-options"></div>
       </div>
 
-      <!-- bloc tailles -->
       <div class="sizes" style="margin-top:1rem;">
-        <p>Tailles disponibles :</p>
+        <p data-i18n="produit.sizes">Tailles disponibles :</p>
         <div class="size-options"></div>
       </div>
 
       <div class="cta-row" style="display:flex; gap:10px; align-items:center; margin:12px 0;">
-        <button class="add-to-cart">Ajouter au panier</button>
+        <button class="add-to-cart" data-i18n="produit.add">Ajouter au panier</button>
         <button class="fav-toggle btn ghost"><span class="heart">♡</span></button>
       </div>
 
-      <!-- Accordéons conservés -->
+      <!-- Accordéons -->
       <section class="accordion-section">
         <details>
-          <summary>Votre pièce en détail</summary>
+          <summary data-i18n="produit.detail">Votre pièce en détail</summary>
           <p></p>
         </details>
         <details>
-          <summary>Conseil & entretien</summary>
+          <summary data-i18n="produit.care">Conseil & entretien</summary>
           <p></p>
         </details>
         <details>
-          <summary>Livraison & retours</summary>
+          <summary data-i18n="produit.shipping">Livraison & retours</summary>
           <p></p>
         </details>
       </section>
 
+      <!-- Caractéristiques -->
+      <div class="icons-banner-wrapper">
+        <div class="icons-banner-slider">
+          <div class="icon-item">
+            <img src="/images/ceramique.png" alt="Céramique naturelle">
+            <p data-i18n="produit.icon1">Céramique naturelle</p>
+          </div>
+          <div class="icon-item">
+            <img src="/images/artisanale.png" alt="Fabrication artisanale">
+            <p data-i18n="produit.icon2">Fabrication artisanale</p>
+          </div>
+          <div class="icon-item">
+            <img src="/images/elegance.png" alt="Elégance intemporelle">
+            <p data-i18n="produit.icon3">Élégance intemporelle</p>
+          </div>
+          <div class="icon-item">
+            <img src="/images/durabilite.png" alt="Durabilité & Qualité">
+            <p data-i18n="produit.icon4">Durabilité & Qualité</p>
+          </div>
+        </div>
+      </div>
 
-<!-- Caractéristiques -->
-<div class="icons-banner-wrapper">
-  <div class="icons-banner-slider">
-    <div class="icon-item">
-      <img src="/images/ceramique.png" alt="Céramique naturelle">
-      <p>Céramique naturelle</p>
-    </div>
-    <div class="icon-item">
-      <img src="/images/artisanale.png" alt="Fabrication artisanale">
-      <p>Fabrication artisanale</p>
-    </div>
-    <div class="icon-item">
-      <img src="/images/elegance.png" alt="Elégance intemporelle">
-      <p>Elégance intemporelle</p>
-    </div>
-    <div class="icon-item">
-      <img src="/images/durabilite.png" alt="Durabilité & Qualité">
-      <p>Durabilité & Qualité</p>
-    </div>
-  </div>
-
-</div>
-
-<!-- Dots navigation -->
-<div class="dots">
-  <span class="dot active"></span>
-  <span class="dot"></span>
-</div>
-
+      <!-- Dots navigation -->
+      <div class="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </div>
     </div>
   </main>
 
   <section class="aimerais-aussi">
-    <h2>Tu aimerais aussi</h2>
+    <h2 data-i18n="produit.also">Tu aimerais aussi</h2>
     <div class="carousel-container">
       <button class="carousel-btn left" aria-label="Produit précédent">&#10094;</button>
       <div class="carousel"></div>
@@ -148,42 +151,47 @@
     </div>
   </section>
 
- <footer>
-    <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
+  <footer>
+    <p>&copy; 2025 Céracotta. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
     <div class="footer-links">
-      <a href="mentions.html">Mentions légales</a>
-      <a href="conditions.html">Conditions générales</a>
-      <a href="confidentialite.html">Politique de confidentialité</a>
-      <a href="retours.html">Retours & remboursement</a>
+      <a href="mentions.html" data-i18n="footer.mentions">Mentions légales</a>
+      <a href="conditions.html" data-i18n="footer.conditions">Conditions générales</a>
+      <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
+      <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
     </div>
   </footer>
 
   <!-- SIDE PANELS -->
   <div id="panel-compte" class="side-panel">
     <button class="close-btn">&times;</button>
-    <h2>Mon compte</h2>
+    <h2 data-i18n="panel.account.title">Mon compte</h2>
     <form>
-      <label>Email</label>
+      <label data-i18n="panel.account.email">Email</label>
       <input type="email" placeholder="Votre email">
-      <label>Mot de passe</label>
+      <label data-i18n="panel.account.password">Mot de passe</label>
       <input type="password" placeholder="Votre mot de passe">
-      <button type="submit">Connexion</button>
-      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
+      <button type="submit" data-i18n="panel.account.login">Connexion</button>
+      <p class="alt-action">
+        <span data-i18n="panel.account.noaccount">Pas encore inscrit ?</span>
+        <a href="#" data-i18n="panel.account.create">Créer un compte</a>
+      </p>
     </form>
   </div>
+
   <div id="panel-favoris" class="side-panel">
     <button class="close-btn">&times;</button>
   </div>
+
   <div id="panel-panier" class="side-panel">
     <button class="close-btn">&times;</button>
-    <h2>Votre panier</h2>
-    <p>Votre panier est vide.</p>
+    <h2 data-i18n="panel.cart.title">Votre panier</h2>
+    <p data-i18n="panel.cart.empty">Votre panier est vide.</p>
   </div>
 
   <!-- JS -->
   <script type="module" src="/js/boot.js"></script>
   <script type="module" src="/js/pages/produit.page.js"></script>
   <script src="/js/tracker.js" defer></script>
-
+  
 </body>
 </html>

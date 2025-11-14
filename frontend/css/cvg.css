@@ -221,3 +221,60 @@ body {
   .legal-section { box-shadow: none !important; border-color: #ddd; break-inside: avoid; page-break-inside: avoid; }
   .legal-hero { padding: 0 0 12px; }
 }
+
+
+/* === Champ SELECT "Pays" — même style que les inputs === */
+.checkout-page select[name="country"] {
+  width: 100%;
+  height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #e5e2db;
+  border-radius: 12px;
+  background: #fff;
+  color: #2f2a26;
+  font-family: 'Urbanist', sans-serif;
+  font-size: 1rem;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  appearance: none;
+  cursor: pointer;
+
+  /* flèche bordeaux identique au style Céracotta */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%237f0000' height='22' viewBox='0 0 24 24' width='22' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+}
+
+/* Focus et survol : même effet que les inputs */
+.checkout-page select[name="country"]:focus {
+  outline: none;
+  border-color: #7f0000;
+  box-shadow: 0 0 0 3px rgba(127, 0, 0, 0.12);
+  background: #f6f9ff; /* même effet bleu clair que tes champs actifs */
+}
+
+.checkout-page select[name="country"]:hover {
+  border-color: rgba(127, 0, 0, 0.3);
+}
+
+/* Texte placeholder (option désactivée) */
+.checkout-page select[name="country"]:invalid {
+  color: #9a9086;
+}
+
+/* Uniformise les labels */
+.checkout-page label span[data-i18n="field.country"] {
+  display: block;
+  margin-bottom: 6px;
+  color: #7b6c60;
+  font-weight: 600;
+  font-size: 0.96rem;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Compatibilité Chrome autofill (même couleur que les autres champs) */
+.checkout-page select[name="country"]:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px #f6f9ff inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #f6f9ff inset !important;
+  border-color: #7f0000 !important;
+}

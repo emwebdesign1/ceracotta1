@@ -1,7 +1,7 @@
 // src/controllers/payments.controller.js
 import Stripe from 'stripe';
 import express from 'express';
-import { prisma } from '../config/db.js';
+import prisma from '../lib/prisma.js';
 
 const stripeSecret = process.env.STRIPE_SECRET_KEY || '';
 const stripe = stripeSecret && stripeSecret.startsWith('sk_') ? new Stripe(stripeSecret) : null;
@@ -15,15 +15,17 @@ async function getCartForUser(userId) {
   const cart = await prisma.cart.findFirst({
     where: { userId: uid },
     include: {
-      items: {
+      cartitem: {
         include: {
           product: true,
-          variant: true,
+          variant: true
         }
       }
     }
   });
-  return cart || { id: null, items: [] };
+
+  // 🪄 compatibilité front (renvoie items au lieu de cartitem)
+  return cart ? { ...cart, items: cart.cartitem || [] } : { id: null, items: [] };
 }
 
 function amountFromCart(cart) {
@@ -42,14 +44,17 @@ export async function stripeConfig(_req, res) {
 // crée un PaymentIntent basé sur le panier courant
 export async function stripeCreateIntent(req, res) {
   try {
-    if (!stripe) return res.status(500).json({ error: 'Stripe non configuré (clé secrète manquante).' });
+    if (!stripe)
+      return res.status(500).json({ error: 'Stripe non configuré (clé secrète manquante).' });
 
     const userId = String(req.user?.id || '');
-    if (!userId) return res.status(401).json({ error: 'Non authentifié.' });
+    if (!userId)
+      return res.status(401).json({ error: 'Non authentifié.' });
 
     const { customer } = req.body || {};
     const cart = await getCartForUser(userId);
-    if (!cart.items?.length) return res.status(400).json({ error: 'Panier vide' });
+    if (!cart.items?.length)
+      return res.status(400).json({ error: 'Panier vide' });
 
     const amount = amountFromCart(cart);
 
@@ -78,14 +83,17 @@ export async function stripeCreateIntent(req, res) {
 
 export async function stripeCheckout(req, res) {
   try {
-    if (!stripe) return res.status(500).json({ error: 'Stripe non configuré (clé secrète manquante).' });
+    if (!stripe)
+      return res.status(500).json({ error: 'Stripe non configuré (clé secrète manquante).' });
 
     const userId = String(req.user?.id || '');
-    if (!userId) return res.status(401).json({ error: 'Non authentifié.' });
+    if (!userId)
+      return res.status(401).json({ error: 'Non authentifié.' });
 
     const { customer } = req.body || {};
     const cart = await getCartForUser(userId);
-    if (!cart.items?.length) return res.status(400).json({ error: 'Panier vide' });
+    if (!cart.items?.length)
+      return res.status(400).json({ error: 'Panier vide' });
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -97,7 +105,9 @@ export async function stripeCheckout(req, res) {
           unit_amount: it.unitPrice,
           product_data: {
             name: it.product?.title || it.title || 'Article',
-            images: it.product?.images?.length ? [it.product.images[0]] : (it.image ? [it.image] : [])
+            images: it.product?.image?.length
+              ? [it.product.image[0].url]
+              : (it.image ? [it.image] : [])
           }
         },
         quantity: it.quantity || 1
@@ -126,11 +136,10 @@ export async function stripeCheckout(req, res) {
  * - Déclare r.post('/webhook', stripeWebhook) dans payments.routes.js
  */
 export const stripeWebhook = [
-  // on laisse la possibilité de déclarer le raw ici si la route est montée sans raw en amont
-  // mais dans app.js on monte déjà un raw scoping sur /api/payments/webhook
   express.raw({ type: 'application/json' }),
   async (req, res) => {
-    if (!stripe) return res.status(500).send('Stripe non configuré');
+    if (!stripe)
+      return res.status(500).send('Stripe non configuré');
 
     const sig = req.headers['stripe-signature'];
     let event;
@@ -148,24 +157,20 @@ export const stripeWebhook = [
     try {
       if (event.type === 'payment_intent.succeeded') {
         const pi = event.data.object;
-
         const userId = String(pi.metadata?.userId || '');
-        if (!userId) {
-          // pas d’info — on confirme juste la réception
-          return res.json({ received: true });
-        }
+        if (!userId) return res.json({ received: true });
 
         // Transaction : créer Order + décrémenter stocks + vider panier
         await prisma.$transaction(async (tx) => {
           const cart = await tx.cart.findFirst({
             where: { userId },
             include: {
-              items: true
+              cartitem: true
             }
           });
-          if (!cart || !cart.items.length) return; // déjà vidé ou aucun item
+          if (!cart || !cart.cartitem.length) return;
 
-          const amount = cart.items.reduce((s, it) => s + (it.unitPrice || 0) * (it.quantity || 1), 0);
+          const amount = cart.cartitem.reduce((s, it) => s + (it.unitPrice || 0) * (it.quantity || 1), 0);
 
           // Crée la commande
           const order = await tx.order.create({
@@ -178,8 +183,8 @@ export const stripeWebhook = [
               paymentProvider: 'STRIPE',
               paymentIntentId: pi.id,
               paymentStatus: pi.status,
-              items: {
-                create: cart.items.map(it => ({
+              orderitem: {
+                create: cart.cartitem.map(it => ({
                   productId: it.productId,
                   variantId: it.variantId,
                   quantity: it.quantity,
@@ -187,11 +192,11 @@ export const stripeWebhook = [
                 })),
               },
             },
-            include: { items: true }
+            include: { orderitem: true }
           });
 
           // décrémente stock si variantId
-          for (const it of cart.items) {
+          for (const it of cart.cartitem) {
             if (it.variantId) {
               await tx.variant.update({
                 where: { id: it.variantId },
@@ -201,13 +206,12 @@ export const stripeWebhook = [
           }
 
           // vide le panier
-          await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+          await tx.cartitem.deleteMany({ where: { cartId: cart.id } });
 
           return order;
         });
       }
 
-      // tu peux gérer d’autres events ici si besoin
       return res.json({ received: true });
     } catch (e) {
       console.error('Webhook handler error:', e);

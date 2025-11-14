@@ -1,5 +1,4 @@
-// src/controllers/orders.controller.js
-import { prisma } from '../config/db.js';
+import prisma from '../lib/prisma.js';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -17,13 +16,18 @@ export const createIntent = async (req, res, next) => {
 
     const cart = await prisma.cart.findUnique({
       where: { userId: String(req.user.id) },
-      include: { items: true },
+      include: {
+        cartitem: {
+          include: { product: true, variant: true },
+        },
+      },
     });
-    if (!cart || !cart.items.length) {
+
+    if (!cart || !cart.cartitem.length) {
       return next({ status: 400, message: 'Panier vide' });
     }
 
-    const amount = cart.items.reduce(
+    const amount = cart.cartitem.reduce(
       (sum, it) => sum + (it.unitPrice || 0) * (it.quantity || 1),
       0
     );
@@ -47,8 +51,8 @@ export const createIntent = async (req, res, next) => {
 /**
  * Confirme la commande après succès du paiement (Stripe Elements)
  * - Vérifie le PaymentIntent
- * - Crée l'Order + OrderItems (avec title / image)
- * - Décrémente les stocks (variant si présent sinon produit)
+ * - Crée l'Order + OrderItems
+ * - Décrémente les stocks
  * - Vide le panier
  */
 export const confirmOrder = async (req, res, next) => {
@@ -67,25 +71,26 @@ export const confirmOrder = async (req, res, next) => {
     const method = pi.metadata?.paymentMethod === 'TWINT' ? 'TWINT' : 'CARD';
 
     const order = await prisma.$transaction(async (tx) => {
-      // Récupère le panier complet (avec produit/variant si dispo)
+      // 🔹 Récupère le panier complet (avec produit et variant)
       const cart = await tx.cart.findUnique({
         where: { userId: String(req.user.id) },
         include: {
-          items: {
+          cartitem: {
             include: { product: true, variant: true },
           },
         },
       });
-      if (!cart || !cart.items.length) {
+
+      if (!cart || !cart.cartitem.length) {
         throw { status: 400, message: 'Panier vide' };
       }
 
-      const amount = cart.items.reduce(
+      const amount = cart.cartitem.reduce(
         (sum, it) => sum + (it.unitPrice || 0) * (it.quantity || 1),
         0
       );
 
-      // Crée la commande + items (⚠️ on fournit title et image)
+      // 🔹 Crée la commande + ses items (utilise "orderitem" conforme au schéma)
       const newOrder = await tx.order.create({
         data: {
           userId: String(req.user.id),
@@ -96,13 +101,12 @@ export const confirmOrder = async (req, res, next) => {
           paymentProvider: 'STRIPE',
           paymentIntentId,
           paymentStatus: pi.status,
-          // si ta colonne est Json -> Prisma acceptera l'objet ; si c'est String, on stringify.
           shippingAddress:
             shipping && typeof shipping === 'object'
               ? JSON.stringify(shipping)
               : shipping ?? null,
-          items: {
-            create: cart.items.map((it) => ({
+          orderitem: {
+            create: cart.cartitem.map((it) => ({
               productId: it.productId,
               variantId: it.variantId ?? null,
               quantity: it.quantity,
@@ -110,8 +114,9 @@ export const confirmOrder = async (req, res, next) => {
               title: it.title || it.product?.title || 'Produit',
               image:
                 it.image ||
-                (Array.isArray(it.product?.images) ? it.product.images[0] ?? null : null),
-              // 🆕 Ajout couleur et taille si présentes
+                (Array.isArray(it.product?.image)
+                  ? it.product.image[0]?.url ?? null
+                  : null),
               color:
                 it.color ||
                 it.variant?.color ||
@@ -132,14 +137,12 @@ export const confirmOrder = async (req, res, next) => {
                 null,
             })),
           },
-
         },
-        include: { items: true },
+        include: { orderitem: true },
       });
 
-      // Décrémenter les stocks
-      for (const it of cart.items) {
-        // Si on a des variantes avec stock
+      // 🔹 Décrémenter les stocks
+      for (const it of cart.cartitem) {
         if (it.variantId) {
           try {
             await tx.variant.update({
@@ -147,30 +150,28 @@ export const confirmOrder = async (req, res, next) => {
               data: { stock: { decrement: it.quantity } },
             });
           } catch {
-            // Si le modèle Variant n'a pas de stock, on ignore
+            // ignore si pas de stock
           }
         } else {
-          // Sinon on tente sur le produit
           try {
             await tx.product.update({
               where: { id: it.productId },
               data: { stock: { decrement: it.quantity } },
             });
           } catch {
-            // Si le modèle Product n'a pas de stock, on ignore
+            // ignore si pas de stock
           }
         }
       }
 
-      // Vider le panier
-      await tx.cartItem.deleteMany({ where: { cartId: cart.id } });
+      // 🔹 Vide le panier
+      await tx.cartitem.deleteMany({ where: { cartId: cart.id } });
 
       return newOrder;
     });
 
     res.status(201).json(order);
   } catch (err) {
-    // Si c'est une erreur custom jetée plus haut
     if (err?.status) return next(err);
     next(err);
   }
@@ -184,7 +185,7 @@ export const myOrders = async (req, res, next) => {
     const orders = await prisma.order.findMany({
       where: { userId: String(req.user.id) },
       orderBy: { createdAt: 'desc' },
-      include: { items: true },
+      include: { orderitem: true },
     });
     res.json(orders);
   } catch (err) {
