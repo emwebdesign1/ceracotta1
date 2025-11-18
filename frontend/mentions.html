@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mentions légales – Céracotta</title>
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/cvg.css" />
+  <link rel="icon" href="images/logo.png" type="image/x-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="header-center">
+      <a href="index.html" class="logo-link">
+        <img src="images/logo.png" alt="Logo Céracotta" class="logo-image" />
+      </a>
+    </div>
+    <div class="header-right">
+      <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
+        </svg>
+      </a>
+
+      <a href="#" id="open-favoris" class="icon-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+          5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+          1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="fav-badge">0</span>
+      </a>
+
+      <a href="#" id="open-panier" class="icon-link" style="position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
+        </svg>
+        <span id="cart-badge" class="cart-badge"></span>
+      </a>
+    </div>
+
+    <nav id="side-menu">
+      <ul>
+        <li><a href="index.html#top">Accueil</a></li>
+        <li class="dropdown">
+          <a href="#">Collections</a>
+          <ul class="dropdown-list">
+            <li><a href="vaisselle.html">Vaisselle</a></li>
+            <li><a href="vases.html">Vases</a></li>
+          </ul>
+        </li>
+        <li><a href="apropos.html">À propos</a></li>
+      </ul>
+    </nav>
+    <div class="overlay" id="overlay"></div>
+  </header>
+
+  <!-- CONTENU -->
+  <main class="page-legale">
+    <div class="header-spacer"></div>
+
+    <!-- HERO -->
+    <section class="legal-hero section-appear">
+      <nav class="breadcrumb">
+        <a href="index.html">Accueil</a>
+        <span class="sep">/</span>
+        <span>Mentions légales</span>
+      </nav>
+
+      <h1>Mentions légales</h1>
+      <p class="subtitle">Informations obligatoires relatives à l’éditeur du site et à l’hébergement.</p>
+
+      <div style="margin-top:12px;">
+        <span class="legal-badge">Mise à jour : 19 septembre 2025</span>
+      </div>
+    </section>
+
+    <div class="legal-shell">
+      <div class="legal-container">
+
+        <!-- 1 ÉDITEUR -->
+        <article class="legal-section section-appear" id="editeur">
+          <div class="section-head">
+            <h2><span class="article-number">1</span>Éditeur du site</h2>
+            <span class="rule"></span>
+          </div>
+
+          <p><strong>Nom de l’entreprise :</strong> Céracotta</p>
+          <p><strong>Adresse :</strong> Chemin des pruneautiers 3, 1566 St Aubin</p>
+          <p><strong>Email :</strong> ceracotta@ceracotta.com</p>
+          <p><strong>Téléphone :</strong> 079 123 62 51</p>
+        </article>
+
+        <!-- 2 HÉBERGEUR -->
+        <article class="legal-section section-appear" id="hebergeur">
+          <div class="section-head">
+            <h2><span class="article-number">2</span>Hébergeur du site</h2>
+            <span class="rule"></span>
+          </div>
+
+          <p><strong>Nom :</strong> Infomaniak Network SA</p>
+          <p><strong>Adresse :</strong> Rue Eugène-Marziano 25, 1227 Genève</p>
+          <p><strong>Site web :</strong> <a href="https://www.infomaniak.com" target="_blank">infomaniak.com</a></p>
+        </article>
+
+        <!-- 3 RESPONSABILITÉ -->
+        <article class="legal-section section-appear" id="responsabilites">
+          <div class="section-head">
+            <h2><span class="article-number">3</span>Responsabilités</h2>
+            <span class="rule"></span>
+          </div>
+
+          <p>
+            Céracotta met tout en œuvre pour garantir l’exactitude et la mise à jour des informations présentes sur ce site.
+            Cependant, l’entreprise ne peut être tenue responsable d’erreurs, d’omissions ou de résultats obtenus par un mauvais usage.
+          </p>
+        </article>
+
+        <!-- 4 PROPRIÉTÉ INTELLECTUELLE -->
+        <article class="legal-section section-appear" id="propriete">
+          <div class="section-head">
+            <h2><span class="article-number">4</span>Propriété intellectuelle</h2>
+            <span class="rule"></span>
+          </div>
+
+          <p>
+            Le contenu du site (textes, images, vidéos, logos, design) est protégé par le droit d’auteur.
+            Toute reproduction partielle ou totale est interdite sans autorisation écrite préalable.
+          </p>
+        </article>
+
+        <!-- 5 CONTACT -->
+        <article class="legal-section section-appear" id="contact">
+          <div class="section-head">
+            <h2><span class="article-number">5</span>Contact</h2>
+            <span class="rule"></span>
+          </div>
+
+          <p>
+            Pour toute question concernant les mentions légales :
+            <br>
+            <a href="mailto:ceracotta@ceracotta.com">ceracotta@ceracotta.com</a>
+          </p>
+        </article>
+
+        <div class="legal-divider"></div>
+        <p class="small" style="opacity:.8">© 2025 Céracotta – Tous droits réservés.</p>
+      </div>
+    </div>
+
+    <button class="legal-back-to-top" id="backToTop">↑</button>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
+    <div class="footer-links">
+      <a href="mentions.html">Mentions légales</a>
+      <a href="cvg.html">Conditions générales</a>
+      <a href="confidentialite.html">Politique de confidentialité</a>
+      <a href="retours.html">Retours &amp; remboursement</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/boot.js"></script>
+  <script src="/js/tracker.js" defer></script>
+
+</body>
+</html>
