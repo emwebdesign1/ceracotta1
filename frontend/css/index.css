@@ -205,7 +205,7 @@ nav ul li.dropdown ul li a {
   background: #d7bc8a;
   color: #3c2e1d;
   padding: 16px 40px;
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   font-weight: bold;
   border: none;
   border-radius: 4px;
@@ -505,7 +505,7 @@ footer {
 
   .cta-button {
     padding: 14px 30px;
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .hero-content {
@@ -1531,4 +1531,52 @@ footer {
   background: #fff;
   border: 1px solid #7f0000;
   color: #7f0000;
+}
+
+
+/* === HERO FIX — IDENTIQUE SUR TOUS LES TÉLÉPHONES === */
+.hero {
+  width: 100%;
+  height: auto;
+}
+
+.hero picture,
+.hero img.hero-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16; /* ratio vertical moderne */
+  object-fit: cover;    /* garde le look luxe */
+  object-position: center;
+}
+
+/* Sur les grands écrans, on remet un ratio plus horizontal */
+@media (min-width: 768px) {
+  .hero picture,
+  .hero img.hero-image {
+    aspect-ratio: 16 / 9;
+  }
+}
+/* === HERO FIX PARFAIT — SUPPRIME LA BARRE BLANCHE === */
+.hero {
+  position: relative;
+  margin-top: 80px; /* hauteur du header */
+}
+
+.hero-image {
+  width: 100%;
+  height: calc(100vh - 80px);  /* la hauteur parfaite */
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .hero {
+    margin-top: 80px; /* même hauteur */
+  }
+  .hero-image {
+    height: calc(100vh - 80px);
+  }
+
 }
