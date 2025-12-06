@@ -7,6 +7,15 @@
   <link rel="stylesheet" href="css/index.css"/>
     <link rel="stylesheet" href="css/checkout.css"/>
        <link rel="icon" href="images/logo.png" type="image/x-icon" />
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
 </head>
 <body class="checkout-page">
   <header>
@@ -376,6 +385,7 @@
     </aside>
   </main>
 
+   <script src="js/tracker.js" type="module"></script>
     <script type="module" src="js/boot.js"></script>
   <script type="module" src="js/pages/checkout.js"></script>
   
@@ -388,6 +398,8 @@
       <a href="cvg.html">Conditions générales</a>
       <a href="confidentialite.html">Politique de confidentialité</a>
        <a href="retours.html">Retours & remboursement</a>
+       <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 

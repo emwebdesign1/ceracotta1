@@ -19,12 +19,47 @@ async function showLastOrder() {
   if (!last) return;
 
   const d = new Date(last.createdAt);
-  document.getElementById('o-id').textContent     = last.id || last.number || '—';
-  document.getElementById('o-date').textContent   = d.toLocaleDateString('fr-CH');
+
+  document.getElementById('o-id').textContent = last.id || last.number || '—';
+  document.getElementById('o-date').textContent = d.toLocaleDateString('fr-CH');
   document.getElementById('o-amount').textContent = CHF(last.amount);
-  document.getElementById('o-status').textContent = ({
-    PAID:'Payée', PENDING:'En attente', CANCELLED:'Annulée'
-  })[last.status] || last.status || '—';
+  document.getElementById('o-status').textContent =
+    ({
+      PAID: 'Payée',
+      PENDING: 'En attente',
+      CANCELLED: 'Annulée',
+    })[last.status] || last.status || '—';
 }
 
-document.addEventListener('DOMContentLoaded', showLastOrder);
+/* -----------------------------------------------------------
+   🔥 TRACK PURCHASE — VERSION SAFE
+------------------------------------------------------------ */
+async function trackPurchaseEvents() {
+  try {
+    const orders = await fetchMyOrders();
+    const last = orders?.[0];
+    if (!last || !last.items?.length) return;
+
+    // tracker global (si défini)
+    const t = window.tracker;
+    if (!t || !t.purchase) {
+      console.warn("⚠️ tracker.purchase non dispo : tracking ignoré");
+      return;
+    }
+
+    last.items.forEach((item) => {
+      t.purchase({
+        productId: item.productId,
+        value: item.unitPrice * item.quantity,
+      });
+    });
+
+  } catch (e) {
+    console.error("⚠️ Erreur tracking purchase :", e);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await showLastOrder();
+  trackPurchaseEvents(); // volontairement sans await pour ne pas bloquer la page
+});

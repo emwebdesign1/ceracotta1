@@ -8,6 +8,15 @@
   <link rel="stylesheet" href="css/cvg.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -50,7 +59,7 @@
 
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="index.html#top" data-i18n="menu.home">Accueil</a></li>
+           <li><a href="index.html" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
           <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
@@ -105,149 +114,97 @@
       <!-- CONTENT -->
       <div class="legal-container">
 
-        <article class="legal-section section-appear" id="droit-retractation">
-          <div class="section-head">
-            <h2 data-i18n="returns.section1.title"><span class="article-number">1</span> Droit de rétractation (Consommateurs)</h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="returns.section1.text">Conformément aux articles L221-18 et suivants du Code de la consommation, vous disposez d’un délai de 14 jours calendaires pour vous rétracter sans motif, à compter de la réception de votre commande.</p>
-        </article>
+   <!-- 1. Droit de rétractation -->
+<article class="legal-section section-appear" id="droit-retractation">
+  <div class="section-head">
+    <h2><span class="article-number">1</span> Droit de rétractation</h2>
+    <span class="rule"></span>
+  </div>
+  <ul class="legal-list">
+    <li>Délai légal : 14 jours pour notifier votre rétractation.</li>
+    <li>Produits non utilisés.</li>
+    <li>Emballage d’origine obligatoire.</li>
+  </ul>
+</article>
 
-        <article class="legal-section section-appear" id="exercice-retractation">
-          <div class="section-head">
-            <h2 data-i18n="returns.section2.title"><span class="article-number">2</span> Exercice du droit de rétractation</h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="returns.section2.text">Pour exercer votre droit de rétractation, vous pouvez nous notifier votre décision par l’un des moyens suivants :</p>
-          <ul class="legal-list">
-            <li>Email à ceracotta@ceracotta.com avec n° de commande</li>
-            <li>Via le formulaire de rétractation (optionnel)</li>
-            <li>Par courrier postal à notre adresse</li>
-          </ul>
-        </article>
+<!-- 2. Retour -->
+<article class="legal-section section-appear" id="retour">
+  <div class="section-head">
+    <h2><span class="article-number">2</span> Retour</h2>
+    <span class="rule"></span>
+  </div>
+  <ul class="legal-list">
+    <li>Les frais de retour sont à la charge du client.</li>
+    <li>Exception : prise en charge en cas de défaut.</li>
+  </ul>
+</article>
 
-        <article class="legal-section section-appear" id="retour-produits">
-          <div class="section-head">
-            <h2 data-i18n="returns.section3.title"><span class="article-number">3</span> Retour des produits</h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li>Délai : 14 jours à compter de la notification</li>
-            <li>État : produits non utilisés, dans leur emballage d’origine</li>
-            <li>Emballage : protection adaptée aux produits céramiques</li>
-            <li>Frais : à votre charge (sauf défaut de notre part)</li>
-          </ul>
-        </article>
+<!-- 3. Remboursement -->
+<article class="legal-section section-appear" id="remboursement">
+  <div class="section-head">
+    <h2><span class="article-number">3</span> Remboursement</h2>
+    <span class="rule"></span>
+  </div>
+  <ul class="legal-list">
+    <li>Délai : maximum 14 jours après réception du retour.</li>
+    <li>Même mode de paiement que la commande.</li>
+    <li>Montant remboursé : prix du produit, hors frais de livraison.</li>
+  </ul>
+</article>
 
-        <article class="legal-section section-appear" id="modalites-remboursement">
-          <div class="section-head">
-            <h2 data-i18n="returns.section4.title"><span class="article-number">4</span> Modalités de remboursement</h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li>Délai : 14 jours maximum après réception du retour</li>
-            <li>Moyen : même moyen de paiement que la commande</li>
-            <li>Montant : prix des produits, hors frais de livraison initiaux</li>
-          </ul>
-        </article>
+<!-- 4. Exceptions -->
+<article class="legal-section section-appear" id="exceptions">
+  <div class="section-head">
+    <h2><span class="article-number">4</span> Exceptions</h2>
+    <span class="rule"></span>
+  </div>
+  <ul class="legal-list">
+    <li>Aucun retour pour pièces personnalisées / sur mesure.</li>
+    <li>Aucun retour pour produits descellés pour raisons d’hygiène.</li>
+  </ul>
+</article>
 
-        <article class="legal-section section-appear" id="exceptions">
-          <div class="section-head">
-            <h2 data-i18n="returns.section5.title"><span class="article-number">5</span> Exceptions au droit de rétractation</h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="returns.section5.intro">Conformément à l’article L221-28 du Code de la consommation, le droit de rétractation ne s’applique pas :</p>
-          <ul class="legal-list">
-            <li>Aux biens confectionnés selon vos spécifications (céramiques personnalisées)</li>
-            <li>Aux biens périssables ou susceptibles de se détériorer rapidement</li>
-            <li>Aux biens descellés ne pouvant être renvoyés pour des raisons d’hygiène</li>
-          </ul>
-        </article>
+<!-- 5. Produits défectueux -->
+<article class="legal-section section-appear" id="defectueux">
+  <div class="section-head">
+    <h2><span class="article-number">5</span> Produits défectueux</h2>
+    <span class="rule"></span>
+  </div>
+  <ul class="legal-list">
+    <li>Déclaration obligatoire sous 48h après réception.</li>
+    <li>Photos du défaut obligatoires.</li>
+    <li>Retour pris en charge par Céracotta.</li>
+    <li>Remboursement intégral (produit + frais).</li>
+  </ul>
+</article>
 
-        <article class="legal-section section-appear" id="defectueux">
-          <div class="section-head">
-            <h2 data-i18n="returns.section6.title"><span class="article-number">6</span> Produits défectueux ou endommagés</h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="returns.section6.notice"><strong>Signalement :</strong> 48 h maximum après réception</p>
-          <ol class="legal-list">
-            <li>Email avec photos du défaut/dommage</li>
-            <li>Conservation de l’emballage d’origine</li>
-            <li>Retour pris en charge par nos soins</li>
-            <li>Échange ou remboursement intégral (frais inclus)</li>
-          </ol>
-        </article>
+<!-- 6. Litiges & transactions contestées -->
+<article class="legal-section section-appear" id="litiges">
+  <div class="section-head">
+    <h2><span class="article-number">6</span> Litiges & contestations</h2>
+    <span class="rule"></span>
+  </div>
+  <ul class="legal-list">
+    <li>Réponse garantie sous 48 h.</li>
+    <li>Collaboration avec Stripe en cas de contestation bancaire.</li>
+  </ul>
+</article>
 
-        <article class="legal-section section-appear" id="garanties">
-          <div class="section-head">
-            <h2 data-i18n="returns.section7.title"><span class="article-number">7</span> Garanties légales</h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li>Garantie de conformité : 2 ans (art. L217-4 Code de la consommation)</li>
-            <li>Garantie contre les vices cachés : 2 ans (art. 1641 Code civil)</li>
-          </ul>
-        </article>
-
-        <article class="legal-section section-appear" id="procedure-etapes">
-          <div class="section-head">
-            <h2 data-i18n="returns.section8.title"><span class="article-number">8</span> Procédure de retour — Étape par étape</h2>
-            <span class="rule"></span>
-          </div>
-          <ol class="legal-list">
-            <li>Contactez-nous : ceracotta@ceracotta.com</li>
-            <li>Recevez l’autorisation de retour et l’étiquette</li>
-            <li>Emballez soigneusement les produits céramiques</li>
-            <li>Expédiez avec le transporteur indiqué</li>
-            <li>Suivez le traitement via votre espace client</li>
-            <li>Recevez le remboursement sous 14 jours</li>
-          </ol>
-        </article>
-
-        <article class="legal-section section-appear" id="conseils-emballage">
-          <div class="section-head">
-            <h2 data-i18n="returns.section9.title"><span class="article-number">9</span> Conseils d’emballage pour céramiques</h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li>Utilisez du papier bulle ou des copeaux</li>
-            <li>Comblez les espaces vides dans le carton</li>
-            <li>Marquez “FRAGILE” sur le colis</li>
-            <li>Conservez le numéro de suivi</li>
-          </ul>
-        </article>
-
-        <article class="legal-section section-appear" id="cas-particuliers">
-          <div class="section-head">
-            <h2 data-i18n="returns.section10.title"><span class="article-number">10</span> Cas particuliers</h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li>Produits artisanaux sur mesure : non repris sauf défaut</li>
-            <li>Lots / Collections : retour de l’ensemble uniquement</li>
-            <li>Cadeaux : remboursement au donateur initial</li>
-          </ul>
-        </article>
-
-        <article class="legal-section section-appear" id="contact">
-          <div class="section-head">
-            <h2 data-i18n="returns.section11.title"><span class="article-number">11</span> Contact Service Client</h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="returns.section11.text">Email : ceracotta@ceracotta.com  (lun–ven 9h–18h) Courrier : [Adresse complète] Délai de réponse : 24–48 h maximum</p>
-        </article>
-
-        <article class="legal-section section-appear" id="litiges">
-          <div class="section-head">
-            <h2 data-i18n="returns.section12.title"><span class="article-number">12</span> Litiges & médiation</h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li>Médiation de la consommation : [Médiateur agréé]</li>
-            <li>Plateforme européenne : ec.europa.eu/consumers/odr</li>
-            <li>Association de consommateurs</li>
-          </ul>
-        </article>
+<!-- 7. Procédure -->
+<article class="legal-section section-appear" id="procedure">
+  <div class="section-head">
+    <h2><span class="article-number">7</span> Procédure de retour</h2>
+    <span class="rule"></span>
+  </div>
+  <ol class="legal-list">
+    <li>Contact du service client.</li>
+    <li>Autorisation de retour.</li>
+    <li>Emballage sécurisé (céramique fragile).</li>
+    <li>Envoi du colis.</li>
+    <li>Transmission du numéro de suivi.</li>
+    <li>Remboursement après réception.</li>
+  </ol>
+</article>
 
         <div class="legal-divider"></div>
         <p class="small" style="opacity:.8">© 2025 Céracotta – <span data-i18n="footer.rights">Tous droits réservés.</span></p>
@@ -264,8 +221,32 @@
       <a href="cvg.html" data-i18n="footer.conditions">Conditions générales</a>
       <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
       <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
+      <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
+
+  <!-- SIDE PANELS -->
+  <div id="panel-compte" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Mon compte</h2>
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Votre email">
+      <label>Mot de passe</label>
+      <input type="password" placeholder="Votre mot de passe">
+      <button type="submit">Connexion</button>
+      <p class="alt-action">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
+    </form>
+  </div>
+  <div id="panel-favoris" class="side-panel">
+    <button class="close-btn">&times;</button>
+  </div>
+  <div id="panel-panier" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Votre panier</h2>
+    <p>Votre panier est vide.</p>
+  </div>
 
   <!-- JS -->
   <script type="module">
@@ -278,8 +259,9 @@
     topBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
   </script>
 
+  <script src="js/tracker.js" type="module"></script>
   <script type="module" src="/js/boot.js"></script>
-  <script src="/js/tracker.js" defer></script>
+
 
 </body>
 </html>

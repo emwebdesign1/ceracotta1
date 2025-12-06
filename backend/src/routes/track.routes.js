@@ -1,127 +1,141 @@
 // src/routes/track.routes.js
-import { Router } from 'express';
-import crypto from 'crypto';
-import { PrismaClient } from '@prisma/client';
+import { Router } from "express";
+import crypto from "crypto";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const router = Router();
 
 function hashIp(ip, salt) {
   if (!ip) return null;
-  return crypto.createHash('sha256').update((salt || 's') + ip).digest('hex');
+  return crypto.createHash("sha256").update((salt || "salt") + ip).digest("hex");
 }
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    // ✅ toutes les variables sont déclarées dans le handler
-    const { type, path, productId, value, currency, utm } = req.body || {};
+    const { type, productId, value, currency, path, utm } = req.body || {};
 
-    // 1) Visitor (cookie 1st-party)
-    let vid = req.cookies?.cer_vid;
-    if (!vid) {
-      vid = crypto.randomUUID();
-      res.cookie('cer_vid', vid, { httpOnly: false, sameSite: 'Lax', maxAge: 31536000000 });
+    /* -------------------- VISITEUR -------------------- */
+    let visitorId = req.cookies?.cer_vid;
+    if (!visitorId) {
+      visitorId = crypto.randomUUID();
+      res.cookie("cer_vid", visitorId, {
+        httpOnly: false,
+        sameSite: "Lax",
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+      });
     }
-    const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+
+    const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
+      .split(",")[0]
+      .trim();
 
     const visitor = await prisma.visitor.upsert({
-      where: { id: vid },
-      update: { ipHash: hashIp(ip, process.env.IP_HASH_SALT), userAgent: req.get('user-agent') || undefined },
-      create: { id: vid, ipHash: hashIp(ip, process.env.IP_HASH_SALT), userAgent: req.get('user-agent') || undefined },
+      where: { id: visitorId },
+      update: {
+        ipHash: hashIp(ip, process.env.IP_HASH_SALT),
+        userAgent: req.get("user-agent"),
+        lastSeenAt: new Date(),
+      },
+      create: {
+        id: visitorId,
+        ipHash: hashIp(ip, process.env.IP_HASH_SALT),
+        userAgent: req.get("user-agent"),
+        lastSeenAt: new Date(),
+      },
     });
 
-    // 2) Session (30 min rolling)
-    const since = new Date(Date.now() - 30 * 60 * 1000);
+    /* -------------------- SESSION -------------------- */
+    const since30min = new Date(Date.now() - 30 * 60 * 1000);
+
     let session = await prisma.session.findFirst({
-      where: { visitorId: visitor.id, startedAt: { gte: since } },
-      orderBy: { startedAt: 'desc' }
+      where: { visitorId: visitor.id, startedAt: { gte: since30min } },
+      orderBy: { startedAt: "desc" },
     });
+
     if (!session) {
       session = await prisma.session.create({
         data: {
           visitorId: visitor.id,
-          referrer: req.get('referer') || undefined,
+          referrer: req.get("referer") || null,
           utmSource: utm?.source,
           utmMedium: utm?.medium,
           utmCampaign: utm?.campaign,
-        }
+        },
+      });
+    } else {
+      await prisma.session.update({
+        where: { id: session.id },
+        data: { updatedAt: new Date() },
       });
     }
 
-    // 3) Event
+    /* -------------------- JOUR (pour stats) -------------------- */
+    const day = new Date();
+    day.setHours(0, 0, 0, 0);
+
+    /* -------------------- EVENT BRUT -------------------- */
     await prisma.event.create({
       data: {
         type,
         sessionId: session.id,
-        path,
         productId: productId || null,
-        value: typeof value === 'number' ? value : null, // montant en centimes pour PURCHASE
+        value: value || null,
         currency: currency || null,
-      }
+        path: path || req.originalUrl,
+      },
     });
 
-      // 4) Agrégats journaliers (si produit)
-    if (productId && type === 'PRODUCT_VIEW') {
-      const day = new Date(); day.setHours(0, 0, 0, 0);
-      await prisma.dailyProductStat.upsert({
-        where: { date_productId: { date: day, productId } },
-        update: { views: { increment: 1 } },
-        create: { date: day, productId, views: 1 }
-      });
+    /* -------------------- STATS PRODUITS -------------------- */
+
+    if (productId) {
+      if (type === "PRODUCT_VIEW") {
+        await prisma.dailyproductstat.upsert({
+          where: { date_productId: { date: day, productId } },
+          update: { views: { increment: 1 } },
+          create: { date: day, productId, views: 1 },
+        });
+      }
+
+      if (type === "ADD_TO_CART") {
+        await prisma.dailyproductstat.upsert({
+          where: { date_productId: { date: day, productId } },
+          update: { addToCarts: { increment: 1 } },
+          create: { date: day, productId, addToCarts: 1 },
+        });
+      }
+
+      if (type === "FAVORITE_ADD") {
+        await prisma.dailyproductstat.upsert({
+          where: { date_productId: { date: day, productId } },
+          update: { favorites: { increment: 1 } },
+          create: { date: day, productId, favorites: 1 },
+        });
+      }
+
+      if (type === "PURCHASE") {
+        await prisma.dailyproductstat.upsert({
+          where: { date_productId: { date: day, productId } },
+          update: {
+            purchases: { increment: 1 },
+            revenue: { increment: value || 0 },
+          },
+          create: {
+            date: day,
+            productId,
+            purchases: 1,
+            revenue: value || 0,
+          },
+        });
+      }
     }
 
-    if (productId && type === 'ADD_TO_CART') {
-      const day = new Date(); day.setHours(0, 0, 0, 0);
-      await prisma.dailyProductStat.upsert({
-        where: { date_productId: { date: day, productId } },
-        update: { addToCarts: { increment: 1 } },
-        create: { date: day, productId, addToCarts: 1 }
-      });
-    }
+    return res.json({ ok: true });
 
-    if (productId && type === 'FAVORITE_ADD') {
-      const day = new Date(); day.setHours(0, 0, 0, 0);
-      await prisma.dailyProductStat.upsert({
-        where: { date_productId: { date: day, productId } },
-        update: { favorites: { increment: 1 } },
-        create: { date: day, productId, favorites: 1 }
-      });
-    }
-
-    // 🟣 Nouveau : suivi global du checkout / achat
-    if (type === 'BEGIN_CHECKOUT') {
-      const day = new Date(); day.setHours(0, 0, 0, 0);
-      await prisma.event.create({
-        data: {
-          type: 'BEGIN_CHECKOUT',
-          sessionId: session.id,
-          path,
-          value: null,
-          currency: null,
-        },
-      });
-    }
-
-    if (type === 'PURCHASE') {
-      const day = new Date(); day.setHours(0, 0, 0, 0);
-      await prisma.event.create({
-        data: {
-          type: 'PURCHASE',
-          sessionId: session.id,
-          path,
-          value: typeof value === 'number' ? value : null,
-          currency: currency || 'CHF',
-        },
-      });
-    }
-
-    res.json({ ok: true });
   } catch (e) {
-    console.error('[track] error', e);
-    res.json({ ok: true });
+    console.error("❌ [track] error", e);
+    return res.json({ ok: true });
   }
 });
 
-
 export default router;
-

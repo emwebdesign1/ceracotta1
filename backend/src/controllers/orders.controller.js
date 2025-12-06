@@ -142,27 +142,6 @@ export const confirmOrder = async (req, res, next) => {
       });
 
       // 🔹 Décrémenter les stocks
-      for (const it of cart.cartitem) {
-        if (it.variantId) {
-          try {
-            await tx.variant.update({
-              where: { id: it.variantId },
-              data: { stock: { decrement: it.quantity } },
-            });
-          } catch {
-            // ignore si pas de stock
-          }
-        } else {
-          try {
-            await tx.product.update({
-              where: { id: it.productId },
-              data: { stock: { decrement: it.quantity } },
-            });
-          } catch {
-            // ignore si pas de stock
-          }
-        }
-      }
 
       // 🔹 Vide le panier
       await tx.cartitem.deleteMany({ where: { cartId: cart.id } });

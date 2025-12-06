@@ -760,7 +760,8 @@ async function loadStats() {
     document.getElementById('fvCheckout').textContent = funnel.beginCheckouts ?? '—';
     document.getElementById('fvPurchase').textContent = funnel.purchases ?? '—';
 
-    renderTopProducts(top || []);
+    renderTopProducts(top.items || []);
+
   } catch (e) {
     console.error(e);
     if (msg) {

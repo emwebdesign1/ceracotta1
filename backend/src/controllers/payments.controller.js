@@ -196,14 +196,27 @@ export const stripeWebhook = [
           });
 
           // décrémente stock si variantId
+          // décrémente stock produit / variant
           for (const it of cart.cartitem) {
             if (it.variantId) {
+              // produit AVEC variantes → on décrémente la variante
               await tx.variant.update({
                 where: { id: it.variantId },
                 data: { stock: { decrement: it.quantity } },
               });
+            } else {
+              // produit SANS variantes → on décrémente le stock du produit
+              const prod = await tx.product.findUnique({ where: { id: it.productId } });
+              const newStock = Math.max(0, prod.stock - it.quantity);
+
+              await tx.product.update({
+                where: { id: it.productId },
+                data: { stock: newStock },
+              });
+
             }
           }
+
 
           // vide le panier
           await tx.cartitem.deleteMany({ where: { cartId: cart.id } });

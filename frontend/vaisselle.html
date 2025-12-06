@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/vaisselle.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
 </head>
 
 <body>
@@ -51,7 +60,7 @@
     </div>
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="#">Accueil</a></li>
+        <li><a href="index.html">Accueil</a></li>
         <li class="dropdown">
           <a href="#" id="collections-link">Collections</a>
           <ul class="dropdown-list">
@@ -137,9 +146,11 @@
     <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
     <div class="footer-links">
       <a href="mentions.html">Mentions légales</a>
-      <a href="conditions.html">Conditions générales</a>
+      <a href="cvg.html">Conditions générales</a>
       <a href="confidentialite.html">Politique de confidentialité</a>
        <a href="retours.html">Retours & remboursement</a>
+       <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 
@@ -154,7 +165,7 @@
       <label>Mot de passe</label>
       <input type="password" placeholder="Votre mot de passe">
       <button type="submit">Connexion</button>
-      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
+      <p class="alt-action">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
     </form>
   </div>
   <div id="panel-favoris" class="side-panel">
@@ -167,9 +178,10 @@
   </div>
 
   
-<script type="module" src="/js/boot.js"></script>
+    <script src="js/tracker.js" type="module"></script>
+  <script type="module" src="/js/boot.js"></script>
 <script type="module" src="/js/pages/vaisselle.page.js"></script>
-<script src="/js/tracker.js" defer></script>
+
 
 
 </body>

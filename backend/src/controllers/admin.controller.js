@@ -4,6 +4,19 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 import multer from 'multer';
 
+function dateParam(req) {
+  const { from, to } = req.query || {};
+
+  const start = from ? new Date(from) : null;
+  const end = to ? new Date(to) : null;
+
+  return {
+    from: isNaN(start?.getTime()) ? null : start,
+    to: isNaN(end?.getTime()) ? null : end,
+  };
+}
+
+
 /* ================== HELPERS ================== */
 function toIntOrUndef(v, round = true) {
   if (v === '' || v === null || v === undefined) return undefined;
@@ -502,56 +515,76 @@ export async function analyticsSummary(req, res) {
   }
 }
 /* ================== ANALYTICS TOP PRODUCTS ================== */
+// en haut du fichier tu as déjà : import prisma from '../lib/prisma.js';
+// et la fonction dateParam utilisée par les autres analytics
+
 export async function analyticsTopProducts(req, res) {
   try {
-    // Récupère les stats agrégées des events
-    const events = await prisma.event.groupBy({
-      by: ['productId', 'type'],
-      _count: { _all: true },
-    });
+    const { from, to } = dateParam(req);
 
-    // Regroupe les stats par produit
-    const byProduct = {};
-    for (const e of events) {
-      const pid = e.productId;
-      if (!pid) continue;
-      if (!byProduct[pid]) byProduct[pid] = { id: pid, views: 0, addToCarts: 0, favorites: 0, purchases: 0 };
-      if (e.type === 'PRODUCT_VIEW') byProduct[pid].views += e._count._all;
-      if (e.type === 'ADD_TO_CART') byProduct[pid].addToCarts += e._count._all;
-      if (e.type === 'FAVORITE_ADD') byProduct[pid].favorites += e._count._all;
-      if (e.type === 'PURCHASE') byProduct[pid].purchases += e._count._all;
+    const where = {};
+
+    if (from || to) {
+      where.date = {};
+      if (from) where.date.gte = from;
+      if (to)   where.date.lte = to;
     }
 
-    // Ajoute les infos produits
-    const productIds = Object.keys(byProduct);
-    const products = await prisma.product.findMany({
-      where: { id: { in: productIds } },
-      select: { id: true, title: true, slug: true, price: true },
+    // 1) Récupération des stats agrégées
+    const stats = await prisma.dailyproductstat.groupBy({
+      by: ['productId'],
+      where,
+      _sum: {
+        views: true,
+        addToCarts: true,
+        favorites: true,
+        purchases: true,
+        revenue: true,
+      }
     });
 
-    const result = productIds.map(pid => {
-      const p = products.find(x => x.id === pid);
-      const stats = byProduct[pid];
+    if (!stats.length) {
+      return res.json({ items: [] });
+    }
+
+    // 👉 2) Tri manuel correct (Prisma ne peut pas trier)
+    stats.sort((a, b) => (b._sum.views || 0) - (a._sum.views || 0));
+
+    // 3) Fetch produits
+    const ids = stats.map(s => s.productId);
+    const products = await prisma.product.findMany({
+      where: { id: { in: ids } },
+      select: { id: true, title: true, slug: true },
+    });
+    const byId = Object.fromEntries(products.map(p => [p.id, p]));
+
+    // 4) Formatage
+    const items = stats.map(s => {
+      const p = byId[s.productId] || {};
+      const views = s._sum.views || 0;
+      const atc = s._sum.addToCarts || 0;
+      const fav = s._sum.favorites || 0;
+      const purchases = s._sum.purchases || 0;
+      const revenue = s._sum.revenue || 0;
+
       return {
-        id: pid,
-        title: p?.title || 'Produit inconnu',
-        slug: p?.slug || null,
-        views: stats.views,
-        addToCarts: stats.addToCarts,
-        favorites: stats.favorites,
-        purchases: stats.purchases,
-        revenue: (stats.purchases || 0) * (p?.price || 0),
+        productId: s.productId,
+        title: p.title || 'Produit',
+        slug: p.slug,
+        views,
+        addToCarts: atc,
+        favorites: fav,
+        purchases,
+        revenue,
+        conversionRate: views ? purchases / views : 0,
       };
     });
 
-    // Trie par vues décroissantes
-    result.sort((a, b) => b.views - a.views);
+    return res.json({ items });
 
-    res.json(result.slice(0, 10));
   } catch (e) {
-    console.error('[analyticsTopProducts]', e);
-    res.status(500).json({ error: 'Erreur chargement top produits' });
+    console.error('[admin] analyticsTopProducts error', e);
+    res.status(500).json({ error: 'Erreur analytics top produits' });
   }
 }
-
 

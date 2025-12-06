@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestion des cookies – Céracotta</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/cvg.css" />
+  <link rel="icon" href="images/logo.png" type="image/x-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="page-legale">
+
+  <div class="header-spacer"></div>
+    <header>
+    <div class="header-left">
+      <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <a href="index.html" class="logo-link">
+        <img src="images/logo.png" alt="Logo Céracotta" class="logo-image" />
+      </a>
+    </div>
+
+    <div class="header-right">
+      <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path
+            d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z" />
+        </svg>
+      </a>
+      <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
+          <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+              5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+              1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span id="fav-badge">0</span>
+      </a>
+      <a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path
+            d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
+        </svg>
+        <span id="cart-badge" class="cart-badge"></span>
+      </a>
+    </div>
+
+    <nav id="side-menu" aria-label="Navigation principale">
+      <ul>
+        <li><a href="index.html" data-i18n="menu.home">Accueil</a></li>
+        <li class="dropdown">
+          <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
+          <ul class="dropdown-list">
+            <li><a href="vaisselle.html" data-i18n="menu.vaisselle">Vaisselle</a></li>
+            <li><a href="vases.html" data-i18n="menu.vases">Vases</a></li>
+          </ul>
+        </li>
+        <li><a href="apropos.html" data-i18n="menu.about">À propos</a></li>
+      </ul>
+
+    </nav>
+    <div class="overlay" id="overlay"></div>
+  </header>
+
+
+  <!-- HERO -->
+  <section class="legal-hero">
+    <h1>Gestion des cookies</h1>
+    <p class="subtitle">Choisissez les cookies que vous souhaitez autoriser lors de votre visite.</p>
+
+  </section>
+
+  <div class="legal-shell">
+
+    <!-- SOMMAIRE -->
+    <aside class="legal-toc">
+      <h3>Sommaire</h3>
+      <ul>
+        <li><a href="#types">Types de cookies</a></li>
+        <li><a href="#parametres">Paramètres de consentement</a></li>
+        <li><a href="#modifier">Modifier mon choix</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENU -->
+    <main class="legal-container">
+
+      <!-- Section types -->
+      <section id="types" class="legal-section section-appear">
+        <div class="section-head">
+          <span class="article-number">1</span>
+          <div class="rule"></div>
+        </div>
+
+        <h2>Types de cookies utilisés</h2>
+        <p>Nous utilisons différents types de cookies pour assurer le bon fonctionnement du site et améliorer votre expérience.</p>
+
+        <ul class="legal-list">
+          <li><strong>Cookies essentiels</strong> : nécessaires au fonctionnement du site (connexion, panier, sécurité).</li>
+          <li><strong>Cookies statistiques</strong> : nous permettent de comprendre comment le site est utilisé (ex : Google Analytics).</li>
+          <li><strong>Cookies marketing</strong> : utilisés pour la publicité personnalisée (ex : Meta Pixel).</li>
+        </ul>
+      </section>
+
+      <!-- Section paramètres -->
+      <section id="parametres" class="legal-section section-appear">
+        <div class="section-head">
+          <span class="article-number">2</span>
+          <div class="rule"></div>
+        </div>
+
+        <h2>Paramètres de consentement</h2>
+
+        <div class="legal-accordion">
+
+          <details>
+            <summary>Cookies essentiels (toujours actifs)</summary>
+            <div class="accordion-body">
+              <p>Ces cookies sont indispensables au fonctionnement de Céracotta : panier, sécurité, session utilisateur.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Cookies statistiques</summary>
+            <div class="accordion-body">
+              <label>
+                <input type="checkbox" id="cookie-statistiques">
+                Autoriser les cookies d’analyse (Google Analytics)
+              </label>
+            </div>
+          </details>
+
+          <details>
+            <summary>Cookies marketing</summary>
+            <div class="accordion-body">
+              <label>
+                <input type="checkbox" id="cookie-marketing">
+                Autoriser les cookies marketing (Meta Pixel / retargeting)
+              </label>
+            </div>
+          </details>
+
+        </div>
+
+        <button id="save-cookies" style="
+          margin-top: 18px;
+          padding: 12px 22px;
+          background:#7f0000;
+          color:white;
+          border:none;
+          border-radius:12px;
+          font-size:1rem;
+          cursor:pointer;">
+          Enregistrer mes préférences
+        </button>
+      </section>
+
+      <!-- Section modifier -->
+      <section id="modifier" class="legal-section section-appear">
+        <div class="section-head">
+          <span class="article-number">3</span>
+          <div class="rule"></div>
+        </div>
+
+        <h2>Modifier mes choix à tout moment</h2>
+        <p>Vous pouvez changer vos préférences à tout moment en cliquant sur :</p>
+
+        <div class="notice notice--beige">
+          <strong>Footer → “Gérer les cookies”</strong>
+        </div>
+
+        <p class="small">Vos choix sont conservés pendant 12 mois selon les recommandations européennes.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Bouton retour haut -->
+  <button class="legal-back-to-top" id="backToTop">↑</button>
+
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Pré-remplissage
+  document.getElementById("cookie-statistiques").checked =
+    localStorage.getItem("cookie_stats") === "true";
+
+  document.getElementById("cookie-marketing").checked =
+    localStorage.getItem("cookie_marketing") === "true";
+});
+
+// Sauvegarde
+document.getElementById("save-cookies").addEventListener("click", () => {
+  const stats = document.getElementById("cookie-statistiques").checked;
+  const marketing = document.getElementById("cookie-marketing").checked;
+
+  // stocker les valeurs
+  localStorage.setItem("cookie_stats", stats);
+  localStorage.setItem("cookie_marketing", marketing);
+
+  // le consentement devient "custom"
+  localStorage.setItem("cookieConsent", "custom");
+
+  alert("Vos préférences ont été enregistrées.");
+
+  // On active GA si “statistiques” est autorisé
+  if (stats) activateOptionalCookies();
+});
+
+  </script>
+
+</body>
+
+</html>

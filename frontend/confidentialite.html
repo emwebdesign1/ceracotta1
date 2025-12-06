@@ -11,6 +11,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
    <link rel="icon" href="images/logo.png" type="image/x-icon" />
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
 </head>
 <body>
 
@@ -51,7 +60,7 @@
     </div>
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="index.html#top" data-i18n="menu.home">Accueil</a></li>
+           <li><a href="index.html" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
           <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
@@ -110,267 +119,174 @@
       <div class="legal-container">
 
         <!-- 1. INTRO -->
-        <article class="legal-section section-appear" id="intro">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">1</span>
-              <span data-i18n="privacy.1.title">Introduction</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="privacy.1.text">
-            <strong>[Nom de votre entreprise]</strong> (ci-après « nous », « notre », « l’entreprise »), société spécialisée
-            dans la vente de céramiques en ligne, s’engage à protéger la confidentialité et la sécurité des données
-            personnelles de ses clients conformément au <strong>RGPD</strong> et à la loi Informatique et Libertés.
-          </p>
-        </article>
+      <!-- 1. INTRODUCTION -->
+<article class="legal-section section-appear" id="intro">
+  <div class="section-head">
+    <h2><span class="article-number">1</span> Introduction</h2>
+    <span class="rule"></span>
+  </div>
+  <p>
+    Céracotta s’engage à protéger la confidentialité des données personnelles conformément au 
+    <strong>RGPD</strong> et aux exigences légales suisses. Cette politique explique quelles données sont collectées, 
+    pourquoi, comment elles sont utilisées et vos droits.
+  </p>
+</article>
 
-        <!-- 2. RESPONSABLE -->
-        <article class="legal-section section-appear" id="responsable">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">2</span>
-              <span data-i18n="privacy.2.title">Responsable du traitement</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="privacy.2.responsable"><strong>Responsable :</strong> [Nom de l’entreprise]</p>
-          <p data-i18n="privacy.2.adresse"><strong>Adresse :</strong> [Votre adresse]</p>
-          <p data-i18n="privacy.2.email"><strong>Email :</strong> [Votre email de contact]</p>
-          <p data-i18n="privacy.2.tel"><strong>Téléphone :</strong> [Votre téléphone]</p>
-          <p data-i18n="privacy.2.dpo"><strong>Délégué à la protection des données (DPO) :</strong> [Email DPO si applicable]</p>
-        </article>
+<!-- 2. RESPONSABLE DU TRAITEMENT -->
+<article class="legal-section section-appear" id="responsable">
+  <div class="section-head">
+    <h2><span class="article-number">2</span> Responsable du traitement</h2>
+    <span class="rule"></span>
+  </div>
+  <p><strong>Céracotta</strong></p>
+  <p><strong>Adresse :</strong> Chemin des Pruneautiers 3, 1566 St Aubin</p>
+  <p><strong>Email :</strong> ceracotta@ceracotta.com</p>
+  <p><strong>Téléphone :</strong> 079 123 62 51</p>
+</article>
 
-        <!-- 3. DONNÉES & FINALITÉS -->
-        <article class="legal-section section-appear" id="donnees-finalites">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">3</span>
-              <span data-i18n="privacy.3.title">Données collectées &amp; finalités</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
+<!-- 3. DONNÉES & FINALITÉS -->
+<article class="legal-section section-appear" id="donnees-finalites">
+  <div class="section-head">
+    <h2><span class="article-number">3</span> Données collectées & finalités</h2>
+    <span class="rule"></span>
+  </div>
 
-          <h3 class="small" data-i18n="privacy.3.1.title">3.1 Données collectées lors de la commande</h3>
-          <ul class="legal-list">
-            <li data-i18n="privacy.3.1.item1"><strong>Données d’identité</strong> : nom, prénom, âge (si nécessaire)</li>
-            <li data-i18n="privacy.3.1.item2"><strong>Données de contact</strong> : email, téléphone, adresse postale</li>
-            <li data-i18n="privacy.3.1.item3"><strong>Données de paiement</strong> : informations bancaires (via prestataires sécurisés)</li>
-            <li data-i18n="privacy.3.1.item4"><strong>Données de livraison</strong> : adresse de livraison, instructions spécifiques</li>
-          </ul>
-          <p class="notice notice--soft" data-i18n="privacy.3.1.finalites">
-            <strong>Finalités :</strong> traitement des commandes, facturation, livraison, service client, gestion des garanties.
-          </p>
+  <h3 class="small">3.1 Données collectées</h3>
+  <ul class="legal-list">
+    <li><strong>Identité :</strong> nom, prénom</li>
+    <li><strong>Contact :</strong> email, téléphone, adresse</li>
+    <li><strong>Paiement :</strong> via Stripe / PayPal (sécurisé — jamais conservé)</li>
+    <li><strong>Livraison :</strong> adresse, instructions</li>
+    <li><strong>Navigation :</strong> cookies, adresse IP, navigateur, pages consultées</li>
+  </ul>
 
-          <h3 class="small" data-i18n="privacy.3.2.title">3.2 Données de navigation</h3>
-          <ul class="legal-list">
-            <li data-i18n="privacy.3.2.item1"><strong>Cookies techniques</strong> : fonctionnement du site, panier d’achat</li>
-            <li data-i18n="privacy.3.2.item2"><strong>Cookies de performance</strong> : analyse de trafic (ex. Google Analytics)</li>
-            <li data-i18n="privacy.3.2.item3"><strong>Données de connexion</strong> : IP, type de navigateur, pages visitées</li>
-          </ul>
-          <p class="notice notice--beige" data-i18n="privacy.3.2.finalites">
-            <strong>Finalités :</strong> amélioration de l’expérience, statistiques de fréquentation, sécurité.
-          </p>
-        </article>
+  <h3 class="small">3.2 Finalités</h3>
+  <p class="notice notice--soft">
+    Traitement des commandes, facturation, livraison, support client, lutte contre la fraude, 
+    statistiques et amélioration de l’expérience utilisateur.
+  </p>
+</article>
 
-        <!-- 4. BASE LÉGALE -->
-        <article class="legal-section section-appear" id="base-legale">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">4</span>
-              <span data-i18n="privacy.4.title">Base légale des traitements</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li data-i18n="privacy.4.item1"><strong>Exécution du contrat</strong> : traitement des commandes, livraison</li>
-            <li data-i18n="privacy.4.item2"><strong>Intérêt légitime</strong> : amélioration des services, sécurité, lutte contre la fraude</li>
-            <li data-i18n="privacy.4.item3"><strong>Consentement</strong> : cookies non essentiels, newsletter marketing</li>
-            <li data-i18n="privacy.4.item4"><strong>Obligation légale</strong> : conservation des factures, obligations fiscales</li>
-          </ul>
-        </article>
+<!-- 4. BASE LÉGALE -->
+<article class="legal-section section-appear" id="base-legale">
+  <div class="section-head">
+    <h2><span class="article-number">4</span> Base légale</h2>
+    <span class="rule"></span>
+  </div>
 
-        <!-- 5. CONSERVATION -->
-        <article class="legal-section section-appear" id="conservation">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">5</span>
-              <span data-i18n="privacy.5.title">Durées de conservation</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <table class="legal-table" aria-label="Durées de conservation">
-            <thead>
-              <tr>
-                <th data-i18n="privacy.5.col.categorie">Catégorie</th>
-                <th data-i18n="privacy.5.col.duree">Durée</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-i18n="privacy.5.row1.col1">Données clients actifs</td>
-                <td data-i18n="privacy.5.row1.col2">Durée de la relation commerciale + 3 ans</td>
-              </tr>
-              <tr>
-                <td data-i18n="privacy.5.row2.col1">Données de facturation</td>
-                <td data-i18n="privacy.5.row2.col2">10 ans (obligations comptables &amp; fiscales)</td>
-              </tr>
-              <tr>
-                <td data-i18n="privacy.5.row3.col1">Données de navigation</td>
-                <td data-i18n="privacy.5.row3.col2">13 mois maximum</td>
-              </tr>
-              <tr>
-                <td data-i18n="privacy.5.row4.col1">Données de prospection</td>
-                <td data-i18n="privacy.5.row4.col2">3 ans à compter du dernier contact</td>
-              </tr>
-            </tbody>
-          </table>
-        </article>
+  <ul class="legal-list">
+    <li><strong>Exécution du contrat</strong> : commande, livraison, facturation</li>
+    <li><strong>Obligation légale</strong> : facturation, garanties</li>
+    <li><strong>Intérêt légitime</strong> : prévention de la fraude, amélioration du service</li>
+    <li><strong>Consentement</strong> : cookies non essentiels, marketing</li>
+  </ul>
+</article>
 
-        <!-- 6. DESTINATAIRES -->
-        <article class="legal-section section-appear" id="destinataires">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">6</span>
-              <span data-i18n="privacy.6.title">Destinataires des données</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li data-i18n="privacy.6.item1"><strong>Prestataires de paiement</strong> : traitement sécurisé des transactions</li>
-            <li data-i18n="privacy.6.item2"><strong>Transporteurs</strong> : livraison des commandes</li>
-            <li data-i18n="privacy.6.item3"><strong>Prestataires techniques</strong> : hébergement, maintenance</li>
-            <li data-i18n="privacy.6.item4"><strong>Autorités compétentes</strong> : en cas d’obligation légale</li>
-          </ul>
-        </article>
+<!-- 5. DURÉES DE CONSERVATION -->
+<article class="legal-section section-appear" id="conservation">
+  <div class="section-head">
+    <h2><span class="article-number">5</span> Durées de conservation</h2>
+    <span class="rule"></span>
+  </div>
 
-        <!-- 7. SÉCURITÉ -->
-        <article class="legal-section section-appear" id="securite">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">7</span>
-              <span data-i18n="privacy.7.title">Sécurité des données</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <ul class="legal-list">
-            <li data-i18n="privacy.7.item1">Chiffrement <strong>SSL</strong> pour les transactions</li>
-            <li data-i18n="privacy.7.item2">Accès <strong>restreint</strong> aux données personnelles</li>
-            <li data-i18n="privacy.7.item3">Sauvegardes <strong>régulières et sécurisées</strong></li>
-            <li data-i18n="privacy.7.item4">Formation du personnel à la protection des données</li>
-          </ul>
-        </article>
+  <table class="legal-table">
+    <thead>
+      <tr><th>Catégorie</th><th>Durée</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Données client</td><td>Durée du contrat + 3 ans</td></tr>
+      <tr><td>Factures</td><td>10 ans</td></tr>
+      <tr><td>Cookies</td><td>13 mois</td></tr>
+      <tr><td>Prospection</td><td>3 ans</td></tr>
+    </tbody>
+  </table>
+</article>
 
-        <!-- 8. DROITS -->
-        <article class="legal-section section-appear" id="droits">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">8</span>
-              <span data-i18n="privacy.8.title">Vos droits (RGPD)</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <div class="legal-accordion">
-            <details>
-              <summary data-i18n="privacy.8.summary1">Droits disponibles</summary>
-              <div class="accordion-body">
-                <ul class="legal-list">
-                  <li data-i18n="privacy.8.item1"><strong>Accès</strong> : obtenir une copie de vos données</li>
-                  <li data-i18n="privacy.8.item2"><strong>Rectification</strong> : corriger des données inexactes</li>
-                  <li data-i18n="privacy.8.item3"><strong>Effacement</strong> : supprimer vos données (sous conditions)</li>
-                  <li data-i18n="privacy.8.item4"><strong>Portabilité</strong> : recevoir vos données dans un format lisible</li>
-                  <li data-i18n="privacy.8.item5"><strong>Opposition</strong> : vous opposer à certains traitements</li>
-                  <li data-i18n="privacy.8.item6"><strong>Limitation</strong> : restreindre temporairement un traitement</li>
-                </ul>
-              </div>
-            </details>
-            <details>
-              <summary data-i18n="privacy.8.summary2">Exercer vos droits</summary>
-              <div class="accordion-body">
-                <p data-i18n="privacy.8.exercice">
-                  Contactez-nous à <a href="mailto:[email]">ceracotta@ceracotta.com</a> avec une pièce d’identité.
-                  Délai de réponse&nbsp;: <strong>1 mois</strong> maximum.
-                </p>
-              </div>
-            </details>
-          </div>
-        </article>
+<!-- 6. DESTINATAIRES -->
+<article class="legal-section section-appear" id="destinataires">
+  <div class="section-head">
+    <h2><span class="article-number">6</span> Destinataires</h2>
+    <span class="rule"></span>
+  </div>
 
-        <!-- 9. RÉCLAMATIONS -->
-        <article class="legal-section section-appear" id="reclamations">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">9</span>
-              <span data-i18n="privacy.9.title">Réclamations</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="privacy.9.text">
-            En cas de litige, vous pouvez saisir la <strong>CNIL</strong> :
-            <a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>
-            ou par courrier (3 Place de Fontenoy - TSA 80715 - 75334 PARIS CEDEX 07).
-          </p>
-        </article>
+  <ul class="legal-list">
+    <li><strong>Stripe / PayPal :</strong> paiement sécurisé</li>
+    <li><strong>Transporteurs :</strong> livraison des commandes</li>
+    <li><strong>Prestataires techniques :</strong> hébergement, maintenance</li>
+    <li><strong>Autorités légales :</strong> si la loi l’exige</li>
+  </ul>
+</article>
 
-        <!-- 10. COOKIES -->
-        <article class="legal-section section-appear" id="cookies">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">10</span>
-              <span data-i18n="privacy.10.title">Cookies</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="privacy.10.text">
-            Nous utilisons des cookies pour le fonctionnement et l’amélioration du site. Vous pouvez les paramétrer via notre
-            bandeau cookies ou les réglages de votre navigateur.
-          </p>
-          <table class="legal-table" aria-label="Types de cookies">
-            <thead>
-              <tr>
-                <th data-i18n="privacy.10.col.type">Type</th>
-                <th data-i18n="privacy.10.col.examples">Exemples</th>
-                <th data-i18n="privacy.10.col.finalite">Finalité</th>
-                <th data-i18n="privacy.10.col.duree">Durée</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-i18n="privacy.10.row1.col1">Essentiels</td>
-                <td data-i18n="privacy.10.row1.col2">Panier, session</td>
-                <td data-i18n="privacy.10.row1.col3">Fonctionnement du site</td>
-                <td data-i18n="privacy.10.row1.col4">Session</td>
-              </tr>
-              <tr>
-                <td data-i18n="privacy.10.row2.col1">Performance</td>
-                <td data-i18n="privacy.10.row2.col2">Analytics</td>
-                <td data-i18n="privacy.10.row2.col3">Mesure d’audience</td>
-                <td data-i18n="privacy.10.row2.col4">13 mois max</td>
-              </tr>
-              <tr>
-                <td data-i18n="privacy.10.row3.col1">Marketing</td>
-                <td data-i18n="privacy.10.row3.col2">UTM, ads</td>
-                <td data-i18n="privacy.10.row3.col3">Personnalisation / campagnes</td>
-                <td data-i18n="privacy.10.row3.col4">Selon partenaire</td>
-              </tr>
-            </tbody>
-          </table>
-        </article>
+<!-- 7. SÉCURITÉ -->
+<article class="legal-section section-appear" id="securite">
+  <div class="section-head">
+    <h2><span class="article-number">7</span> Sécurité</h2>
+    <span class="rule"></span>
+  </div>
 
-        <!-- 11. CONTACT -->
-        <article class="legal-section section-appear" id="contact">
-          <div class="section-head">
-            <h2>
-              <span class="article-number">11</span>
-              <span data-i18n="privacy.11.title">Contact</span>
-            </h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="privacy.11.text">
-            Service données personnelles :
-            <a href="mailto:[email]">ceracotta@ceracotta.com</a>
-          </p>
-        </article>
+  <ul class="legal-list">
+    <li>Chiffrement <strong>SSL</strong></li>
+    <li>Accès interne strictement limité</li>
+    <li>Sauvegardes régulières</li>
+    <li>Procédures internes de protection des données</li>
+  </ul>
+</article>
+
+<!-- 8. DROITS RGPD -->
+<article class="legal-section section-appear" id="droits">
+  <div class="section-head">
+    <h2><span class="article-number">8</span> Vos droits</h2>
+    <span class="rule"></span>
+  </div>
+
+  <ul class="legal-list">
+    <li>Accès</li>
+    <li>Rectification</li>
+    <li>Effacement</li>
+    <li>Opposition</li>
+    <li>Portabilité</li>
+  </ul>
+
+  <p>
+    Exercice des droits : <strong>ceracotta@ceracotta.com</strong><br>
+    Délai de réponse : 24–48 h ouvrées.
+  </p>
+</article>
+
+<!-- 9. RÉCLAMATIONS -->
+<article class="legal-section section-appear" id="reclamations">
+  <div class="section-head">
+    <h2><span class="article-number">9</span> Réclamations</h2>
+    <span class="rule"></span>
+  </div>
+  <p>
+    Vous pouvez adresser toute réclamation à : <strong>ceracotta@ceracotta.com</strong>.
+  </p>
+</article>
+
+<!-- 10. COOKIES -->
+<article class="legal-section section-appear" id="cookies">
+  <div class="section-head">
+    <h2><span class="article-number">10</span> Cookies</h2>
+    <span class="rule"></span>
+  </div>
+  <p>
+    Nous utilisons des cookies essentiels, de performance et marketing.
+    Leur durée varie selon leur type (maximum 13 mois).
+  </p>
+</article>
+
+<!-- 11. CONTACT -->
+<article class="legal-section section-appear" id="contact">
+  <div class="section-head">
+    <h2><span class="article-number">11</span> Contact</h2>
+    <span class="rule"></span>
+  </div>
+  <p>
+    Pour toute question : <strong>ceracotta@ceracotta.com</strong>
+  </p>
+</article>
+
 
         <div class="legal-divider"></div>
         <p class="small" style="opacity:.8" data-i18n="privacy.footer">
@@ -394,6 +310,8 @@
       <a href="cvg.html" data-i18n="footer.conditions">Conditions générales</a>
       <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
       <a href="retours.html" data-i18n="footer.retours">Retours &amp; remboursement</a>
+      <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 
@@ -408,8 +326,9 @@
     topBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
   </script>
 
-  <script type="module" src="/js/boot.js"></script>
-  <script src="/js/tracker.js" defer></script>
+ <script src="js/tracker.js" type="module"></script>
+  <script type="module" src="js/boot.js"></script>
+  <script src="js/tracker.js" defer></script>
 
 
   <!-- SIDE PANELS -->
@@ -424,7 +343,7 @@
       <button type="submit" data-i18n="panel.account.login">Connexion</button>
       <p class="alt-action">
         <span data-i18n="panel.account.noaccount">Pas encore inscrit ?</span>
-        <a href="#" data-i18n="panel.account.create">Créer un compte</a>
+        <a href="register.html" data-i18n="panel.account.create">Créer un compte</a>
       </p>
     </form>
   </div>

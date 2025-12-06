@@ -393,3 +393,26 @@ tbody tr { border-bottom:1px solid #efeae2; }
 @media (max-width: 900px) {
   .variant-row { grid-template-columns: 1fr 1fr; }
 }
+
+/* Désactiver les icônes du header dans l’admin */
+body.page-admin .header-right {
+  display: none !important;
+}
+/* Désactiver totalement les side-panels dans l’administration */
+body.page-admin #panel-favoris,
+body.page-admin #panel-panier,
+body.page-admin #panel-compte {
+  display: none !important;
+}
+
+/* Ajuste le menu admin en mobile */
+@media (max-width: 980px) {
+  .ad-menu {
+    padding: 6px 4px;
+    gap: 10px;
+  }
+  .ad-tab {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}

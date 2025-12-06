@@ -1473,3 +1473,62 @@ footer {
     font-size: 0.9rem;
   }
 }
+
+
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f4f1ec;
+  padding: 25px;
+  border-top: 1px solid #e2ded7;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Urbanist', sans-serif;
+  z-index: 9999;
+}
+
+.cookie-banner.hidden {
+  display: none;
+}
+
+.cookie-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.cookie-content p {
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
+.cookie-buttons {
+  margin-top: 15px;
+  display: flex;
+  gap: 12px;
+}
+
+.cookie-btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+}
+
+.cookie-btn.accept {
+  background: #7f0000;
+  color: white;
+}
+
+.cookie-btn.reject {
+  background: #ccc;
+  color: #333;
+}
+
+.cookie-btn.customize {
+  background: #fff;
+  border: 1px solid #7f0000;
+  color: #7f0000;
+}

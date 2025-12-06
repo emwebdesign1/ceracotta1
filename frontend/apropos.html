@@ -10,8 +10,15 @@
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-</head>
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
 
 <body>
   <header>
@@ -110,9 +117,35 @@
       <a href="cvg.html" data-i18n="footer.conditions">Conditions générales</a>
       <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
       <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
+      <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 
+
+  <!-- SIDE PANELS -->
+  <div id="panel-compte" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Mon compte</h2>
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Votre email">
+      <label>Mot de passe</label>
+      <input type="password" placeholder="Votre mot de passe">
+      <button type="submit">Connexion</button>
+      <p class="alt-action">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
+    </form>
+  </div>
+  <div id="panel-favoris" class="side-panel">
+    <button class="close-btn">&times;</button>
+  </div>
+  <div id="panel-panier" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Votre panier</h2>
+    <p>Votre panier est vide.</p>
+  </div>
+
+  <script src="js/tracker.js" type="module"></script>
   <script type="module" src="/js/boot.js"></script>
   <script type="module" src="/js/pages/index.page.js"></script>
 

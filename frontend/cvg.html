@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-i18n="cgv.pageTitle">Conditions Générales de Vente – Céracotta</title>
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/cvg.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-     <link rel="icon" href="images/logo.png" type="image/x-icon" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="images/logo.png" type="image/x-icon" />
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -31,22 +43,23 @@
     <div class="header-right">
       <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
+          <path
+            d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z" />
         </svg>
       </a>
       <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="feather feather-heart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
           <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
-            5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
-            1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+              1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
         </svg>
         <span id="fav-badge">0</span>
       </a>
       <a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
+          <path
+            d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
         </svg>
         <span id="cart-badge" class="cart-badge"></span>
       </a>
@@ -54,7 +67,7 @@
 
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="index.html#top" data-i18n="menu.home">Accueil</a></li>
+        <li><a href="index.html" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
           <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
@@ -81,7 +94,8 @@
         <span data-i18n="breadcrumb2.cgv">CGV</span>
       </nav>
       <h1 data-i18n="cgv.title">Conditions Générales de Vente (CGV)</h1>
-      <p class="subtitle" data-i18n="cgv.subtitle">Toutes les informations contractuelles applicables à vos achats sur Céracotta.</p>
+      <p class="subtitle" data-i18n="cgv.subtitle">Toutes les informations contractuelles applicables à vos achats sur
+        Céracotta.</p>
       <div style="margin-top:12px;">
         <span class="legal-badge" data-i18n="cgv.updated">Mise à jour : 19 septembre 2025</span>
       </div>
@@ -112,201 +126,183 @@
       <div class="legal-container">
 
         <!-- 1 -->
+        <!-- 1. OBJET -->
         <article class="legal-section" id="objet-champ">
           <div class="section-head">
-            <h2><span class="article-number">1</span><span data-i18n="cgv.1.title">Objet et champ d’application</span></h2>
+            <h2><span class="article-number">1</span> Objet</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.1.text1">Les présentes Conditions Générales de Vente (ci-après « CGV »)...</p>
-          <p data-i18n="cgv.1.text2">Tout achat implique l’acceptation pleine et entière des CGV par le Client.</p>
+          <p>
+            Les présentes Conditions Générales de Vente (CGV) régissent les ventes réalisées sur le site Céracotta.
+            Toute commande implique l’acceptation pleine et entière des présentes CGV.
+          </p>
         </article>
 
-        <!-- 2 -->
+        <!-- 2. PRODUITS -->
         <article class="legal-section" id="produits">
           <div class="section-head">
-            <h2><span class="article-number">2</span><span data-i18n="cgv.2.title">Produits proposés</span></h2>
+            <h2><span class="article-number">2</span> Produits</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.2.text1">Nos collections comprennent :</p>
+          <p>Les produits proposés comprennent :</p>
           <ul class="legal-list">
-            <li data-i18n="cgv.2.item1">Vaisselle en céramique</li>
-            <li data-i18n="cgv.2.item2">Objets décoratifs et vases</li>
-            <li data-i18n="cgv.2.item3">Éditions artisanales / séries limitées</li>
-            <li data-i18n="cgv.2.item4">Créations sur-mesure (sur devis)</li>
+            <li>Vases</li>
+            <li>Objets décoratifs</li>
+            <li>Céramiques artisanales</li>
+            <li>Pièces sur mesure</li>
           </ul>
-          <p class="notice notice--soft" data-i18n="cgv.2.notice">Les photos sont non contractuelles...</p>
         </article>
 
-        <!-- 3 -->
+        <!-- 3. PRIX -->
         <article class="legal-section" id="prix">
           <div class="section-head">
-            <h2><span class="article-number">3</span><span data-i18n="cgv.3.title">Prix</span></h2>
+            <h2><span class="article-number">3</span> Prix</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.3.text1">
-            Les prix sont indiqués en CHF TTC (ou devise affichée sur le Site) hors frais de livraison.
+          <p>
+            Les prix sont affichés en CHF TTC, hors frais de livraison.
+            Les prix applicables sont ceux affichés au moment de la commande.
           </p>
-          <table class="legal-table">
-            <thead><tr><th data-i18n="cgv.3.table.col1">Poste</th><th data-i18n="cgv.3.table.col2">Détail</th></tr></thead>
-            <tbody>
-              <tr><td data-i18n="cgv.3.row1a">Prix article</td><td data-i18n="cgv.3.row1b">Affiché sur la fiche produit</td></tr>
-              <tr><td data-i18n="cgv.3.row2a">Livraison</td><td data-i18n="cgv.3.row2b">Calculée au panier selon poids/destination</td></tr>
-              <tr><td data-i18n="cgv.3.row3a">Taxes</td><td data-i18n="cgv.3.row3b">Incluses si applicable</td></tr>
-            </tbody>
-          </table>
-          <p data-i18n="cgv.3.text2">Les prix peuvent évoluer mais restent garantis au moment du paiement.</p>
         </article>
 
-        <!-- 4 -->
+        <!-- 4. COMMANDE -->
         <article class="legal-section" id="commande-validation">
           <div class="section-head">
-            <h2><span class="article-number">4</span><span data-i18n="cgv.4.title">Commande & validation</span></h2>
+            <h2><span class="article-number">4</span> Commande</h2>
             <span class="rule"></span>
           </div>
-          <h3 class="small" data-i18n="cgv.4.processTitle">Processus</h3>
+
+          <p>Processus :</p>
           <ol class="legal-list">
-            <li data-i18n="cgv.4.step1">Ajout des produits au panier</li>
-            <li data-i18n="cgv.4.step2">Saisie des informations de livraison/facturation</li>
-            <li data-i18n="cgv.4.step3">Choix du mode d’envoi et de paiement</li>
-            <li data-i18n="cgv.4.step4">Validation après acceptation des CGV</li>
+            <li>Panier</li>
+            <li>Informations personnelles</li>
+            <li>Livraison</li>
+            <li>Paiement</li>
+            <li>Validation</li>
           </ol>
-          <h3 class="small" data-i18n="cgv.4.confirmTitle">Confirmation</h3>
-          <p data-i18n="cgv.4.confirmText">Un email récapitulatif est envoyé...</p>
         </article>
-        <!-- 5 -->
+
+        <!-- 5. PAIEMENT -->
         <article class="legal-section" id="paiement">
           <div class="section-head">
-            <h2><span class="article-number">5</span><span data-i18n="cgv.5.title">Paiement</span></h2>
+            <h2><span class="article-number">5</span> Paiement</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.5.text1">Moyens acceptés (variable selon pays) :</p>
+          <p>Moyens acceptés :</p>
           <ul class="legal-list">
-            <li data-i18n="cgv.5.item1">Carte bancaire (Visa, Mastercard, American Express)</li>
-            <li data-i18n="cgv.5.item2">TWINT / PostFinance (si activés)</li>
-            <li data-i18n="cgv.5.item3">PayPal (si activé)</li>
-            <li data-i18n="cgv.5.item4">Virement (professionnels / sur devis)</li>
+            <li>Stripe (Visa, Mastercard, Amex)</li>
+            <li>TWINT (si activé)</li>
+            <li>PayPal</li>
           </ul>
-          <p class="notice notice--beige" data-i18n="cgv.5.notice">
-            Le paiement est exigible à la commande. Les données bancaires ne transitent pas ni ne sont conservées sur nos serveurs.
+          <p>
+            Les données bancaires ne sont jamais conservées par Céracotta.
           </p>
         </article>
 
-        <!-- 6 -->
+        <!-- 6. LIVRAISON -->
         <article class="legal-section" id="livraison">
           <div class="section-head">
-            <h2><span class="article-number">6</span><span data-i18n="cgv.6.title">Livraison</span></h2>
+            <h2><span class="article-number">6</span> Livraison</h2>
             <span class="rule"></span>
           </div>
-          <h3 class="small" data-i18n="cgv.6.zones">Zones</h3>
+          <p>Zones :</p>
           <ul class="legal-list">
-            <li data-i18n="cgv.6.item1">Suisse</li>
-            <li data-i18n="cgv.6.item2">Europe (frais/ délais spécifiques)</li>
-            <li data-i18n="cgv.6.item3">Autres destinations sur demande</li>
+            <li>Suisse</li>
+            <li>Europe</li>
+            <li>Autres pays sur demande</li>
           </ul>
-          <h3 class="small" data-i18n="cgv.6.delaisTitle">Délais indicatifs</h3>
+
+          <p>Délais :</p>
           <ul class="legal-list">
-            <li data-i18n="cgv.6.delay1">Standard : 2–5 jours ouvrés</li>
-            <li data-i18n="cgv.6.delay2">Express : 24–48 h</li>
-            <li data-i18n="cgv.6.delay3">Sur-mesure : 2–4 semaines</li>
+            <li>Standard : 2–5 jours ouvrés</li>
+            <li>Express : 24–48 h</li>
           </ul>
-          <h3 class="small" data-i18n="cgv.6.receptionTitle">Réception & réserves</h3>
-          <p data-i18n="cgv.6.text">
-            Les colis sont protégés. À la réception, le Client vérifie l’état et signale toute anomalie sous 48 h.
-          </p>
         </article>
 
-        <!-- 7 -->
+        <!-- 7. RETOURS -->
         <article class="legal-section" id="retractation">
           <div class="section-head">
-            <h2><span class="article-number">7</span><span data-i18n="cgv.7.title">Droit de rétractation & retours</span></h2>
+            <h2><span class="article-number">7</span> Retour et droit de rétractation</h2>
             <span class="rule"></span>
           </div>
-          <div class="legal-accordion">
-            <details>
-              <summary data-i18n="cgv.7.delayTitle">Délai & éligibilité</summary>
-              <div class="accordion-body">
-                <p data-i18n="cgv.7.delayText">Délai légal de 14 jours à compter de la réception (hors articles personnalisés/sur-mesure).</p>
-              </div>
-            </details>
-            <details>
-              <summary data-i18n="cgv.7.procedureTitle">Procédure</summary>
-              <div class="accordion-body">
-                <ol class="legal-list">
-                  <li data-i18n="cgv.7.step1">Contact via contact@ceracotta.ch (n° commande, motif, photos si casse)</li>
-                  <li data-i18n="cgv.7.step2">Retour dans l’emballage d’origine, non utilisé et intact</li>
-                  <li data-i18n="cgv.7.step3">Remboursement à réception/contrôle (hors frais de retour sauf défaut)</li>
-                </ol>
-              </div>
-            </details>
-          </div>
+          <p>Délai légal : 14 jours.</p>
+          <ul class="legal-list">
+            <li>Produit non utilisé</li>
+            <li>Emballage d’origine</li>
+            <li>Frais de retour à la charge du client (sauf défaut)</li>
+          </ul>
         </article>
 
-        <!-- 8 -->
+        <!-- 8. POLITIQUE D’ANNULATION -->
+        <article class="legal-section" id="annulation">
+          <div class="section-head">
+            <h2><span class="article-number">8</span> Politique d’annulation</h2>
+            <span class="rule"></span>
+          </div>
+          <p>
+            L’annulation est possible uniquement avant l’expédition.
+            Aucune annulation n’est possible pour les pièces sur mesure.
+          </p>
+        </article>
+
+        <!-- 9. GARANTIES -->
         <article class="legal-section" id="garanties">
           <div class="section-head">
-            <h2><span class="article-number">8</span><span data-i18n="cgv.8.title">Garanties</span></h2>
+            <h2><span class="article-number">9</span> Garanties</h2>
             <span class="rule"></span>
           </div>
-          <h3 class="small" data-i18n="cgv.8.conf">Conformité</h3>
-          <p data-i18n="cgv.8.confText">Couverture légale applicable selon le droit local (Suisse/UE)...</p>
-          <h3 class="small" data-i18n="cgv.8.def">Vices cachés</h3>
-          <p data-i18n="cgv.8.defText">Possibilité de remboursement/échange selon constat.</p>
-          <h3 class="small" data-i18n="cgv.8.spec">Spécificités céramique</h3>
-          <p data-i18n="cgv.8.specText">De légères différences de teinte/texture ne constituent pas un défaut.</p>
-        </article>
-
-        <!-- 9 -->
-        <article class="legal-section" id="responsabilite">
-          <div class="section-head">
-            <h2><span class="article-number">9</span><span data-i18n="cgv.9.title">Responsabilité</span></h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="cgv.9.text">
-            Céracotta ne saurait être tenue responsable des dommages indirects ou pertes de données.
+          <p>
+            Les produits bénéficient de la garantie légale de conformité et contre les vices cachés (2 ans).
+            De légères variations d’émail ne constituent pas un défaut.
           </p>
         </article>
 
-        <!-- 10 -->
-        <article class="legal-section" id="force-majeure">
+        <!-- 10. EXPORTATION -->
+        <article class="legal-section" id="export">
           <div class="section-head">
-            <h2><span class="article-number">10</span><span data-i18n="cgv.10.title">Force majeure</span></h2>
+            <h2><span class="article-number">10</span> Restrictions légales / exportation</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.10.text">
-            En cas d’événement imprévisible et irrésistible (grève, catastrophe, pandémie…), l’exécution des obligations peut être suspendue.
+          <p>
+            Certaines destinations peuvent être refusées pour cause de douanes ou fragilité du produit.
+            En cas d’impossibilité, un remboursement intégral est effectué.
           </p>
         </article>
 
-        <!-- 11 -->
-        <article class="legal-section" id="donnees">
+        <!-- 11. PROMOTIONS -->
+        <article class="legal-section" id="promotions">
           <div class="section-head">
-            <h2><span class="article-number">11</span><span data-i18n="cgv.11.title">Données personnelles</span></h2>
+            <h2><span class="article-number">11</span> Promotions</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.11.text">
-            Le traitement des données est décrit dans notre <a href="confidentialite.html">Politique de confidentialité</a>.
-          </p>
+          <ul class="legal-list">
+            <li>Codes non cumulables sauf mention contraire</li>
+            <li>Pas d’application rétroactive</li>
+            <li>Suspension en cas d’erreur ou fraude</li>
+          </ul>
         </article>
 
-        <!-- 12 -->
+        <!-- 12. DROIT APPLICABLE -->
         <article class="legal-section" id="droit-applicable">
           <div class="section-head">
-            <h2><span class="article-number">12</span><span data-i18n="cgv.12.title">Droit applicable & litiges</span></h2>
+            <h2><span class="article-number">12</span> Droit applicable</h2>
             <span class="rule"></span>
           </div>
-          <p data-i18n="cgv.12.text">
-            Les présentes CGV sont soumises au droit suisse. En cas de litige, les tribunaux compétents seront ceux du siège de l’entreprise.
+          <p>Les présentes CGV sont soumises au droit suisse.</p>
+        </article>
+
+        <!-- 13. SUPPORT -->
+        <article class="legal-section" id="contact">
+          <div class="section-head">
+            <h2><span class="article-number">13</span> Support client</h2>
+            <span class="rule"></span>
+          </div>
+          <p>
+            Email : <strong>ceracotta@ceracotta.com</strong><br>
+            Réponse sous 24–48 h ouvrées.
           </p>
         </article>
 
-        <!-- 13 -->
-        <article class="legal-section" id="contact">
-          <div class="section-head">
-            <h2><span class="article-number">13</span><span data-i18n="cgv.13.title">Contact</span></h2>
-            <span class="rule"></span>
-          </div>
-          <p data-i18n="cgv.13.text">Service client : <a href="mailto:contact@ceracotta.ch">contact@ceracotta.ch</a> — Lun-Ven, 9h-17h.</p>
-        </article>
 
         <div class="legal-divider"></div>
         <p class="small" data-i18n="cgv.footer">© 2025 Céracotta – Tous droits réservés.</p>
@@ -321,15 +317,17 @@
     <p>&copy; 2025 Céracotta. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
     <div class="footer-links">
       <a href="mentions.html" data-i18n="footer.mentions">Mentions légales</a>
-      <a href="conditions.html" data-i18n="footer.conditions">Conditions générales</a>
+      <a href="cvg.html" data-i18n="footer.conditions">Conditions générales</a>
       <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
       <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
+      <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 
   <!-- JS -->
   <script type="module" src="/js/boot.js"></script>
-  <script src="/js/tracker.js" defer></script>
+  <script src="js/tracker.js" defer></script>
 
 
 
@@ -345,7 +343,7 @@
       <button type="submit" data-i18n="panel.account.login">Connexion</button>
       <p class="alt-action">
         <span data-i18n="panel.account.noaccount">Pas encore inscrit ?</span>
-        <a href="#" data-i18n="panel.account.create">Créer un compte</a>
+        <a href="register.html" data-i18n="panel.account.create">Créer un compte</a>
       </p>
     </form>
   </div>
@@ -361,4 +359,5 @@
   </div>
 
 </body>
+
 </html>

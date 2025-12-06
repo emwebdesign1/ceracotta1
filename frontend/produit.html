@@ -9,6 +9,14 @@
   <link rel="stylesheet" href="css/index.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Urbanist:wght@400;600&display=swap" rel="stylesheet" />
 </head>
@@ -156,9 +164,11 @@
     <p>&copy; 2025 Céracotta. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
     <div class="footer-links">
       <a href="mentions.html" data-i18n="footer.mentions">Mentions légales</a>
-      <a href="conditions.html" data-i18n="footer.conditions">Conditions générales</a>
+      <a href="cvg.html" data-i18n="footer.conditions">Conditions générales</a>
       <a href="confidentialite.html" data-i18n="footer.confidentialite">Politique de confidentialité</a>
       <a href="retours.html" data-i18n="footer.retours">Retours & remboursement</a>
+      <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 
@@ -174,7 +184,7 @@
       <button type="submit" data-i18n="panel.account.login">Connexion</button>
       <p class="alt-action">
         <span data-i18n="panel.account.noaccount">Pas encore inscrit ?</span>
-        <a href="#" data-i18n="panel.account.create">Créer un compte</a>
+        <a href="register.html" data-i18n="panel.account.create">Créer un compte</a>
       </p>
     </form>
   </div>
@@ -190,9 +200,10 @@
   </div>
 
   <!-- JS -->
+    <script src="js/tracker.js" type="module"></script>
   <script type="module" src="/js/boot.js"></script>
   <script type="module" src="/js/pages/produit.page.js"></script>
-  <script src="/js/tracker.js" defer></script>
+
 
 </body>
 </html>

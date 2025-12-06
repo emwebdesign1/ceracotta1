@@ -13,6 +13,13 @@ export async function recordEvent(req, res) {
       res.cookie('visitorId', visitorId, { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true });
     }
 
+    let sessionId = req.cookies?.sessionId;
+if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    res.cookie('sessionId', sessionId, { maxAge: 1000*60*30 }); // 30 min
+}
+
+
     // Sauvegarde l’événement
     await prisma.event.create({
       data: {
@@ -25,8 +32,27 @@ export async function recordEvent(req, res) {
         utmSource: utm?.source || null,
         utmMedium: utm?.medium || null,
         utmCampaign: utm?.campaign || null,
+        sessionId: sessionId,
+
       },
     });
+
+    await prisma.session.upsert({
+  where: { id: sessionId },
+  create: {
+      id: sessionId,
+      visitorId,
+      startedAt: new Date(),
+      utmSource: utm?.source || null,
+      utmMedium: utm?.medium || null,
+      utmCampaign: utm?.campaign || null,
+      referrer: req.get('referer') || null,
+  },
+  update: {
+      lastSeenAt: new Date(),
+  }
+});
+
 
     return res.json({ ok: true });
   } catch (e) {

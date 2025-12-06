@@ -76,23 +76,32 @@ model dailyproductstat {
 }
 
 model event {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   type      event_type
-  sessionId String
-  path      String?
   productId String?
+  path      String?
   value     Int?
   currency  String?
   meta      Json?
-  session   session    @relation(fields: [sessionId], references: [id], map: "Event_sessionId_fkey")
 
-  @@index([createdAt], map: "Event_createdAt_idx")
-  @@index([productId, createdAt], map: "Event_productId_createdAt_idx")
-  @@index([sessionId], map: "Event_sessionId_idx")
-  @@index([type, createdAt], map: "Event_type_createdAt_idx")
+  // Tracking
+  visitorId String?
+  sessionId String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  product   product? @relation(fields: [productId], references: [id])
+  session   session? @relation(fields: [sessionId], references: [id])
+
+  @@index([createdAt])
+  @@index([productId, createdAt])
+  @@index([sessionId])
+  @@index([type, createdAt])
 }
+
 
 model image {
   id        String   @id @default(uuid())
@@ -176,6 +185,9 @@ model product {
   wishlistitem     wishlistitem[]
 
   @@index([categoryId], map: "Product_categoryId_idx")
+event   event[]
+
+
 }
 
 model productcolor {

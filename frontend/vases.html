@@ -9,6 +9,14 @@
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/vaisselle.css" />
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
+  <meta http-equiv="Content-Security-Policy" content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
 </head>
 
 <body>
@@ -28,30 +36,31 @@
     <div class="header-right">
       <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
+          <path
+            d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z" />
         </svg>
       </a>
-<a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-    class="feather feather-heart">
-    <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
+      <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
+          <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
       5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
       1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-  </svg>
-  <span id="fav-badge">0</span>
-</a>
-<a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
-  <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-    <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
-  </svg>
-  <span id="cart-badge" class="cart-badge"></span>
-</a>
+        </svg>
+        <span id="fav-badge">0</span>
+      </a>
+      <a href="#" id="open-panier" class="icon-link" aria-label="Panier" style="position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
+          <path
+            d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
+        </svg>
+        <span id="cart-badge" class="cart-badge"></span>
+      </a>
 
     </div>
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="#">Accueil</a></li>
+        <li><a href="index.html">Accueil</a></li>
         <li class="dropdown">
           <a href="#" id="collections-link">Collections</a>
           <ul class="dropdown-list">
@@ -83,13 +92,15 @@
     </div>
   </main>
 
- <footer>
+  <footer>
     <p>&copy; 2025 Céracotta. Tous droits réservés.</p>
     <div class="footer-links">
       <a href="mentions.html">Mentions légales</a>
-      <a href="conditions.html">Conditions générales</a>
+      <a href="cvg.html">Conditions générales</a>
       <a href="confidentialite.html">Politique de confidentialité</a>
-       <a href="retours.html">Retours & remboursement</a>
+      <a href="retours.html">Retours & remboursement</a>
+      <a href="cookies.html">Gérer les cookies</a>
+
     </div>
   </footer>
 
@@ -103,7 +114,7 @@
       <label>Mot de passe</label>
       <input type="password" placeholder="Votre mot de passe">
       <button type="submit">Connexion</button>
-      <p class="alt-action">Pas encore inscrit ? <a href="#">Créer un compte</a></p>
+      <p class="alt-action">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
     </form>
   </div>
   <div id="panel-favoris" class="side-panel">
@@ -114,9 +125,10 @@
     <h2>Votre panier</h2>
     <p>Votre panier est vide.</p>
 
-<script type="module" src="/js/boot.js"></script>
-<script type="module" src="/js/pages/vases.page.js"></script>
-<script src="/js/tracker.js" defer></script>
+    <script src="js/tracker.js" type="module"></script>
+    <script type="module" src="/js/boot.js"></script>
+    <script type="module" src="/js/pages/vases.page.js"></script>
+
 
 
 </body>

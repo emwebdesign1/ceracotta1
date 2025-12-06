@@ -1,5 +1,11 @@
-// /js/api.js
 import { state, authHeaders, saveCart, clearAuth } from '/js/state.js';
+
+/* -------------------------------------------------------------------------- */
+/*                               CONFIG BACKEND                               */
+/* -------------------------------------------------------------------------- */
+
+const API_BASE = "http://localhost:4000";
+
 
 /**
  * CONFIG
@@ -50,16 +56,16 @@ function safeMatch(a, b) {
 
 export async function getProducts({ category, q = '', sort = '-createdAt', page = 1, limit = 12 } = {}) {
   const params = new URLSearchParams({ q, sort, page, limit, ...(category ? { category } : {}) });
-  return fetchJson(`/api/products?${params.toString()}`);
+  return fetchJson(`${API_BASE}/api/products?${params.toString()}`);
 }
 
 export async function getProductBySlug(slug) {
   // Essai direct /:slug
   try {
-    return await fetchJson(`/api/products/${encodeURIComponent(slug)}`);
+    return await fetchJson(`${API_BASE}/api/products/${encodeURIComponent(slug)}`);
   } catch {
     // Fallback /?slug=
-    const d = await fetchJson(`/api/products?slug=${encodeURIComponent(slug)}`);
+    const d = await fetchJson(`${API_BASE}/api/products?slug=${encodeURIComponent(slug)}`);
     if (d?.product) return d.product;
     if (Array.isArray(d?.items)) return d.items.find(p => p.slug === slug) ?? d.items[0] ?? null;
     return null;
@@ -70,23 +76,24 @@ export async function getProductBySlug(slug) {
 /** IMPORTANT: Pas de setAuth/clearAuth ici (géré dans /js/auth.js) */
 
 export async function register(payload) {
-  const r = await fetch('/api/auth/register', withJson('POST', payload));
+  const r = await fetch(`${API_BASE}/api/auth/register`, withJson('POST', payload));
   try { return await r.json(); } catch { return {}; }
 }
 
 export async function login({ email, password }) {
-  const r = await fetch('/api/auth/login', withJson('POST', { email, password }));
+  const r = await fetch(`${API_BASE}/api/auth/login`, withJson('POST', { email, password }));
   try { return await r.json(); } catch { return {}; }
 }
 
 export async function me() {
-  try { return await fetchJson('/api/auth/me', { headers: { ...authHeaders() } }); }
+  try { return await fetchJson(`${API_BASE}/api/auth/me`, { headers: { ...authHeaders() } }); }
   catch { return { user: null }; }
 }
+
 export async function logout() {
   try {
     // Appel au backend
-    await fetch('/api/auth/logout', {
+    await fetch(`${API_BASE}/api/auth/logout`, {
       method: 'POST',
       headers: { ...authHeaders() },
       credentials: 'include',
@@ -124,7 +131,6 @@ export async function logout() {
   clearAuth();
 }
 
-
 /* ---------------------------------- Panier --------------------------------- */
 /**
  * MODE HYBRIDE
@@ -133,7 +139,6 @@ export async function logout() {
  * - Après login : fusion locale -> serveur
  */
 
-// ----------------- Local (fallback invité) -----------------
 function localCartGet() {
   return state.cart || { items: [] };
 }
@@ -153,7 +158,6 @@ function localCartAdd({ productId, quantity = 1, variantId = null, title = null,
   if (existing) {
     existing.quantity = Math.max(1, (existing.quantity || 0) + quantity);
   } else {
-    // id "virtuel" pour manipulation locale
     cart.items.push({ id: `local_${Math.random().toString(36).slice(2)}`, ...incoming });
   }
   return localCartSet(cart);
@@ -173,67 +177,61 @@ function localCartClear() {
   return localCartSet({ items: [] });
 }
 
-// --------------- Serveur: invité (guest) ---------------
+/* ------------------- Guest (invité) serveur ------------------- */
+
 async function guestGetCartServer() {
-  return fetchJson('/api/carts/guest');
+  return fetchJson(`${API_BASE}/api/carts/guest`);
 }
 async function guestAddItemServer(payload) {
-  return fetchJson('/api/carts/guest/items', withJson('POST', payload));
+  return fetchJson(`${API_BASE}/api/carts/guest/items`, withJson('POST', payload));
 }
 async function guestUpdateItemServer(itemId, body) {
-  return fetchJson(`/api/carts/guest/items/${encodeURIComponent(itemId)}`, withJson('PATCH', body));
+  return fetchJson(`${API_BASE}/api/carts/guest/items/${encodeURIComponent(itemId)}`, withJson('PATCH', body));
 }
 async function guestRemoveItemServer(itemId) {
-  return fetchJson(`/api/carts/guest/items/${encodeURIComponent(itemId)}`, { method: 'DELETE' });
+  return fetchJson(`${API_BASE}/api/carts/guest/items/${encodeURIComponent(itemId)}`, { method: 'DELETE' });
 }
 async function guestClearServer() {
-  return fetchJson('/api/carts/guest', { method: 'DELETE' });
+  return fetchJson(`${API_BASE}/api/carts/guest`, { method: 'DELETE' });
 }
 
-// --------------- Serveur: connecté (auth) ---------------
+/* -------------------- User (connecté) serveur -------------------- */
+
 async function userGetCartServer() {
-  return fetchJson('/api/carts/', { headers: { ...authHeaders() } });
+  return fetchJson(`${API_BASE}/api/carts/`, { headers: { ...authHeaders() } });
 }
 async function userAddItemServer(body) {
-  return fetchJson('/api/carts/items', withJson('POST', body, authHeaders()));
+  return fetchJson(`${API_BASE}/api/carts/items`, withJson('POST', body, authHeaders()));
 }
 async function userUpdateItemServer(itemId, body) {
-  return fetchJson(`/api/carts/items/${encodeURIComponent(itemId)}`, withJson('PATCH', body, authHeaders()));
+  return fetchJson(`${API_BASE}/api/carts/items/${encodeURIComponent(itemId)}`, withJson('PATCH', body, authHeaders()));
 }
 async function userRemoveItemServer(itemId) {
-  return fetchJson(`/api/carts/items/${encodeURIComponent(itemId)}`, { method: 'DELETE', headers: { ...authHeaders() } });
+  return fetchJson(`${API_BASE}/api/carts/items/${encodeURIComponent(itemId)}`, { method: 'DELETE', headers: { ...authHeaders() } });
 }
 async function userClearServer() {
-  return fetchJson('/api/carts/', { method: 'DELETE', headers: { ...authHeaders() } });
+  return fetchJson(`${API_BASE}/api/carts/`, { method: 'DELETE', headers: { ...authHeaders() } });
 }
 
-// ----------------- API publique Panier -----------------
+/* ---------------------- API publique Panier ---------------------- */
 
 export async function getCart() {
-  // Connecté → serveur
   if (hasToken()) {
     try {
       const d = await userGetCartServer();
-      // Normalisation
       const cart = d?.cart || d || { items: Array.isArray(d?.items) ? d.items : [] };
       return localCartSet(cart);
     } catch (e) {
-      // Si le token est invalide, retomber en invité
-      if (e?.status === 401) {
-        // on ne touche pas au local ici
-      }
+      if (e?.status === 401) { /* fallback invité */ }
     }
   }
 
-  // Invité → serveur guest si possible
   if (USE_GUEST_SERVER) {
     try {
       const d = await guestGetCartServer();
       const cart = d?.cart || d || { items: Array.isArray(d?.items) ? d.items : [] };
       return localCartSet(cart);
-    } catch {
-      // Pas de guest côté serveur → fallback local
-    }
+    } catch { /* fallback */ }
   }
 
   return localCartGet();
@@ -242,45 +240,35 @@ export async function getCart() {
 export async function addToCart({ productId, quantity = 1, variantId = null, title = null, unitPrice = null, slug = null, image = null, color = null, size = null }) {
   const payload = { productId, quantity, variantId, title, unitPrice, slug, image, color, size };
 
-  // Connecté → serveur
   if (hasToken()) {
     await userAddItemServer(payload);
-    return getCart(); // refresh source de vérité
+    return getCart();
   }
 
-  // Invité → serveur guest si possible
   if (USE_GUEST_SERVER) {
     try {
       await guestAddItemServer(payload);
       return getCart();
-    } catch {
-      // fallback local si pas d’endpoint guest
-    }
+    } catch {}
   }
 
-  // Fallback local
   localCartAdd(payload);
   return localCartGet();
 }
 
 export async function updateCartItem({ itemId, quantity }) {
-  // Connecté
   if (hasToken()) {
     await userUpdateItemServer(itemId, { quantity });
     return getCart();
   }
 
-  // Invité → serveur guest si possible
   if (USE_GUEST_SERVER) {
     try {
       await guestUpdateItemServer(itemId, { quantity });
       return getCart();
-    } catch {
-      // fallback
-    }
+    } catch {}
   }
 
-  // Local
   localCartPatch(itemId, quantity);
   return localCartGet();
 }
@@ -294,7 +282,7 @@ export async function removeCartItem(itemId) {
     try {
       await guestRemoveItemServer(itemId);
       return getCart();
-    } catch { /* fallback */ }
+    } catch {}
   }
   localCartRemove(itemId);
   return localCartGet();
@@ -309,20 +297,14 @@ export async function clearCart() {
     try {
       await guestClearServer();
       return getCart();
-    } catch { /* fallback */ }
+    } catch {}
   }
   localCartClear();
   return localCartGet();
 }
 
-/* -------------------------- Fusion après authentification ------------------ */
-/**
- * A appeler AUTOMATIQUEMENT quand l’auth change :
- * - Si user vient de se connecter : on envoie chaque item local → serveur, puis on recharge depuis serveur
- * - Si user se déconnecte : on tente de récupérer le panier guest serveur (sinon on garde local)
- *
- * On écoute l’évènement custom que tu dispatches déjà dans setAuth(): 'auth:changed'
- */
+/* ----------------- Fusion après authentification ----------------- */
+
 async function mergeLocalIntoUserCart() {
   const local = localCartGet();
   if (!Array.isArray(local?.items) || local.items.length === 0) return;
@@ -340,24 +322,18 @@ async function mergeLocalIntoUserCart() {
         color: it.color ?? null,
         size: it.size ?? null
       });
-    } catch {
-      // on tente tous les items, même si un échoue
-    }
+    } catch {}
   }
 
-  // Une fois fusionné, on vide le local et on recharge depuis serveur
   localCartClear();
   await getCart();
 }
 
-// Ecoute globale : déclenchée par setAuth() (state.js)
 document.addEventListener('auth:changed', async (ev) => {
   const user = ev?.detail?.user || null;
   if (user) {
-    // login → fusion
-    try { await mergeLocalIntoUserCart(); } catch { /* noop */ }
+    try { await mergeLocalIntoUserCart(); } catch {}
   } else {
-    // logout → essayer de charger le panier guest serveur (sinon on garde le local actuel)
-    try { await getCart(); } catch { /* noop */ }
+    try { await getCart(); } catch {}
   }
 });

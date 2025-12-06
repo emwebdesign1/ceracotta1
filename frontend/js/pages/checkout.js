@@ -7,6 +7,23 @@ const API_BASE = 'http://localhost:4000'; // ton backend écoute sur 4000
 const $ = s => document.querySelector(s);
 const CHF = v => `CHF ${(Number(v || 0) / 100).toFixed(2)}`;
 
+async function trackEvent(payload) {
+  try {
+    await fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        path: location.pathname,
+        ...payload,
+      }),
+    });
+  } catch (e) {
+    console.warn('track error', e);
+  }
+}
+
+
 let stripe, elements, cardNumberEl, cardExpiryEl, cardCvcEl, clientSecretCache = null;
 
 /* ---------- helpers ---------- */
@@ -134,6 +151,18 @@ async function loadSummary() {
   const items = cart.items || [];
   const total = items.reduce((s, it) => s + (it.unitPrice || 0) * (it.quantity || 1), 0);
 
+  wrap.innerHTML = `...`;
+
+  // 🟣 Nouveau : on trace le BEGIN_CHECKOUT (global)
+  trackEvent({
+    type: 'BEGIN_CHECKOUT',
+    // si tu veux, tu peux envoyer la valeur totale:
+    value: total,
+    currency: 'CHF',
+    // si tu veux rattacher à un seul produit quand il n'y en a qu'un :
+    productId: items.length === 1 ? items[0].productId : null,
+  });
+
   wrap.innerHTML = `
     <div class="card">
       <h2>Votre commande</h2>
@@ -252,6 +281,21 @@ async function setupStripeCardElements() {
   fitStripeIframes();
 }
 
+
+async function trackPurchaseForEachProduct() {
+  const cart = await getCart().catch(() => ({ items: [] }));
+  const items = cart.items || [];
+
+  for (const it of items) {
+    await trackEvent({
+      type: 'PURCHASE',
+      productId: it.productId,
+      value: (it.unitPrice * it.quantity) || null,
+      currency: 'CHF',
+    });
+  }
+}
+
 /* ---------- submit ---------- */
 async function submitCheckout(e) {
   e.preventDefault();
@@ -287,37 +331,40 @@ async function submitCheckout(e) {
       const pi = result.paymentIntent;
 
       // ✅ confirme l’ordre côté backend (création + vidage panier) AVANT de rediriger
-      if (pi?.status === 'succeeded') {
-        try {
-          const shipping = {
-            line1:  customer.address.line1 || null,
-            line2:  customer.address.line2 || null,
-            zip:    customer.address.postal_code || null,
-            city:   customer.address.city || null,
-            country:(customer.address.country || 'CH').toUpperCase()
-          };
+ if (pi?.status === 'succeeded') {
+  try {
+    const shipping = {
+      line1:  customer.address.line1 || null,
+      line2:  customer.address.line2 || null,
+      zip:    customer.address.postal_code || null,
+      city:   customer.address.city || null,
+      country:(customer.address.country || 'CH').toUpperCase()
+    };
 
-          const resp = await fetch(`${API_BASE}/api/orders/confirm`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...authHeaders() },
-            body: JSON.stringify({ paymentIntentId: pi.id, shipping })
-          });
+    const resp = await fetch(`${API_BASE}/api/orders/confirm`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ paymentIntentId: pi.id, shipping })
+    });
 
-          if (!resp.ok) {
-            const data = await resp.json().catch(() => ({}));
-            throw new Error(data?.message || 'Erreur confirmation commande');
-          }
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => ({}));
+      throw new Error(data?.message || 'Erreur confirmation commande');
+    }
 
-          msg.textContent = 'Paiement confirmé ✅';
-          location.href = '/merci.html';
-          return;
-        } catch (e2) {
-          console.error('confirm order error:', e2);
-          msg.textContent = e2?.message || 'Commande non confirmée côté serveur.';
-          return;
-        }
-      }
+    // 💜 Nouveau : on trace l'achat global
+// 💜 Nouveau : on trace ENFIN l'achat par produit
+await trackPurchaseForEachProduct();
 
+    msg.textContent = 'Paiement confirmé ✅';
+    location.href = '/merci.html';
+    return;
+  } catch (e2) {
+    console.error('confirm order error:', e2);
+    msg.textContent = e2?.message || 'Commande non confirmée côté serveur.';
+    return;
+  }
+}
       msg.textContent = `Statut de paiement: ${pi?.status || 'inconnu'}`;
       return;
     }

@@ -8,6 +8,16 @@
   <link rel="stylesheet" href="/css/index.css" />
      <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="stylesheet" href="/css/admin.css" />
+<meta http-equiv="Content-Security-Policy" 
+content="
+default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
+connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
+img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://demo-ceracotta.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' data: https://fonts.gstatic.com;">
+
+
 </head>
 
 <body class="page-admin">
@@ -50,7 +60,7 @@
 
     <nav id="side-menu" aria-label="Navigation principale">
       <ul>
-        <li><a href="#" data-i18n="menu.home">Accueil</a></li>
+        <li><a href="index.html" data-i18n="menu.home">Accueil</a></li>
         <li class="dropdown">
           <a href="#" id="collections-link" data-i18n="menu.collections">Collections</a>
           <ul class="dropdown-list">
@@ -271,9 +281,35 @@
     </section>
   </main>
 
+  <script src="js/tracker.js" type="module"></script>
   <script type="module" src="/js/pages/admin.page.js"></script>
   <script type="module" src="/js/boot.js"></script>
 
+
+  <!-- SIDE PANELS -->
+  <div id="panel-compte" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Mon compte</h2>
+    <form>
+      <label>Email</label>
+      <input type="email" placeholder="Votre email">
+      <label>Mot de passe</label>
+      <input type="password" placeholder="Votre mot de passe">
+      <button type="submit">Connexion</button>
+      <p class="alt-action">Pas encore inscrit ? <a href="register.html">Créer un compte</a></p>
+    </form>
+  </div>
+  <div id="panel-favoris" class="side-panel">
+    <button class="close-btn">&times;</button>
+  </div>
+  <div id="panel-panier" class="side-panel">
+    <button class="close-btn">&times;</button>
+    <h2>Votre panier</h2>
+    <p>Votre panier est vide.</p>
+  </div>
+
+  
   <button id="logoutBtn" class="fab-logout" type="button" data-i18n="btn.logout">Déconnexion</button>
 </body>
+
 </html>
