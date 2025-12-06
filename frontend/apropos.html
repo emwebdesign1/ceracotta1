@@ -10,8 +10,7 @@
   <link rel="icon" href="images/logo.png" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<meta http-equiv="Content-Security-Policy" 
-content="
+  <meta http-equiv="Content-Security-Policy" content="
 default-src 'self' data: blob: https://js.stripe.com https://fonts.googleapis.com https://fonts.gstatic.com https://demo-ceracotta.com https://backend-ceracotta.onrender.com;
 connect-src 'self' https://backend-ceracotta.onrender.com https://demo-ceracotta.com https://api.stripe.com;
 img-src 'self' data: blob: https://demo-ceracotta.com https://backend-ceracotta.onrender.com https://*.stripe.com;
@@ -35,13 +34,13 @@ font-src 'self' data: https://fonts.gstatic.com;">
     <div class="header-right">
       <a href="#" id="open-compte" class="icon-link" aria-label="Mon compte">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z"/>
+          <path
+            d="M12 2a6 6 0 1 0 0 12A6 6 0 0 0 12 2Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5Zm8 6H4v-1c0-1.5 4-3 8-3s8 1.5 8 3v1Z" />
         </svg>
       </a>
       <a href="#" id="open-favoris" class="icon-link" aria-label="Favoris">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="feather feather-heart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
           <path d="M20.84 4.61a5.5 5.5  0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 
             5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
             1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -50,7 +49,8 @@ font-src 'self' data: https://fonts.gstatic.com;">
       </a>
       <a href="#" id="open-panier" class="icon-link" aria-label="Panier">
         <svg xmlns="http://www.w3.org/2000/svg" fill="#7f0000" viewBox="0 0 24 24" width="22" height="22">
-          <path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z"/>
+          <path
+            d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM6.2 14l-.94-2H20a1 1 0 0 0 .96-.74l2-7A1 1 0 0 0 22 3H5.21l-.38-1.11A1 1 0 0 0 4 1H1v2h2.34l3.6 10.84A1 1 0 0 0 8 15h12v-2H6.2Z" />
         </svg>
       </a>
     </div>
@@ -76,7 +76,9 @@ font-src 'self' data: https://fonts.gstatic.com;">
         <div class="hero-text">
           <h1 data-i18n="about.history.title">Notre histoire</h1>
           <p data-i18n="about.history.text">
-            Chez <strong>Céracotta</strong>, nous croyons en la beauté du geste, en la force du silence, et en la chaleur de l’imparfait. Chaque pièce que nous créons porte la trace de la main, le rythme du feu, et l’empreinte du temps.
+            Chez <strong>Chez Céracotta</strong>, chaque pièce raconte une histoire. Nous célébrons la beauté du geste,
+            la force des matières naturelles et la chaleur de l’imperfection qui rend chaque céramique unique. Ici, le
+            fait-main est plus qu’un savoir-faire : c’est une signature.
           </p>
         </div>
       </div>
@@ -85,7 +87,11 @@ font-src 'self' data: https://fonts.gstatic.com;">
         <div class="text-block">
           <h2 data-i18n="about.artisan.title">Une maison artisanale</h2>
           <p data-i18n="about.artisan.text">
-            Fondée par une passionnée de matières naturelles, <strong>Céracotta</strong> est une maison de création céramique qui allie l’art du fait-main à une vision contemporaine du design. Chaque objet est pensé pour durer, sublimer l’usage quotidien et transmettre une émotion simple.
+            Fondée par une passionnée de design et de céramique, <strong>Céracotta</strong> crée des vases, pièces
+            décoratives et objets du quotidien façonnés à la main.
+            Notre vision : unir artisanat traditionnel, durabilité et esthétique contemporaine.
+            Textures brutes, lignes épurées et finitions naturelles donnent naissance à des pièces qui ont une âme.
+
           </p>
         </div>
       </div>
@@ -94,7 +100,11 @@ font-src 'self' data: https://fonts.gstatic.com;">
         <div class="text-block">
           <h2 data-i18n="about.lifestyle.title">Un art de vivre</h2>
           <p data-i18n="about.lifestyle.text">
-            Céracotta invite à ralentir. Nos collections insufflent à chaque intérieur un souffle brut, organique, vivant. Inspirées par la nature et la terre, elles célèbrent l’équilibre entre simplicité et élégance.
+
+            Céracotta invite à ralentir et à revenir à l’essentiel. Inspirées par la terre et les gestes des artisans,
+            nos collections insufflent une atmosphère chaleureuse, organique et élégante.
+            Plus qu’une boutique, Céracotta propose une véritable expérience sensorielle : la matière, la
+            forme, l’émotion.
           </p>
         </div>
       </div>
@@ -102,9 +112,12 @@ font-src 'self' data: https://fonts.gstatic.com;">
       <div class="container-valeurs">
         <h2 data-i18n="about.values.title">Nos valeurs</h2>
         <ul class="valeurs-list">
-          <li><strong data-i18n="about.values.authenticity">Authenticité</strong><br><span data-i18n="about.values.authenticityText">Chaque pièce est unique</span></li>
-          <li><strong data-i18n="about.values.sustainability">Durabilité</strong><br><span data-i18n="about.values.sustainabilityText">Matières locales et responsables</span></li>
-          <li><strong data-i18n="about.values.elegance">Élégance</strong><br><span data-i18n="about.values.eleganceText">Simplicité intemporelle</span></li>
+          <li><strong data-i18n="about.values.authenticity">Authenticité</strong><br><span
+              data-i18n="about.values.authenticityText">Chaque pièce est unique</span></li>
+          <li><strong data-i18n="about.values.sustainability">Durabilité</strong><br><span
+              data-i18n="about.values.sustainabilityText">Matières locales et responsables</span></li>
+          <li><strong data-i18n="about.values.elegance">Élégance</strong><br><span
+              data-i18n="about.values.eleganceText">Simplicité intemporelle</span></li>
         </ul>
       </div>
     </section>
@@ -150,4 +163,5 @@ font-src 'self' data: https://fonts.gstatic.com;">
   <script type="module" src="/js/pages/index.page.js"></script>
 
 </body>
+
 </html>
