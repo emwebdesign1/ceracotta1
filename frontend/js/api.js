@@ -2,9 +2,9 @@ import { state, authHeaders, saveCart, clearAuth } from '/js/state.js';
 
 /* -------------------------------------------------------------------------- */
 /*                               CONFIG BACKEND                               */
-/* -------------------------------------------------------------------------- */
+/* --------------------- ----------------------------------------------------- */
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://backend-ceracotta-j8zr.onrender.com";
 
 
 /**
