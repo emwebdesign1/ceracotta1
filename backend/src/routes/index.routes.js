@@ -10,6 +10,7 @@ import payments from './payments.routes.js';
 import trackRoutes from './track.routes.js';
 import wishlistRoutes from './wishlist.routes.js';
 import account from './account.routes.js';
+
  
 
 
@@ -27,5 +28,6 @@ r.use('/payments', payments);
 r.use('/track', trackRoutes);
 r.use('/wishlist', wishlistRoutes);
 r.use('/account', account);
+r.use('/survey', surveyRoutes); 
 
 export default r;

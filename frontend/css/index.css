@@ -505,7 +505,7 @@ footer {
 
   .cta-button {
     padding: 14px 30px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   .hero-content {
@@ -1540,22 +1540,6 @@ footer {
   height: auto;
 }
 
-.hero picture,
-.hero img.hero-image {
-  display: block;
-  width: 100%;
-  aspect-ratio: 9 / 16; /* ratio vertical moderne */
-  object-fit: cover;    /* garde le look luxe */
-  object-position: center;
-}
-
-/* Sur les grands écrans, on remet un ratio plus horizontal */
-@media (min-width: 768px) {
-  .hero picture,
-  .hero img.hero-image {
-    aspect-ratio: 16 / 9;
-  }
-}
 /* === HERO FIX PARFAIT — SUPPRIME LA BARRE BLANCHE === */
 .hero {
   position: relative;
@@ -1571,12 +1555,11 @@ footer {
 }
 
 /* MOBILE */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .hero {
     margin-top: 80px; /* même hauteur */
   }
   .hero-image {
     height: calc(100vh - 80px);
   }
-
 }
